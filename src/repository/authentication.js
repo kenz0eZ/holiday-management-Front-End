@@ -13,6 +13,16 @@ export default {
             throw error;
         }
     },
+    async verificationLink (body) {
+        console.log('333333', body);
+        try {
+            const response = await apiClient.post("/email/verification-notification", { headers: { email: body } });
+            return response; // Return the full response object
+        } catch (error) {
+            console.error('Failed to Register:', error);
+            throw error;
+        }
+    },
     async loginUser (body) {
         try {
             const response = await apiClient.post("/login", body);
@@ -23,4 +33,14 @@ export default {
             throw error;
         }
     },
+    async logOutUser (token){
+        try {
+            const response = await apiClient.post("/logout", token)
+            console.log('LOGOGOGOUT', response);
+            return response;
+        } catch (error) {
+            console.error('Failed to Logout:', error);
+            throw error;
+        }
+    }
 };

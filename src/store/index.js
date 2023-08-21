@@ -6,10 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-
   },
   mutations: {
-
   },
   actions: {
     // eslint-disable-next-line no-unused-vars
@@ -17,10 +15,19 @@ export default new Vuex.Store({
       return authenticationRepo.registerUser(body);
     },
     // eslint-disable-next-line no-unused-vars
+    verificationLink( { commit }, body) {
+      console.log('2222222', body);
+      return authenticationRepo.verificationLink(body);
+    },
+    // eslint-disable-next-line no-unused-vars
     loginUser( { commit }, body) {
       return authenticationRepo.loginUser(body);
     },
+    // eslint-disable-next-line no-unused-vars
+    logOutUser( { commit }, token) {
+      console.log('MODULE', token);
+      return authenticationRepo.logOutUser(token);
+    },
 
   },
-  modules: {},
 });
