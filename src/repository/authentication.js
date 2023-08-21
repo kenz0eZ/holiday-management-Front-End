@@ -13,13 +13,21 @@ export default {
             throw error;
         }
     },
-    async verificationLink (body) {
-        console.log('333333', body);
+    async verificationLink(body) {
         try {
-            const response = await apiClient.post("/email/verification-notification", { headers: { email: body } });
+            const response = await apiClient.post(
+                "/email/verification-notification",
+                { email: body.email }, // Sending email in the request body
+                {
+                    headers: {
+                        Authorization: `Bearer ${body.token}` // Adding the bearer token to the headers
+                    }
+                }
+            );
+
             return response; // Return the full response object
         } catch (error) {
-            console.error('Failed to Register:', error);
+            console.error('Failed to send verification link:', error);
             throw error;
         }
     },

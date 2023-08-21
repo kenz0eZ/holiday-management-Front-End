@@ -234,7 +234,7 @@ export default {
         const token = this.loginResponse.data.token;
         localStorage.setItem('token', token);
         // await this.$store.dispatch('setAuthToken', token);
-        await this.$router.push('/test');
+        await this.$router.push('/appbar');
         console.log("Login successful");
       } else {
         console.log("Login failed");
@@ -248,8 +248,12 @@ export default {
 
       if (this.registrationResponse && this.registrationResponse.status === 201) {
         this.step = 1;
-        const email = this.registrationResponse.data.user.email;
-        this.verificationResponse = await this.$store.dispatch('verificationLink', email)
+        const body = {
+          email: this.registrationResponse.data.user.email,
+          token: this.registrationResponse.data.token,
+        };
+        console.log('aeaeaaeae', body);
+        this.verificationResponse = await this.$store.dispatch('verificationLink', body);
         console.log("Registration successful");
       } else {
         console.log("Registration failed");

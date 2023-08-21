@@ -92,7 +92,7 @@ export default {
       };
 
       this.$store.dispatch('logOutUser', token);
-      this.$router.push('/');
+      this.$router.push('/login');
       localStorage.removeItem('token');
       // if (action === 'profile') {
       //   this.profileDialog = true;

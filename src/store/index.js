@@ -16,7 +16,6 @@ export default new Vuex.Store({
     },
     // eslint-disable-next-line no-unused-vars
     verificationLink( { commit }, body) {
-      console.log('2222222', body);
       return authenticationRepo.verificationLink(body);
     },
     // eslint-disable-next-line no-unused-vars
