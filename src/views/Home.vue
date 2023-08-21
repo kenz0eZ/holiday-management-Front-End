@@ -1,6 +1,6 @@
 <template>
   <v-container>
-      <v-row align="center" justify="center" >
+    <v-row align="center" justify="center" >
           <v-col cols="12" sm="10">
             <v-card class="elevation-6 mt-10"  >
              <v-window v-model="step">
@@ -16,7 +16,7 @@
                         >Log in to your account so you can continue builiding <br>and editing your onboarding flows</h6>
                         <v-row align="center" justify="center">
                           <v-col cols="12" sm="8">
-                           
+
                           <v-text-field
                             v-model="user.email"
                             label="Email"
@@ -34,12 +34,12 @@
                             color="blue"
                           autocomplete="false"
                            type="password"
-                          
+
                           />
                             <v-row>
                               <v-col cols="12" sm="7">
                                 <v-checkbox
-                       
+
                         label="Remember Me"
                         class="mt-n1"
                         color="blue"
@@ -50,7 +50,7 @@
                               </v-col>
                             </v-row>
                           <v-btn @click="login" color="blue" dark block tile>Log in</v-btn>
-                     
+
                          <h5
                           class="text-center  grey--text mt-4 mb-3"
                         >Or Log in using</h5>
@@ -66,7 +66,7 @@
                         </v-btn>
                          </div>
                           </v-col>
-                        </v-row>  
+                        </v-row>
                       </v-card-text>
                     </v-col>
                     <v-col cols="12" md="6" class="blue rounded-bl-xl" >
@@ -151,12 +151,12 @@
                             color="blue"
                           autocomplete="false"
                            type="password"
-                          
+
                           />
                             <v-row>
                               <v-col cols="12" sm="7">
                                 <v-checkbox
-                       
+
                         label="I Accept AAE"
                         class="mt-n1"
                         color="blue"
@@ -167,7 +167,7 @@
                               </v-col>
                             </v-row>
                             <v-btn @click="register" color="blue" dark block tile>Sign up</v-btn>
-                     
+
                          <h5
                           class="text-center  grey--text mt-4 mb-3"
                         >Or Sign up using</h5>
@@ -183,7 +183,7 @@
                         </v-btn>
                          </div>
                           </v-col>
-                        </v-row>  
+                        </v-row>
                       </v-card-text>
                     </v-col>
                   </v-row>
@@ -196,6 +196,7 @@
 </template>
 <script>
 import { mapActions } from 'vuex';
+
 
 export default {
   data() {
@@ -215,7 +216,7 @@ export default {
 
       props: {
         source: String
-      }
+      },
     };
   },
   computed: {
@@ -234,7 +235,7 @@ export default {
         const token = this.loginResponse.data.token;
         localStorage.setItem('token', token);
         // await this.$store.dispatch('setAuthToken', token);
-        await this.$router.push('/appbar');
+        await this.$router.push('/dashboard');
         console.log("Login successful");
       } else {
         console.log("Login failed");
