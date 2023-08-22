@@ -33,7 +33,6 @@
                             dense
                             color="blue"
                           autocomplete="false"
-                           type="password"
 
                           />
                             <v-row>

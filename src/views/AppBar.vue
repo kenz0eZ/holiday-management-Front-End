@@ -1,69 +1,81 @@
 <template>
   <v-app>
-    <v-app-bar app>
-      <!-- Top left buttons -->
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-app-bar-title>App Title</v-app-bar-title>
+    <v-app-bar app color="primary">
+      <v-app-bar-title class="title">Time Mozaic</v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon>mdi-settings</v-icon>
-      </v-btn>
+
+      <!-- Text Buttons -->
+      <v-btn text>My Calendar</v-btn>
+      <v-btn text>Users</v-btn>
+      <v-btn text>Settings</v-btn>
+
+      <!-- Icon Buttons -->
       <v-btn icon>
         <v-icon>mdi-bell</v-icon>
       </v-btn>
       <v-btn icon>
-        <v-icon>mdi-account-circle</v-icon>
+        <v-icon>mdi-email</v-icon>
       </v-btn>
-      <v-btn icon>
-        <v-icon>mdi-help-circle</v-icon>
-      </v-btn>
-      <div class="text-center">
-        <v-menu
-            bottom
-            left
-            offset-y
-            origin="top right"
-            transition="scale-transition"
-        >
-          <template v-slot:activator="{ attrs, on }">
-            <v-btn
-                class="ml-2"
-                min-width="0"
-                v-bind="attrs"
-                v-on="on"
-                id="mdi-account"
-                rounded
-            >
-              <span class="mr-3"> avatartInitials </span>
-              <v-icon>mdi-account-circle</v-icon>
-            </v-btn>
-          </template>
 
-          <v-list :tile="false" nav dense>
-            <template>
-              <div style="text-align: center">
-                <span > roleUser </span>
-                <v-divider></v-divider>
-              </div>
-              <v-list-item-group
-              >
-                <v-list-item
-                >
-                  <v-list-item-icon>
-                    <v-icon mdi-clock></v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-title @click="menuActionClick">aaa</v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-item-group>
-            </template>
-          </v-list>
-        </v-menu>
-      </div>
+      <!-- Avatar Menu -->
+      <v-menu bottom left offset-y origin="top right" transition="scale-transition">
+        <template v-slot:activator="{ attrs, on }">
+          <v-btn class="ml-2" min-width="0" v-bind="attrs" v-on="on" id="mdi-account" rounded>
+            <v-icon class="mr-3">mdi-account</v-icon>
+            <span class="initials">TM</span>
+          </v-btn>
+        </template>
+
+        <v-list dense>
+          <v-list-item @click="menuActionClick">
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>My Details</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="menuActionClick">
+            <v-list-item-icon>
+              <v-icon>mdi-settings</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>My Preferences</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="menuActionClick">
+            <v-list-item-icon>
+              <v-icon>mdi-help</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Help & Support</v-list-item-title>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list-item @click="menuActionClick">
+            <v-list-item-icon>
+              <v-icon>mdi-exit-to-app</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Sign Out</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
   </v-app>
 </template>
+
+<script>
+export default {
+  methods: {
+    menuActionClick() {
+      // Implement the action for menu items
+    },
+  },
+};
+</script>
+
+<style scoped>
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 12px;
+}
+</style>
+
 
 <script>
 import { mapState } from "vuex";
