@@ -22,7 +22,7 @@ export default {
   computed: {
     ...mapGetters(["isAuthenticated"]),
     shouldShowDashboard() {
-      const shouldShow = this.isAuthenticated && this.$route.name === "Dashbo ard";
+      const shouldShow = this.isAuthenticated && this.$route.name === "Dashboard";
       console.log("shouldShowDashboard:", shouldShow);
       return shouldShow;
     },

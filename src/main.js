@@ -3,15 +3,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
-import MdiVue from 'mdi-vue/v2';
-import 'mdi-vue/v2/css/materialdesignicons.css'; // Import the CSS
+import material from 'vue-material';
+
 
 Vue.config.productionTip = false
-Vue.use(MdiVue);
 
 new Vue({
   router,
   store,
   vuetify,
+  material,
   render: h => h(App)
 }).$mount('#app')

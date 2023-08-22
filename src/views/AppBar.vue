@@ -27,26 +27,26 @@
         </template>
 
         <v-list dense>
-          <v-list-item @click="menuActionClick">
+          <v-list-item @click="openDetailsDialog">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>mdi-dark mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-title>My Details</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="menuActionClick">
+          <v-list-item @click="menuActionClick('preferences')">
             <v-list-item-icon>
-              <v-icon>mdi-settings</v-icon>
+              <v-icon>mdi-wrench</v-icon>
             </v-list-item-icon>
             <v-list-item-title>My Preferences</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="menuActionClick">
+          <v-list-item @click="menuActionClick('help')">
             <v-list-item-icon>
               <v-icon>mdi-help</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Help & Support</v-list-item-title>
           </v-list-item>
           <v-divider></v-divider>
-          <v-list-item @click="menuActionClick">
+          <v-list-item @click="menuActionClick('signOut')">
             <v-list-item-icon>
               <v-icon>mdi-exit-to-app</v-icon>
             </v-list-item-icon>
@@ -55,39 +55,20 @@
         </v-list>
       </v-menu>
     </v-app-bar>
+    <user-details-dialog v-model="showDetailsDialog" />
   </v-app>
 </template>
-
 <script>
-export default {
-  methods: {
-    menuActionClick() {
-      // Implement the action for menu items
-    },
-  },
-};
-</script>
+import UserDetailsDialog from '@/views/dialogs/UserDetailsDialog';
 
-<style scoped>
-.title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-right: 12px;
-}
-</style>
-
-
-<script>
 import { mapState } from "vuex";
 
 export default {
+  components: {
+    UserDetailsDialog,
+  },
   data: () => ({
-    items: [
-      { title: 'Click Me' },
-      { title: 'Click Me' },
-      { title: 'Click Me' },
-      { title: 'Click Me 2' },
-    ],
+    showDetailsDialog: false,
   }),
   computed: {
     ...mapState({
@@ -98,6 +79,10 @@ export default {
     localStorage.getItem("authToken");
   },
     methods: {
+      openDetailsDialog () {
+        this.showDetailsDialog = true;
+        console.log('DIALOG', this.showDetailsDialog);
+      },
     menuActionClick () {
       const token = {
         token: localStorage.getItem('token'),
@@ -119,6 +104,10 @@ export default {
   },
 }
 </script>
-
-<style>
+<style scoped>
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 12px;
+}
 </style>

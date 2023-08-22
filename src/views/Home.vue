@@ -233,6 +233,7 @@ export default {
       if (this.loginResponse && this.loginResponse.status === 200) {
         const token = this.loginResponse.data.token;
         localStorage.setItem('token', token);
+        console.log('TOKEN NA LOGIN', token);
         // await this.$store.dispatch('setAuthToken', token);
         await this.$router.push('/dashboard');
         console.log("Login successful");
