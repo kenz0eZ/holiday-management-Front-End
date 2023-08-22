@@ -62,7 +62,7 @@
                 <span class="wkday ">T</span>
               </th>
                 <th> </th>
-                <th class="initial day-header">
+                <th class="initial daqqqqy-header">
                   <span class="dayfilter"><i class="material-icons">expand_more</i> </span>
                   <span class="wkday ">W</span>
                 </th>

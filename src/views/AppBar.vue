@@ -59,13 +59,12 @@
   </v-app>
 </template>
 <script>
-import UserDetailsDialog from '@/views/dialogs/UserDetailsDialog';
-
+import userDetailsDialog from "@/views/dialogs/UserDetailsDialog.vue";
 import { mapState } from "vuex";
 
 export default {
   components: {
-    UserDetailsDialog,
+    userDetailsDialog,
   },
   data: () => ({
     showDetailsDialog: false,
