@@ -55,54 +55,44 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <user-details-dialog v-model="showDetailsDialog" />
+
+    <user-details-dialog
+        v-model="showDetailsDialog"
+        :user="userDetails"
+    ></user-details-dialog>
   </v-app>
 </template>
+
 <script>
-import userDetailsDialog from "@/views/dialogs/UserDetailsDialog.vue";
-import { mapState } from "vuex";
+import UserDetailsDialog from "@/views/dialogs/userDialog.vue"; // Adjust the path as needed
 
 export default {
   components: {
-    userDetailsDialog,
+    UserDetailsDialog,
   },
-  data: () => ({
-    showDetailsDialog: false,
-  }),
-  computed: {
-    ...mapState({
-      // authToken: state => state.authToken,
-    }),
-  },
-  mounted () {
-    localStorage.getItem("authToken");
-  },
-    methods: {
-      openDetailsDialog () {
-        this.showDetailsDialog = true;
-        console.log('DIALOG', this.showDetailsDialog);
+  data() {
+    return {
+      showDetailsDialog: false,
+      userDetails: {
+        name: "John Doe", // Example user details
+        email: "john@example.com",
       },
-    menuActionClick () {
-      const token = {
-        token: localStorage.getItem('token'),
-      };
-
-      this.$store.dispatch('logOutUser', token);
-      this.$router.push('/login');
-      localStorage.removeItem('token');
-      // if (action === 'profile') {
-      //   this.profileDialog = true;
-      //   this.consoleDialog = false;
-      // } else if (action === 'console') {
-      //   this.consoleDialog = true;
-      //   this.profileDialog = false;
-      // } else if (action === 'logout') {
-      //   this.$store.dispatch('authentication/doLogout', 'user');
-      // }
+    };
+  },
+  methods: {
+    openDetailsDialog() {
+      this.showDetailsDialog = true;
+    },
+    menuActionClick(action) {
+      if (action === "signOut") {
+        // Handle sign out action
+      }
+      // Handle other menu actions
     },
   },
-}
+};
 </script>
+
 <style scoped>
 .title {
   font-size: 18px;
