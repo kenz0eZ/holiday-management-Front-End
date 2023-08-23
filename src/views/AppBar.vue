@@ -58,7 +58,7 @@
 
     <user-details-dialog
         v-model="showDetailsDialog"
-        :user="userDetails"
+        :users="userDetails"
     ></user-details-dialog>
   </v-app>
 </template>
