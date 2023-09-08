@@ -1,22 +1,20 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main >
       <router-view />
       <AppBar v-if="shouldShowAppBar" />
-      <Dashboard v-if="shouldShowDashboard" />
+<!--      <Dashboard v-if="shouldShowDashboard" />-->
     </v-main>
   </v-app>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import Dashboard from "./views/dashboard.vue";
 import AppBar from "./views/AppBar.vue";
 
 export default {
   name: "App",
   components: {
-    Dashboard,
     AppBar,
   },
   computed: {

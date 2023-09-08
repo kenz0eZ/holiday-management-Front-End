@@ -31,7 +31,7 @@
                 </v-col>
                 <v-col cols="10">
                   Google Calendar
-                  <v-btn color="primary" @click="connectToGoogleCalendar" style="margin-left:150px;">Connect</v-btn>
+                  <v-btn color="primary"style="margin-left:150px;">Connect</v-btn>
                 </v-col>
               </v-row>
               <br />
@@ -42,7 +42,7 @@
                 </v-col>
                 <v-col cols="10">
                   Google Calendar
-                  <v-btn color="primary" @click="connectToOutlook" style="margin-left:150px;">Connect</v-btn>
+                  <v-btn color="primary" style="margin-left:150px;">Connect</v-btn>
                 </v-col>
               </v-row>
               <br /><br />
@@ -423,6 +423,7 @@ export default {
 .btn-animation:hover{
   transform:rotate(35deg);
   transition:0.5s;
+
 }
 
 </style>

@@ -1,13 +1,13 @@
 <template>
   <v-app>
     <v-app-bar app color="primary">
-      <v-app-bar-title class="title">Time Mozaic</v-app-bar-title>
+      <v-app-bar-title class="title" style="color:white;">Time Mozaic</v-app-bar-title>
       <v-spacer></v-spacer>
 
       <!-- Text Buttons -->
-      <v-btn text>My Calendar</v-btn>
-      <v-btn text>Users</v-btn>
-      <v-btn text>Settings</v-btn>
+      <v-btn text style="color:white" @click="navigateToCalendar">My Calendar</v-btn>
+      <v-btn text style="color:white">Users</v-btn>
+      <v-btn text style="color:white">Settings</v-btn>
 
       <!-- Icon Buttons -->
       <v-btn icon>
@@ -89,7 +89,12 @@ export default {
       }
       // Handle other menu actions
     },
+    navigateToCalendar() {
+      this.$router.push({ name: 'mycalendar' }); // Assuming you're using Vue Router
+      // If you're not using Vue Router, you can use other navigation methods.
+    },
   },
+
 };
 </script>
 

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Dashboard from "../views/dashboard.vue";
+import MyCalendar from "../views/mycalendar.vue";
 
 Vue.use(VueRouter)
 
@@ -11,10 +11,15 @@ const routes = [
         name: 'Home',
         component: Home
     },
+    // {
+    //     path: '/dashboard',
+    //     name: 'Dashboard',
+    //     component: Dashboard
+    // },
     {
-        path: '/dashboard',
-        name: 'Dashboard',
-        component: Dashboard
+        path: '/mycalendar',
+        name: 'mycalendar',
+        component: MyCalendar
     },
     {
         path: '/about',
