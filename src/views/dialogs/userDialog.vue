@@ -10,8 +10,6 @@
               <img
                   src="https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg"
                   style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
-                  @mouseover="scaleImage"
-                  @mouseout="resetImage"
               />            </v-avatar>
           </v-col>
           <v-col cols="4">

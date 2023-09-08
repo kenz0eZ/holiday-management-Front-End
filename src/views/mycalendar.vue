@@ -74,8 +74,8 @@
       </v-tooltip>
 
     </div>
-    <div style="width:200px; position:absolute;top:8.2rem;right:1.5rem;">
-      <v-card class="info-card">
+    <div style="width:200px; position:absolute;top:11.3rem;right:1.5rem;">
+      <v-card class="info-card" style="height:300px; padding:20px; position:absolute;right:1rem; min-width:350px;">
         <v-card-title class="card-title">Year end May 2024</v-card-title>
         <v-card-text>
           <div class="card-info">
@@ -98,13 +98,52 @@
         </v-card-text>
       </v-card>
       <!-- Show the card for Meeting Days if there are meeting reservations -->
-      <v-card v-if="hasReservations('meeting')" class="mt-10">
+      <v-card v-if="hasReservations('meeting')" class="mt-10" style="height:300px; padding:20px; position:absolute;right:1rem;top:17rem; min-width:350px;">
         <v-card-title class="card-title">Meeting Days</v-card-title>
-        <v-card-text class="d-flex align-center mt-10">
-          <v-icon color="red" style="margin-top:-10px;">mdi-account-group</v-icon>
-          <div class="info-item ml-2">Meeting<span class="info-value">{{ getReservedDays('meeting') }} days</span></div>
+        <v-divider></v-divider> <!-- Add a divider for separation -->
+        <v-card-text class="d-flex align-center mt-3">
+          <v-row align="center" style="width:400px;">
+            <v-col cols="2">
+              <v-icon color="red" style="font-size: 24px;">mdi-account-group</v-icon> <!-- Larger icon -->
+            </v-col>
+            <v-col cols="10">
+              <div class="info-item">
+                <span class="info-label">Type:</span>
+                <span class="info-value">Meeting</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Reserved Days:</span>
+                <span class="info-value">{{ getReservedDays('meeting') }} days</span>
+              </div>
+              <!-- Add more information as needed -->
+              <div class="info-item">
+                <span class="info-label">Last Reservation Date:</span>
+                <span class="info-value">{{ lastMeetingReservationDate }}</span>
+              </div>
+            </v-col>
+          </v-row>
         </v-card-text>
+        <v-divider></v-divider> <!-- Add another divider for separation -->
+        <v-card-actions>
+          <v-btn text color="red" @click="viewMeetingDetails">View Details</v-btn>
+        </v-card-actions>
       </v-card>
+      <v-dialog v-model="meetingDetailsDialog" max-width="500px">
+        <v-card>
+          <v-card-title class="headline">Meeting Days Details</v-card-title>
+          <v-card-text>
+            <!-- Display the details of meeting reservations here -->
+            <ul>
+              <li v-for="meetingDate in meetingReservationDates">
+                {{ meetingDate }}
+              </li>
+            </ul>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" @click="closeMeetingDetailsDialog">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
 
 
@@ -200,12 +239,16 @@
 </template>
 
 <script>
+import {formatDate} from "fullcalendar";
+
 export default {
   watch:{
     currentYear:'updateCalendar',
   },
   data() {
     return {
+      meetingDetailsDialog: false, // Flag to control the dialog visibility
+      meetingReservationDates: [], // Array to store meeting reservation dates
       holidayReservations: [], // Array to store holiday reservations
       meetingReservations: [], // Array to store meeting reservations
       currentYear: new Date().getFullYear(),
@@ -239,6 +282,25 @@ export default {
     };
   },
   computed: {
+    lastMeetingReservationDate() {
+      const meetingReservations = this.reservedDateRanges.filter(
+          (range) => range.eventType === 'meeting'
+      );
+
+      if (meetingReservations.length > 0) {
+        // Find the reservation with the latest end date
+        const lastReservation = meetingReservations.reduce((latest, reservation) => {
+          return new Date(reservation.endDate) > new Date(latest.endDate) ? reservation : latest;
+        });
+
+        // Format the date as needed (e.g., using a date formatting library)
+        return formatDate(lastReservation.endDate); // Replace formatDate with your formatting logic
+      }
+
+      return 'No meeting reservations'; // Message when there are no meeting reservations
+    },
+
+
     getReservedIcon() {
       return (eventType) => {
         return eventType === 'holiday' ? 'reserved-icon mdi-beach' : 'reserved-icon mdi-account-group';
@@ -255,6 +317,28 @@ export default {
     },
   },
   methods: {
+
+    viewMeetingDetails() {
+      // Populate the meetingReservationDates array with meeting reservation dates
+      this.meetingReservationDates = this.getMeetingReservationDates();
+
+      // Open the Meeting Days Details dialog
+      this.meetingDetailsDialog = true;
+    },
+
+    closeMeetingDetailsDialog() {
+      // Close the Meeting Days Details dialog
+      this.meetingDetailsDialog = false;
+    },
+
+    getMeetingReservationDates() {
+      // Implement logic to retrieve meeting reservation dates
+      // For example, you can filter the reservedDateRanges based on the event type
+      return this.reservedDateRanges
+          .filter((range) => range.eventType === 'meeting')
+          .map((range) => range.startDate);
+    },
+
     hasReservations(eventType) {
       if (eventType === 'holiday') {
         return this.holidayReservations.length > 0;
@@ -426,7 +510,7 @@ export default {
   flex-wrap: wrap;
   justify-content: space-between;
   max-width: 70%;
-  margin: auto;
+  margin: 50px;
 }
 
 .month-group {
@@ -443,6 +527,11 @@ export default {
   border-radius: 5px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
   height:370px;
+  @media (max-width: 768px) {
+    /* Adjust the layout for screens with a maximum width of 768px (or any other desired breakpoint) */
+    flex-basis: calc(50% - 20px); /* Two columns on smaller screens */
+    margin: 5px;
+  }
 }
 
 .month-title {
@@ -466,6 +555,13 @@ export default {
   background-color: #fff;
   transition: background-color 0.2s ease-in-out;
   cursor:pointer;
+
+  @media (max-width: 768px) {
+    /* Adjust the layout for screens with a maximum width of 768px (or any other desired breakpoint) */
+    width: calc(100% / 7); /* Back to one column on smaller screens */
+    font-size: 14px; /* Adjust the font size for days on smaller screens */
+  }
+
 }
 
 .day:hover {
