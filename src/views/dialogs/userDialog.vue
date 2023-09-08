@@ -5,12 +5,16 @@
       <v-card-text>
         <!-- Profile Photo and Name/Department -->
         <v-row align="center" justify="space-between">
-          <v-col cols="2">
-            <v-avatar size="50">
-              <img :src="user.profilePhotoUrl" alt="Profile Photo" />
-            </v-avatar>
+          <v-col cols="3">
+            <v-avatar size="100">
+              <img
+                  src="https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg"
+                  style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
+                  @mouseover="scaleImage"
+                  @mouseout="resetImage"
+              />            </v-avatar>
           </v-col>
-          <v-col cols="5">
+          <v-col cols="4">
             <div class="subtitle-1">{{ user.name }}</div>
             <div class="caption">{{ user.department }}</div>
           </v-col>
@@ -28,39 +32,107 @@
           <v-row>
             <!-- First Name -->
             <v-col cols="6">
-              <v-text-field label="First Name" v-model="user.firstName"></v-text-field>
+              <v-text-field
+                  label="First Name"
+                  v-model="user.firstName"
+                  outlined
+                  hide-details
+                  dense
+              ></v-text-field>
             </v-col>
             <!-- Last Name -->
             <v-col cols="6">
-              <v-text-field label="Last Name" v-model="user.lastName"></v-text-field>
+              <v-text-field
+                  label="Last Name"
+                  v-model="user.lastName"
+                  outlined
+                  hide-details
+                  dense
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <!-- Email Address -->
             <v-col cols="6">
-              <v-text-field label="Email Address" v-model="user.email"></v-text-field>
+              <v-text-field
+                  label="Email Address"
+                  v-model="user.email"
+                  outlined
+                  hide-details
+                  dense
+              ></v-text-field>
             </v-col>
             <!-- Employment Start Date -->
             <v-col cols="6">
-              <v-text-field label="Employment Start Date" v-model="user.employmentStartDate"></v-text-field>
+              <v-menu
+                  ref="menu"
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  :return-value.sync="date"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                      v-model="date"
+                      label="Picker in menu"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      outlined
+                      hide-details
+                      dense
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                    v-model="date"
+                    no-title
+                    scrollable
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      text
+                      color="primary"
+                      @click="menu = false"
+                  >
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                      text
+                      color="primary"
+                      @click="$refs.menu.save(date)"
+                  >
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-menu>
             </v-col>
           </v-row>
           <v-row>
             <!-- Date of Birth -->
             <v-col cols="6">
-              <v-text-field label="Date of Birth" v-model="user.dateOfBirth"></v-text-field>
+              <v-text-field
+                  label="Date of Birth"
+                  v-model="user.dateOfBirth"
+                  outlined
+                  hide-details
+                  dense
+              ></v-text-field>
             </v-col>
             <!-- Department -->
             <v-col cols="6">
-              <v-text-field label="Department" v-model="user.department"></v-text-field>
+              <v-text-field
+                  label="Department"
+                  v-model="user.department"
+                  outlined
+                  hide-details
+                  dense
+              ></v-text-field>
             </v-col>
           </v-row>
-          <v-row>
-            <!-- Approver -->
-            <v-col cols="6">
-              <v-text-field label="Approver" v-model="user.approver"></v-text-field>
-            </v-col>
-          </v-row>
+
 
         <!-- Other Tabs Content -->
         <!-- Add content for other tabs here -->
@@ -118,3 +190,11 @@ export default {
   },
 };
 </script>
+<style>
+.avatar-placeholder {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  border-radius: 50%; /* Makes it a circle */
+}
+</style>

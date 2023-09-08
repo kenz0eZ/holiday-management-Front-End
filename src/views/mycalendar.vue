@@ -31,7 +31,7 @@
                 </v-col>
                 <v-col cols="10">
                   Google Calendar
-                  <v-btn color="primary"style="margin-left:150px;">Connect</v-btn>
+                  <v-btn color="primary" style="margin-left:150px;">Connect</v-btn>
                 </v-col>
               </v-row>
               <br />
@@ -87,6 +87,22 @@
             </div>
             <div class="info-item">Days remaining <span class="info-value">16</span></div>
           </div>
+        </v-card-text>
+      </v-card>
+
+      <v-card v-if="hasReservations('holiday')" class="mt-10">
+        <v-card-title class="card-title">Holiday Days</v-card-title>
+        <v-card-text class="d-flex align-center mt-10">
+          <v-icon color="primary" style="margin-top:-10px;">mdi-beach</v-icon>
+          <div class="info-item ml-2">Holiday<span class="info-value">{{ getReservedDays('holiday') }} days</span></div>
+        </v-card-text>
+      </v-card>
+      <!-- Show the card for Meeting Days if there are meeting reservations -->
+      <v-card v-if="hasReservations('meeting')" class="mt-10">
+        <v-card-title class="card-title">Meeting Days</v-card-title>
+        <v-card-text class="d-flex align-center mt-10">
+          <v-icon color="red" style="margin-top:-10px;">mdi-account-group</v-icon>
+          <div class="info-item ml-2">Meeting<span class="info-value">{{ getReservedDays('meeting') }} days</span></div>
         </v-card-text>
       </v-card>
     </div>
@@ -190,6 +206,8 @@ export default {
   },
   data() {
     return {
+      holidayReservations: [], // Array to store holiday reservations
+      meetingReservations: [], // Array to store meeting reservations
       currentYear: new Date().getFullYear(),
       MIN_YEAR: 2000, // Change this to your desired minimum year
       eventTypes: [
@@ -237,6 +255,31 @@ export default {
     },
   },
   methods: {
+    hasReservations(eventType) {
+      if (eventType === 'holiday') {
+        return this.holidayReservations.length > 0;
+      } else if (eventType === 'meeting') {
+        return this.meetingReservations.length > 0;
+      }
+      return false;
+    },
+    getReservedDays(eventType) {
+      let reservationsArray;
+      if (eventType === 'holiday') {
+        reservationsArray = this.holidayReservations;
+      } else if (eventType === 'meeting') {
+        reservationsArray = this.meetingReservations;
+      }
+
+      return reservationsArray.reduce((totalDays, reservation) => {
+        const start = new Date(reservation.startDate);
+        const end = new Date(reservation.endDate);
+        const daysDiff = (end - start) / (1000 * 60 * 60 * 24) + 1;
+        return totalDays + daysDiff;
+      }, 0);
+    },
+
+
     openCalendarIntegrationDialog() {
       this.calendarIntegrationDialog = true;
     },
@@ -278,6 +321,19 @@ export default {
       });
       console.log('Selected Event Type:', this.selectedEventType);
       console.log('Event Type Icon Class:', this.eventTypeIcons[this.selectedEventType]);
+      if (this.selectedEventType === 'holiday') {
+        this.holidayReservations.push({
+          startDate: this.startDate,
+          endDate: this.endDate,
+        });
+      } else if (this.selectedEventType === 'meeting') {
+        this.meetingReservations.push({
+          startDate: this.startDate,
+          endDate: this.endDate,
+        });
+      }
+
+
       // Reset form and close the dialog
       this.startDate = null;
       this.endDate = null;
