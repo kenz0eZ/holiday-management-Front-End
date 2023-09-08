@@ -1,312 +1,428 @@
 <template>
   <div>
-      <table border="0" class="wallchart-container" style="opacity: 1;">
-        <thead>
-        <tr class="header pager-container">
-          <td class="person-cell dept-filter">
-            <div class="favourite-department hidden-xs" data-favourite="190956" style="display: none">
-            </div>
-            <div class="chosen-container chosen-container-single snazzy chosen-container-single-nosearch" title="" id="department_select_chosen" style="width: 190px; display: none;"><a class="chosen-single">
-              <span>Bridge</span>
-              <div><b></b></div>
-            </a>
-              <div class="chosen-drop">
-                <div class="chosen-search">
-                  <input class="chosen-search-input" type="text" autocomplete="off" readonly="">
-                </div>
-                <ul class="chosen-results"></ul>
-              </div></div>
+    <!-- Button to Open the Date Selection Dialog -->
+    <div style="display:flex; align-items:center; justify-content: space-around; width:90%;margin:auto; padding-top:20px;">
+      <img
+          src="https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg"
+          style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
+          @mouseover="scaleImage"
+          @mouseout="resetImage"
+      />
+      <div class="mr-auto ml-5">
+        <v-card-text style="font-size:17px; color:orangered;">Leo Pavlovski</v-card-text>
+        <v-icon @click="decrementYear" color="primary"  v-if="currentYear > MIN_YEAR">mdi-chevron-left</v-icon>
+        <!-- Display Current Year -->
+        <span class="current-year">September {{ currentYear }} to October {{currentYear +1  }}</span>
+        <!-- Right Arrow Button -->
+        <v-icon @click="incrementYear" color="primary" class="arrow-button">mdi-chevron-right</v-icon>
+      </div>
+      <div>
+        <a  style="margin-right:50px; text-decoration:none;" @click="openCalendarIntegrationDialog">Calendar integrations</a>
+        <v-dialog v-model="calendarIntegrationDialog" max-width="500px">
+          <v-card>
+            <v-card-title class="headline">Calendar connections</v-card-title>
+            <v-card-text>
+              Your own Timetastic bookings instantly in your favorite calendar app.
+              <br /><br />
+              <!-- Google Calendar -->
+              <v-row align="center" class="d-flex justify-space-between">
+                <v-col cols="2">
+                  <v-icon>mdi-google</v-icon>
+                </v-col>
+                <v-col cols="10">
+                  Google Calendar
+                  <v-btn color="primary" @click="connectToGoogleCalendar" style="margin-left:150px;">Connect</v-btn>
+                </v-col>
+              </v-row>
+              <br />
+              <!-- Outlook Connect -->
+              <v-row >
+                <v-col cols="2">
+                  <v-icon>mdi-facebook</v-icon>
+                </v-col>
+                <v-col cols="10">
+                  Google Calendar
+                  <v-btn color="primary" @click="connectToOutlook" style="margin-left:150px;">Connect</v-btn>
+                </v-col>
+              </v-row>
+              <br /><br />
+              <!-- Calendar Subscriptions -->
+              <strong>Calendar subscriptions</strong>
+              <p>iCal feeds work in most calendar apps. Bookings can take an hour to sync.</p>
+              <p>Your leave</p>
+              <a :href="webcalLink" target="_blank">{{ webcalLink }}</a>
+              <br /><br />
+              <p>Need help setting these up? There are detailed guides in the help center.</p>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn color="primary" @click="closeCalendarIntegrationDialog">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
 
-            <select id="department-select" aria-label="Select a department" class="snazzy" novalidate="novalidate" style="display: none;">
-              <option class="dept " alttext="All departments" value="0">All departments</option>
-              <option class="dept " alttext="Department managers" value="-1">Department mana..</option>
-              <option class="dept " alttext="Users I approve" value="-3">Users I approve</option>
-              <option class="dept  favourite-user" alttext="My favourites" value="-2">My favourites</option>
+      </div>
 
-              <option class="dept  mine" alttext="Bridge" value="190956" selected="">Bridge</option>
-            </select></td>
-          <td id="pager-container">
-            <div>
-              <div class="pager" style="">
-                <input id="start" type="hidden" value="2023-08-01">
-                <input id="end" type="hidden" value="2023-08-07">
-                <input id="pageLoadStart" type="hidden" value="2023-08-21">
-                <input id="pageLoadEnd" type="hidden" value="2023-09-21">
-                <input id="defaultDepartmentId" type="hidden" value="190956">
-                <input id="userDefaultDepartmentId" type="hidden" value="190956">
+      <v-tooltip bottom>
+        <template v-slot:activator="{on}">
+          <v-btn @click="openDateSelectionDialog" class="btn-animation" color="primary" style="width:30px; height:60px; font-size:40px; border-radius: 50%;" v-on="on">+</v-btn>
+        </template>
+        <div style="text-align:center;">
+          <v-icon style="color:orange; margin-right:5px;">mdi-calendar</v-icon>
+          <span style="margin-top:10px;">Add Date</span>
+        </div>
 
-                <div class="date-range">
-                  <a href="#" id="wallchart-prev" class="prev ripple noselect">
-                    <i class="material-icons">arrow_back</i>
-                  </a>
-                  <a href="#" id="wallchart-next" class="next ripple noselect">
-                    <i class="material-icons">arrow_forward</i>
-                  </a>
-                  <span id="date-range">01-Aug — 07-Aug</span>
-                </div>
-
-              </div>
-
-            </div>
-          </td>
-        </tr>
-        <tr class="header">
-          <td>
-            <div class="person_container hidden-xs"> </div>
-          </td>
-          <td>
-            <table class="wallchart-header">
-              <thead>
-              <tr id="daysofmonth-container">    <th class="initial day-header">
-                <span class="dayfilter"><i class="material-icons">expand_more</i> </span>
-                <span class="wkday ">T</span>
-              </th>
-                <th> </th>
-                <th class="initial daqqqqy-header">
-                  <span class="dayfilter"><i class="material-icons">expand_more</i> </span>
-                  <span class="wkday ">W</span>
-                </th>
-                <th> </th>
-                <th class="initial day-header">
-                  <span class="dayfilter"><i class="material-icons">expand_more</i> </span>
-                  <span class="wkday ">T</span>
-                </th>
-                <th> </th>
-                <th class="initial day-header">
-                  <span class="dayfilter"><i class="material-icons">expand_more</i> </span>
-                  <span class="wkday ">F</span>
-                </th>
-                <th> </th>
-                <th class="initial day-header">
-                  <span class="dayfilter"><i class="material-icons">expand_more</i> </span>
-                  <span class="wkday ">S</span>
-                </th>
-                <th> </th>
-                <th class="initial day-header">
-                  <span class="dayfilter"><i class="material-icons">expand_more</i> </span>
-                  <span class="wkday ">S</span>
-                </th>
-                <th> </th>
-                <th class="initial day-header">
-                  <span class="dayfilter"><i class="material-icons">expand_more</i> </span>
-                  <span class="wkday ">M</span>
-                </th>
-                <th> </th>
-              </tr>
-              </thead>
-            </table>
-          </td>
-        </tr>
-        </thead>
-        <tbody id="users-container"><tr data-username="Leo Pavlovski" data-department="190956" data-userid="973698" data-canmanage="true" data-isdeptmanager="true" data-canfavourite="" data-isfavourite="false" class="user-list" style=""><th class="person"><div><div class="person_container"><span class="favourite-user hidden-xs " data-toggle="tooltip" data-placement="right" title="Add to favourites" data-favourite="false"><i class="material-icons">star_border</i></span><span class="imgcircle mh3-ns">LP
-                        <span class="allowance-remaining" id="">
-                            16
-                        </span></span><div class="dept hidden-xs"><a href="/calendar/973698" class="person cal-link" data-year="2023">Leo Pavlovski</a><br><span class="description">
-                        Bridge
-                    </span></div><div class="mobile-person"><a href="/calendar/973698" class="person cal-link" data-year="2023"><div>Leo</div><div>Pavlovski</div></a></div></div></div></th><td class="days-container"><table><tbody><tr><td class="first day  " data-month="8" data-year="2023"><span>1</span></td><td class="second day  "></td><td class="first day  "><span>2</span></td><td class="second day  "></td><td class="first day  "><span>3</span></td><td class="second day  "></td><td class="first day  "><span>4</span></td><td class="second day  "></td><td class="first nwd  "><span>5</span></td><td class="second nwd  "></td><td class="first nwd  "><span>6</span></td><td class="second nwd  "></td><td class="first day  "><span>7</span></td><td class="second day  "></td></tr></tbody></table></td></tr><tr data-username="Nikola Jovanoski" data-department="190956" data-userid="973700" data-canmanage="true" data-isdeptmanager="false" data-canfavourite="" data-isfavourite="false" class="user-list" style=""><th class="person"><div><div class="person_container"><span class="favourite-user hidden-xs " data-toggle="tooltip" data-placement="right" title="Add to favourites" data-favourite="false"><i class="material-icons">star_border</i></span><span class="imgcircle mh3-ns">NJ
-                        <span class="allowance-remaining" id="">
-                            19
-                        </span></span><div class="dept hidden-xs"><a href="/calendar/973700" class="person cal-link" data-year="2023">Nikola Jovanoski</a><br><span class="description">
-                        Bridge
-                    </span></div><div class="mobile-person"><a href="/calendar/973700" class="person cal-link" data-year="2023"><div>Nikola</div><div>Jovanoski</div></a></div></div></div></th><td class="days-container"><table><tbody><tr><td class="first preStartDate" data-month="8" data-year="2023"><span>1</span></td><td class="second preStartDate"></td><td class="first preStartDate"><span>2</span></td><td class="second preStartDate"></td><td class="first preStartDate"><span>3</span></td><td class="second preStartDate"></td><td class="first preStartDate"><span>4</span></td><td class="second preStartDate"></td><td class="first preStartDate"><span>5</span></td><td class="second preStartDate"></td><td class="first preStartDate"><span>6</span></td><td class="second preStartDate"></td><td class="first preStartDate"><span>7</span></td><td class="second preStartDate"></td></tr></tbody></table></td></tr></tbody>
-        <tfoot class="visible-xs">
-        <tr>
-          <th class="person">
-            <div>
-              <span style="width: 35px; margin: 0 5px; display: inline-block"></span>
-              <div class="person_container mobile-person" style="width: 207px;"></div>
-            </div>
-          </th>
-        </tr>
-        </tfoot>
-        <tfoot>
-        <tr class="hidden-xs">
-          <th class="person">
-            <div class="person">
-              <a class="imgcircle new-user mh3" href="/users?adduser=true">
-                <i class="material-icons">add</i>
-              </a>
-              <div class="person_container">
-                <a href="/users?adduser=true" class="person" id="add-new-person">New user</a><br>
-                <span class="description">Add someone else</span>
-              </div>
-            </div>
-          </th>
-        </tr>
-        <tr class="header admin" id="blank-state" style="display: none;">
-          <td></td>
-          <td>
-            <div id="bs-dayfilter" style="display: none;">
-              <p class="header">
-                Nobody on leave
-              </p>
-              <p>Should be a productive day :)</p>
-              <p>
-                <a id="clear-dayfilter" class=""><i class="material-icons">clear</i> Clear filter</a>
-              </p>
-            </div>
-            <div id="bs-favourites" style="display: none;">
-              <i class="material-icons">star</i>
-              <p class="header">You have no favourites</p>
-              <p>Create a custom view of your favourite teammates <br>by selecting the star to the left of their name on the Wallchart.</p>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <th id="wallchart-footer" class="bigfoot"> </th>
-        </tr>
-        </tfoot>
-      </table>
-      <MonthCalendar></MonthCalendar>
+      </v-tooltip>
 
     </div>
+    <div style="width:200px; position:absolute;top:8.2rem;right:1.5rem;">
+      <v-card class="info-card">
+        <v-card-title class="card-title">Year end May 2024</v-card-title>
+        <v-card-text>
+          <div class="card-info">
+            <div class="info-item">Days</div>
+            <div class="info-item">Contractual allowance <span class="info-value">19</span></div>
+            <div class="info-item">Time in lieu <span class="info-value">-</span></div>
+            <div class="info-item">Total <span class="info-value">19</span></div>
+            <div class="info-item">Holiday <span class="info-value">10</span>
+            </div>
+            <div class="info-item">Days remaining <span class="info-value">16</span></div>
+          </div>
+        </v-card-text>
+      </v-card>
+    </div>
+
+
+    <!-- Date Selection Dialog -->
+    <v-dialog v-model="dialogVisible" max-width="800px">
+      <v-card class="elevation-12">
+        <v-card-title style="font-size:19px">Reserve a Date Range</v-card-title>
+        <v-card-text>
+          <v-form ref="dateRangeForm" v-model="valid">
+            <v-row>
+              <!-- Start Date Input -->
+              <v-col cols="6" sm="6">
+                <v-date-picker
+                    v-model="startDate"
+                    label="Start Date"
+                    required
+                    @input="validateDateRange"
+                    no-title
+                ></v-date-picker>
+              </v-col>
+
+              <!-- End Date Input -->
+              <v-col cols="12" sm="6">
+                <v-date-picker
+                    v-model="endDate"
+                    label="End Date"
+                    required
+                    @input="validateDateRange"
+                    no-title
+                ></v-date-picker>
+              </v-col>
+            </v-row>
+            <v-select v-model="selectedEventType" :items="eventTypes" label="Event Type" item-text="text" item-value="value">
+              <template v-slot:selection="{ item }">
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon :color="item.value === 'holiday' ? 'blue' : 'red'">{{ eventTypeIcons[item.value] }}</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ item.text }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-select>
+
+
+            <!-- Error Message -->
+            <v-alert v-if="!valid" type="error">Please select a valid date range.</v-alert>
+
+            <!-- Submit Button -->
+            <v-card-actions>
+              <v-btn @click="reserveDateRange" :disabled="!valid" color="primary">Reserve</v-btn>
+              <v-btn @click="closeDateSelectionDialog" color="error">Cancel</v-btn>
+            </v-card-actions>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <div class="month-container">
+      <div v-for="(monthGroup, groupIndex) in monthGroups" :key="groupIndex" class="month-group">
+        <div v-for="(month, index) in monthGroup" :key="index" class="month">
+          <h4 class="month-title">{{ getMonthName(month) }}</h4>
+          <div class="days">
+            <div v-for="day in getDaysInMonth(month)" :key="day" class="day">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <div v-if="isDayReserved(month, day)">
+                    <v-icon v-on="on" class="reserved-icon" :color="isDayReserved(month, day) === 'holiday' ? 'blue' : 'red'">
+                      {{ isDayReserved(month, day) === 'holiday' ? 'mdi-beach' : 'mdi-account-group' }}
+                    </v-icon>
+                  </div>
+                  <div v-else>
+                    <span v-if="isDayReserved(month, day)">
+                    {{ 'This day is reserved' }}
+                  </span>
+                    <p v-else>{{ day }}</p>
+                  </div>
+                </template>
+                <span>This day is reserved {{day}}</span>
+              </v-tooltip>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Table to display all reserved date ranges -->
+    <v-data-table :items="reservedDateRanges" :headers="tableHeaders" style="width: 500px;"></v-data-table>
+  </div>
 </template>
+
 <script>
-import MonthCalendar from "./MonthCalendar.vue";
-
-
-const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
 export default {
- components:{
-   MonthCalendar,
- },
-  mounted() {
-    // Get the date-range element and arrow links
-    const dateRangeElement = document.getElementById("date-range");
-    const prevArrow = document.getElementById("wallchart-prev");
-    const nextArrow = document.getElementById("wallchart-next");
+  watch:{
+    currentYear:'updateCalendar',
+  },
+  data() {
+    return {
+      currentYear: new Date().getFullYear(),
+      MIN_YEAR: 2000, // Change this to your desired minimum year
+      eventTypes: [
+        { text: 'Holiday', value: 'holiday' },
+        { text: 'Meeting', value: 'meeting' },
+        // Add more event types here
+      ],
+      eventType: null,
+      selectedEventType: 'meeting',
+      calendarIntegrationDialog: false,
+      webcalLink: 'webcal://app.timetastic.co.uk/Feeds/MyFavouritesCalendar/13fc2f75-aa2f-44b2-a9b7-294adc723ca2',
 
-    // Initialize the current month index
-    let currentMonthIndex = 7; // Assuming August (0-indexed)
+      startDate: null,
+      endDate: null,
+      valid: true,
+      reservedStartDate: null,
+      reservedEndDate: null,
+      eventTypeIcons: {
+        holiday: 'mdi-beach',
+        meeting: 'mdi-account-group',
+        // Add more event types and icons as needed
+      },
+      dialogVisible: false,
+      reservedDateRanges: [],
+      tableHeaders: [
+        { text: "Start Date", value: "startDate" },
+        { text: "End Date", value: "endDate" },
+      ],
+    };
+  },
+  computed: {
+    getReservedIcon() {
+      return (eventType) => {
+        return eventType === 'holiday' ? 'reserved-icon mdi-beach' : 'reserved-icon mdi-account-group';
+      };
+    },
 
-    // Update the displayed date range
-    function updateDateRange() {
-      const startDate = new Date(2023, currentMonthIndex, 1);
-      const endDate = new Date(2023, currentMonthIndex, new Date(2023, currentMonthIndex + 1, 0).getDate());
-      const dateRangeText = `${startDate.getDate()}-${monthNames[startDate.getMonth()]} — ${endDate.getDate()}-${monthNames[endDate.getMonth()]}`;
-      dateRangeElement.textContent = dateRangeText;
-    }
-
-    // Update the date range when the page loads
-    updateDateRange();
-
-    // Event listener for previous month arrow
-    prevArrow.addEventListener("click", () => {
-      currentMonthIndex -= 1;
-      if (currentMonthIndex < 0) {
-        currentMonthIndex = 11;
+    monthGroups() {
+      // Split the months into groups of 4
+      const groups = [];
+      for (let i = 0; i < 12; i += 4) {
+        groups.push([i + 1, i + 2, i + 3, i + 4]);
       }
-      updateDateRange();
-    });
+      return groups;
+    },
+  },
+  methods: {
+    openCalendarIntegrationDialog() {
+      this.calendarIntegrationDialog = true;
+    },
+    closeCalendarIntegrationDialog(){
+      this.calendarIntegrationDialog = false;
+    },
+    scaleImage(event) {
+      event.target.style.transform = 'translateY(10px)'; // Scale up the image on hover
+    },
+    resetImage(event) {
+      event.target.style.transform = 'scale(1)'; // Reset the image scale on hover out
+    },
 
-    // Event listener for next month arrow
-    nextArrow.addEventListener("click", () => {
-      currentMonthIndex += 1;
-      if (currentMonthIndex > 11) {
-        currentMonthIndex = 0;
+    incrementYear() {
+      this.currentYear++;
+    },
+    decrementYear() {
+      if (this.currentYear > this.MIN_YEAR) {
+        this.currentYear--;
       }
-      updateDateRange();
-    });
+    },
+    openDateSelectionDialog() {
+      this.dialogVisible = true;
+    },
+    closeDateSelectionDialog() {
+      this.dialogVisible = false;
+    },
+    validateDateRange() {
+      this.valid = this.startDate <= this.endDate;
+    },
+    reserveDateRange() {
+      this.reservedStartDate = this.startDate;
+      this.reservedEndDate = this.endDate;
+
+      this.reservedDateRanges.push({
+        startDate: this.startDate,
+        endDate: this.endDate,
+        eventType: this.selectedEventType, // Store the selected event type
+      });
+      console.log('Selected Event Type:', this.selectedEventType);
+      console.log('Event Type Icon Class:', this.eventTypeIcons[this.selectedEventType]);
+      // Reset form and close the dialog
+      this.startDate = null;
+      this.endDate = null;
+      this.selectedEventType = null; // Reset the event type
+      this.valid = true;
+      this.$refs.dateRangeForm.resetValidation();
+      this.dialogVisible = false;
+
+    },
+    getMonthName(month) {
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+      return monthNames[month - 1];
+    },
+    getDaysInMonth(month) {
+      const daysInMonth = new Date(new Date().getFullYear(), month, 0).getDate();
+      return Array.from({ length: daysInMonth }, (_, i) => i + 1);
+    },
+    isDayReserved(month, day) {
+      const reservedDay = this.reservedDateRanges.find((range) => {
+        const start = new Date(range.startDate);
+        const end = new Date(range.endDate);
+        const current = new Date(new Date().getFullYear(), month - 1, day);
+        return current >= start && current <= end;
+      });
+
+      return reservedDay !== undefined ? reservedDay.eventType : null;
+    },
   },
 };
 </script>
 
 <style>
-/* Apply styles to the whole table */
-table.wallchart-container {
-  border-collapse: collapse;
-  width: 100%;
-  border: 1px solid #ccc;
+
+.info-card {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 
-/* Apply styles to the table header */
-table.wallchart-container thead {
-  background-color: #f2f2f2;
-  font-weight: bold;
-}
-
-/* Apply styles to table cells in the header */
-table.wallchart-container th {
+.card-title {
+  background-color: #007bff;
+  color: #ffffff;
   padding: 10px;
-  text-align: center;
-}
-
-/* Apply styles to the table body */
-table.wallchart-container tbody {
-  background-color: #fff;
-}
-
-/* Apply styles to individual rows in the table body */
-table.wallchart-container tr.user-list {
-  border-bottom: 1px solid #ccc;
-}
-
-/* Apply styles to cells in the table body */
-table.wallchart-container td {
-  padding: 10px;
-  text-align: center;
-}
-
-/* Apply styles to the date range */
-#date-range {
-  font-weight: bold;
   font-size: 18px;
+  text-align: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
-/* Apply styles to person containers */
-.person_container {
+.card-info {
+  padding: 15px;
+}
+
+.info-item {
+  margin-bottom: 10px;
+  font-size: 16px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
-/* Apply styles to person avatars */
-.imgcircle {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  background-color: #ccc;
-  color: #fff;
-  text-align: center;
-  line-height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+.info-value {
+  font-weight: bold;
+  margin-left: 10px;
 }
 
-/* Apply styles to favorite icons */
-.favourite-user i {
-  color: gold;
+.icon {
+  font-size: 18px;
+  color: #007bff;
+  margin-right: 5px;
 }
 
-/* Apply styles to department descriptions */
-.description {
-  font-size: 12px;
-  color: #888;
+.arrow-button {
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
 }
 
-/* Apply styles to footer */
-tfoot {
-  background-color: #f2f2f2;
+.current-year {
+  font-size: 18px;
+  margin: 0 10px; /* Adjust spacing as needed */
 }
 
-/* Apply styles to footer links */
-tfoot a {
-  color: #333;
-  text-decoration: none;
+/* Custom CSS for styling */
+.month-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 70%;
+  margin: auto;
 }
 
-/* Apply styles to footer admin section */
-#blank-state {
-  background-color: #fff;
-  color: #888;
-  text-align: center;
+.month-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
-/* Apply styles to footer icons */
-#blank-state i {
-  font-size: 24px;
+.month {
+  flex: 1 0 calc(20.33% - 20px); /* Adjust the width as needed */
+  margin: 10px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  height:370px;
+}
+
+.month-title {
+  font-size: 1rem;
   margin-bottom: 10px;
-  color: #888;
+  margin-left:10px;
+}
+
+.days {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day {
+  width: calc(100% / 9); /* Display 7 days per row */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: background-color 0.2s ease-in-out;
+  cursor:pointer;
+}
+
+.day:hover {
+  background-color: #f0f0f0; /* Highlight on hover */
+}
+.reserved-icon {
+  font-size: 24px; /* Adjust the size as needed */
+  color: #ff5733; /* Adjust the color as needed */
+}
+
+.btn-animation:hover{
+  transform:rotate(35deg);
+  transition:0.5s;
 }
 
 </style>
