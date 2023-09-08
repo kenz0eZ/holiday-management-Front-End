@@ -90,8 +90,10 @@ export default {
       // Handle other menu actions
     },
     navigateToCalendar() {
-      this.$router.push({ name: 'mycalendar' }); // Assuming you're using Vue Router
-      // If you're not using Vue Router, you can use other navigation methods.
+      // Check if the current route name is not already 'mycalendar'
+      if (this.$route.name !== 'mycalendar') {
+        this.$router.push({ name: 'mycalendar' });
+      }
     },
   },
 
