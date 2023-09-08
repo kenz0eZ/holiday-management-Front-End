@@ -90,7 +90,7 @@
         </v-card-text>
       </v-card>
 
-      <v-card v-if="hasReservations('holiday')" class="mt-10">
+      <v-card v-if="hasReservations('holiday')" class="mt-10" style="height:300px; padding:20px; position:absolute;right:1rem;top:37rem; min-width:350px;">
         <v-card-title class="card-title">Holiday Days</v-card-title>
         <v-card-text class="d-flex align-center mt-10">
           <v-icon color="primary" style="margin-top:-10px;">mdi-beach</v-icon>
