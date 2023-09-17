@@ -3,7 +3,6 @@
     <v-main >
       <router-view />
       <AppBar v-if="shouldShowAppBar" />
-<!--      <Dashboard v-if="shouldShowDashboard" />-->
     </v-main>
   </v-app>
 </template>
@@ -19,11 +18,6 @@ export default {
   },
   computed: {
     ...mapGetters(["isAuthenticated"]),
-    shouldShowDashboard() {
-      const shouldShow = this.isAuthenticated && this.$route.name === "Dashboard";
-      console.log("shouldShowDashboard:", shouldShow);
-      return shouldShow;
-    },
     shouldShowAppBar() {
       // Hide AppBar on the '/login' route
       return this.$route.path !== '/login';

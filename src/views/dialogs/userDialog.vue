@@ -68,9 +68,7 @@
             <v-col cols="6">
               <v-menu
                   ref="menu"
-                  v-model="menu"
                   :close-on-content-click="false"
-                  :return-value.sync="date"
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
@@ -78,7 +76,6 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                      v-model="date"
                       label="Employment start date"
                       prepend-inner-icon="mdi-calendar"
                       readonly
@@ -91,7 +88,7 @@
                   ></v-text-field>
                 </template>
                 <v-date-picker
-                    v-model="date"
+
                     no-title
                     scrollable
                 >
@@ -99,14 +96,12 @@
                   <v-btn
                       text
                       color="primary"
-                      @click="menu = false"
                   >
                     Cancel
                   </v-btn>
                   <v-btn
                       text
                       color="primary"
-                      @click="$refs.menu.save(date)"
                   >
                     OK
                   </v-btn>
@@ -119,16 +114,16 @@
             <v-col cols="6">
               <v-menu
                   ref="menu"
-                  v-model="menu"
+
                   :close-on-content-click="false"
-                  :return-value.sync="date"
+
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                      v-model="date"
+
                       label="Date of Birth"
                       append-icon="mdi-calendar"
                       readonly
@@ -141,7 +136,7 @@
                   ></v-text-field>
                 </template>
                 <v-date-picker
-                    v-model="date"
+
                     no-title
                     scrollable
                 >
@@ -149,14 +144,12 @@
                   <v-btn
                       text
                       color="primary"
-                      @click="menu = false"
                   >
                     Cancel
                   </v-btn>
                   <v-btn
                       text
                       color="primary"
-                      @click="$refs.menu.save(date)"
                   >
                     OK
                   </v-btn>

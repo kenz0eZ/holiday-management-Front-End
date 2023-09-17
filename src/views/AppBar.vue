@@ -1,9 +1,8 @@
 <template>
   <v-app>
     <v-app-bar app color="primary">
-      <router-link :to="{ name: 'dashboard' }">
         <v-app-bar-title class="title" style="color: white;">Time Mozaic</v-app-bar-title>
-      </router-link>      <v-spacer></v-spacer>
+      <v-spacer></v-spacer>
 
       <!-- Text Buttons -->
       <v-btn text style="color:white" @click="navigateToCalendar">My Calendar</v-btn>
@@ -80,11 +79,6 @@ export default {
     };
   },
   methods: {
-    dashboard() {
-      if (this.$route.name !== 'dashboard') {
-        this.$router.push({ name: 'dashboard' });
-      }
-    },
     openDetailsDialog() {
       this.showDetailsDialog = true;
     },
