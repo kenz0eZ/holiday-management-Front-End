@@ -3,7 +3,7 @@
     <!-- Button to Open the Date Selection Dialog -->
     <div style="display:flex; align-items:center; justify-content: space-around; width:90%;margin:auto; padding-top:20px;">
       <img
-          src="https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg"
+          src="https://scontent.fskp4-2.fna.fbcdn.net/v/t39.30808-6/311995759_5155837401187500_2886514852781537434_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=JBf6OyEpBhwAX84QtCf&_nc_ht=scontent.fskp4-2.fna&oh=00_AfDfM5Wwu7hPcnYtG9DoATR2M1NN5kYR-uTozy4M5tuxrg&oe=650BE879"
           style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
           @mouseover="scaleImage"
           @mouseout="resetImage"
@@ -90,12 +90,35 @@
         </v-card-text>
       </v-card>
 
-      <v-card v-if="hasReservations('holiday')" class="mt-10" style="height:300px; padding:20px; position:absolute;right:1rem;top:37rem; min-width:350px;">
+      <v-card v-if="hasReservations('holiday')" class="mt-10 reservation-card" style="height:300px; padding:20px; position:absolute;right:1rem;top:38rem;min-width:350px;">
         <v-card-title class="card-title">Holiday Days</v-card-title>
-        <v-card-text class="d-flex align-center mt-10">
-          <v-icon color="primary" style="margin-top:-10px;">mdi-beach</v-icon>
-          <div class="info-item ml-2">Holiday<span class="info-value">{{ getReservedDays('holiday') }} days</span></div>
+        <v-divider></v-divider> <!-- Add a divider for separation -->
+        <v-card-text class="d-flex align-center mt-3">
+          <v-row align="center" style="width:400px;">
+            <v-col cols="2">
+              <v-icon color="primary" style="font-size: 24px;">mdi-beach</v-icon> <!-- Larger icon -->
+            </v-col>
+            <v-col cols="10">
+              <div class="info-item">
+                <span class="info-label">Type:</span>
+                <span class="info-value">Holiday</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Reserved Days:</span>
+                <span class="info-value">{{ getReservedDays('holiday') }} days</span>
+              </div>
+              <!-- Add more information as needed -->
+              <div class="info-item">
+                <span class="info-label">Last Reservation Date:</span>
+                <span class="info-value">{{ lastHolidayReservationDate }}</span>
+              </div>
+            </v-col>
+          </v-row>
         </v-card-text>
+        <v-divider></v-divider> <!-- Add another divider for separation -->
+        <v-card-actions>
+          <v-btn text color="primary" @click="viewHolidayDetails">View Details</v-btn> <!-- Button for viewing holiday details -->
+        </v-card-actions>
       </v-card>
       <!-- Show the card for Meeting Days if there are meeting reservations -->
       <v-card v-if="hasReservations('meeting')" class="mt-10" style="height:300px; padding:20px; position:absolute;right:1rem;top:17rem; min-width:350px;">
@@ -247,6 +270,7 @@ export default {
   },
   data() {
     return {
+      holidayDetailsDialog:false,
       meetingDetailsDialog: false, // Flag to control the dialog visibility
       meetingReservationDates: [], // Array to store meeting reservation dates
       holidayReservations: [], // Array to store holiday reservations
@@ -301,6 +325,24 @@ export default {
     },
 
 
+    lastHolidayReservationDate() {
+      const meetingReservations = this.reservedDateRanges.filter(
+          (range) => range.eventType === 'holiday'
+      );
+      if (meetingReservations.length > 0) {
+        // Find the reservation with the latest end date
+        const lastReservation = meetingReservations.reduce((latest, reservation) => {
+          return new Date(reservation.endDate) > new Date(latest.endDate) ? reservation : latest;
+        });
+
+        // Format the date as needed (e.g., using a date formatting library)
+        return formatDate(lastReservation.endDate); // Replace formatDate with your formatting logic
+      }
+
+      return 'No meeting reservations'; // Message when there are no meeting reservations
+    },
+
+
     getReservedIcon() {
       return (eventType) => {
         return eventType === 'holiday' ? 'reserved-icon mdi-beach' : 'reserved-icon mdi-account-group';
@@ -325,7 +367,15 @@ export default {
       // Open the Meeting Days Details dialog
       this.meetingDetailsDialog = true;
     },
+    viewHolidayDetails(){
+      this.meetingReservationDates = this.holidayReservations();
 
+      // Open the Meeting Days Details dialog
+      this.holidayDetailsDialog = true;
+    },
+    closeHolidayDetailsDialog(){
+      this.holidayDetailsDialog = false;
+    },
     closeMeetingDetailsDialog() {
       // Close the Meeting Days Details dialog
       this.meetingDetailsDialog = false;
@@ -336,6 +386,13 @@ export default {
       // For example, you can filter the reservedDateRanges based on the event type
       return this.reservedDateRanges
           .filter((range) => range.eventType === 'meeting')
+          .map((range) => range.startDate);
+    },
+    getHolidayReservationDates() {
+      // Implement logic to retrieve meeting reservation dates
+      // For example, you can filter the reservedDateRanges based on the event type
+      return this.reservedDateRanges
+          .filter((range) => range.eventType === 'holiday')
           .map((range) => range.startDate);
     },
 
