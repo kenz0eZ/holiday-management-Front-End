@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {patch, put} from "axios";
 
 const apiClient = axios.create({
     baseURL: "http://127.0.0.1:8000",
@@ -50,5 +50,20 @@ export default {
             console.error('Failed to Logout:', error);
             throw error;
         }
+    },
+    async updateUser(body) {
+        try {
+            const response = await axios.patch(`user/${body.id}`, body);
+            if (response.data.resFlag) {
+                const userJson = response.data;
+                return userJson;
+            } else {
+                throw new UsersError('Invalid id');
+            }
+        } catch (error) {
+            console.error('Failed to update user:', error);
+            throw error;
+        }
     }
+
 };

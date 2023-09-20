@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import authenticationRepo from '@/repository/authentication';
+import authentication from "@/repository/authentication";
 
 Vue.use(Vuex);
 
@@ -26,6 +27,11 @@ export default new Vuex.Store({
     logOutUser( { commit }, token) {
       console.log('MODULE', token);
       return authenticationRepo.logOutUser(token);
+    },
+    async updateUser ({ commit }, body) {
+      console.log('xD', body);
+      const res = await authentication.updateUser(body);
+      return res;
     },
 
   },

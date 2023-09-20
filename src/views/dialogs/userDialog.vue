@@ -10,7 +10,8 @@
               <img
                   src="https://scontent.fskp4-2.fna.fbcdn.net/v/t39.30808-6/311995759_5155837401187500_2886514852781537434_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=GCSLEBdC0b0AX-4F4IE&_nc_ht=scontent.fskp4-2.fna&oh=00_AfDMOp65f0YOx-J3I9Y0MhJ0mvLryIahma3sPWgfmxQO5g&oe=650BE879"
                   style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
-              />            </v-avatar>
+              />
+            </v-avatar>
           </v-col>
           <v-col cols="4">
             <div class="custom-text">{{ user.name }}</div>
@@ -58,6 +59,16 @@
               <v-text-field
                   label="Email Address"
                   v-model="user.email"
+                  outlined
+                  hide-details
+                  dense
+                  class="custom-text"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                  label="Phone"
+                  v-model="user.phone"
                   outlined
                   hide-details
                   dense
@@ -112,49 +123,15 @@
           <v-row>
             <!-- Date of Birth -->
             <v-col cols="6">
-              <v-menu
-                  ref="menu"
-
-                  :close-on-content-click="false"
-
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-
                       label="Date of Birth"
                       append-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
                       outlined
+                      v-model="user.dateOfBirth"
                       hide-details
                       dense
                       class="custom-text"
                   ></v-text-field>
-                </template>
-                <v-date-picker
-
-                    no-title
-                    scrollable
-                >
-                  <v-spacer></v-spacer>
-                  <v-btn
-                      text
-                      color="primary"
-                  >
-                    Cancel
-                  </v-btn>
-                  <v-btn
-                      text
-                      color="primary"
-                  >
-                    OK
-                  </v-btn>
-                </v-date-picker>
-              </v-menu>
               <v-row>
                 <v-col cols="12" class="d-flex align-center mt-8">
                   <v-checkbox
@@ -260,6 +237,8 @@
 </template>
 
 <script>
+import index from "vuex";
+
 export default {
   data() {
     return {
@@ -273,7 +252,8 @@ export default {
         email: '',
         employmentStartDate: '',
         dateOfBirth: '',
-        approver: ''
+        approver: '',
+        phone: '',
         // Add more user properties as needed
       }
     };
@@ -296,8 +276,18 @@ export default {
     closeDialog() {
       this.dialog = false;
     },
-    saveChanges() {
-      // Implement saving changes logic here
+    async saveChanges() {
+      const body = {
+        // id: this.userDetails.id,
+        name: this.user.firstName,
+        surname: this.user.lastName,
+        phone: this.user.phone,
+        email: this.user.email,
+        // address: this.user.address,
+        birthdate: this.user.dateOfBirth,
+      };
+      await this.$store.dispatch('updateUser', body);
+      console.log('xD', body);
     }
   },
 };
