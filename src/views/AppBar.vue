@@ -74,8 +74,10 @@ export default {
     return {
       showDetailsDialog: false,
       userDetails: {
-        name: "John Doe", // Example user details
-        email: "john@example.com",
+        // name: "John Doe", // Example user details
+        // email: "john@example.com",
+        // password:'1234',
+        token:null,
       },
     };
   },
@@ -83,11 +85,16 @@ export default {
     openDetailsDialog() {
       this.showDetailsDialog = true;
     },
-    menuActionClick(action) {
+    async menuActionClick(action) {
       if (action === "signOut") {
-        // Handle sign out action
+         var token = localStorage.getItem('token');
+        console.log(token);
+        const body = {
+          token:token
+        };
+        await this.$store.dispatch('logOutUser', body);
+       await this.$router.push('/login');
       }
-      // Handle other menu actions
     },
     navigateToCalendar() {
       if (this.$route.name !== 'mycalendar') {
