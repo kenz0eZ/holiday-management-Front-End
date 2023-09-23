@@ -25,7 +25,6 @@ export default new Vuex.Store({
     },
     // eslint-disable-next-line no-unused-vars
     logOutUser( { commit }, token) {
-      console.log('MODULE', token);
       return authenticationRepo.logOutUser(token);
     },
     async updateUser ({ commit }, body) {

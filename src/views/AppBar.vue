@@ -1,12 +1,13 @@
 <template>
   <v-app>
     <v-app-bar app color="primary">
-        <v-app-bar-title class="title" style="color: white;">Time Mozaic</v-app-bar-title>
+      <v-app-bar-title class="title" style="color: white;" @click="navigateToWallChart">Time Mozaic</v-app-bar-title>
       <v-spacer></v-spacer>
 
       <!-- Text Buttons -->
+      <v-btn text style="color:white" @click="navigateToWallChart">WallChart</v-btn>
       <v-btn text style="color:white" @click="navigateToCalendar">My Calendar</v-btn>
-      <v-btn text style="color:white">Settings</v-btn>
+      <v-btn text style="color:white" @click="navigateToUsers">Users</v-btn>
 
       <!-- Icon Buttons -->
       <v-btn icon>
@@ -89,9 +90,18 @@ export default {
       // Handle other menu actions
     },
     navigateToCalendar() {
-      // Check if the current route name is not already 'mycalendar'
       if (this.$route.name !== 'mycalendar') {
         this.$router.push({ name: 'mycalendar' });
+      }
+    },
+    navigateToUsers() {
+      if (this.$route.name !== 'users') {
+        this.$router.push({ name: 'users' });
+      }
+    },
+    navigateToWallChart() {
+      if (this.$route.name !== 'dashboard') {
+        this.$router.push({ name: 'dashboard' });
       }
     },
   },

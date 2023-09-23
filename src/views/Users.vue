@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>This is an DASHBOARD page</h1>
+    <h1>This is an USERS Page</h1>
   </div>
 </template>
 <script setup>

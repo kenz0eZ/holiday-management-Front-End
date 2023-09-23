@@ -44,7 +44,6 @@ export default {
     async logOutUser (token){
         try {
             const response = await apiClient.post("/logout", token)
-            console.log('LOGOGOGOUT', response);
             return response;
         } catch (error) {
             console.error('Failed to Logout:', error);
