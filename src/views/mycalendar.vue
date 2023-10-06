@@ -2,6 +2,7 @@
   <div>
     <!-- Button to Open the Date Selection Dialog -->
     <div style="display:flex; align-items:center; justify-content: space-around; width:90%;margin:auto; padding-top:20px;">
+<!--      Need to fix the image, take something different URL has expired when using a facebook img-->
       <img
           src="https://scontent.fskp4-2.fna.fbcdn.net/v/t39.30808-6/311995759_5155837401187500_2886514852781537434_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=JBf6OyEpBhwAX84QtCf&_nc_ht=scontent.fskp4-2.fna&oh=00_AfDfM5Wwu7hPcnYtG9DoATR2M1NN5kYR-uTozy4M5tuxrg&oe=650BE879"
           style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
@@ -9,15 +10,15 @@
           @mouseout="resetImage"
       />
       <div class="mr-auto ml-5">
-        <v-card-text style="font-size:17px; color:orangered;">Leo Pavlovski</v-card-text>
+        <v-card-text style="font-size:17px; color:orangered;" class="custom-text">Leo Pavlovski</v-card-text>
         <v-icon @click="decrementYear" color="primary"  v-if="currentYear > MIN_YEAR">mdi-chevron-left</v-icon>
         <!-- Display Current Year -->
-        <span class="current-year">September {{ currentYear }} to October {{currentYear +1  }}</span>
+        <span class="current-year custom-text">September {{ currentYear }} to October {{currentYear +1  }}</span>
         <!-- Right Arrow Button -->
         <v-icon @click="incrementYear" color="primary" class="arrow-button">mdi-chevron-right</v-icon>
       </div>
       <div>
-        <a  style="margin-right:50px; text-decoration:none;" @click="openCalendarIntegrationDialog">Calendar integrations</a>
+        <a style="margin-right:50px; text-decoration:none;" @click="openCalendarIntegrationDialog">Calendar integrations</a>
         <v-dialog v-model="calendarIntegrationDialog" max-width="500px">
           <v-card>
             <v-card-title class="headline">Calendar connections</v-card-title>
@@ -68,7 +69,7 @@
         </template>
         <div style="text-align:center;">
           <v-icon style="color:orange; margin-right:5px;">mdi-calendar</v-icon>
-          <span style="margin-top:10px;">Add Date</span>
+          <span style="margin-top:10px;"  class="custom-text">Add Date</span>
         </div>
 
       </v-tooltip>
@@ -76,7 +77,7 @@
     </div>
     <div style="width:200px; position:absolute;top:11.3rem;right:1.5rem;">
       <v-card class="info-card" style="height:300px; padding:20px; position:absolute;right:1rem; min-width:350px;">
-        <v-card-title class="card-title">Year end May 2024</v-card-title>
+        <v-card-title class="card-title" >Year end May 2024</v-card-title>
         <v-card-text>
           <div class="card-info">
             <div class="info-item">Days</div>
