@@ -13,6 +13,29 @@ export default {
             throw error;
         }
     },
+    async listUsers(body) {
+        try {
+            const response = await apiClient.get("api/user", {
+                headers: {
+                    Authorization: `Bearer ${body.token}` // Adding the bearer token to the headers
+                }
+            });
+            return response.data; // Return the response data
+        } catch (error) {
+            console.error('Failed to list users:', error);
+            throw error;
+        }
+    },
+    async logOutUser (token){
+        try {
+            const response = await apiClient.post("/logout", token)
+            return response;
+        } catch (error) {
+            console.error('Failed to Logout:', error);
+            throw error;
+        }
+    },
+
     async verificationLink(body) {
         try {
             const response = await apiClient.post(
@@ -38,15 +61,6 @@ export default {
             return response; // Return the full response object
         } catch (error) {
             console.error('Failed to Login:', error);
-            throw error;
-        }
-    },
-    async logOutUser (token){
-        try {
-            const response = await apiClient.post("/logout", token)
-            return response;
-        } catch (error) {
-            console.error('Failed to Logout:', error);
             throw error;
         }
     },

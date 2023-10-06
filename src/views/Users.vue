@@ -82,14 +82,16 @@ export default {
   },
   mounted() {
     // this.getUser();
+    this.listUsers();
   },
   methods: {
-    // getUser(){
-    //   this.$store.dispatch('listUser')
-    // },
-    addUser() {
-      // Handle the "Add Someone" button click event
-      // You can implement the logic to add a user here
+    async listUsers() {
+      var token = localStorage.getItem('token');
+      console.log(token);
+      const body = {
+        token: token
+      };
+      await this.$store.dispatch('listUsers', body);
     },
   },
 };

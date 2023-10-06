@@ -27,6 +27,9 @@ export default new Vuex.Store({
     logOutUser( { commit }, token) {
       return authenticationRepo.logOutUser(token);
     },
+    listUsers( { commit },token){
+      return authenticationRepo.listUsers(token);
+    },
     async updateUser ({ commit }, body) {
       console.log('xD', body);
       const res = await authentication.updateUser(body);
