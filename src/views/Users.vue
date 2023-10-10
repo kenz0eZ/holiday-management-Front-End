@@ -30,15 +30,12 @@
             </v-col>
             <!-- "Add Someone" button -->
             <v-col cols="4" class="text-right">
-              <v-btn color="primary" @click="addUser">Add Someone</v-btn>
+              <v-btn color="primary">Add Someone</v-btn>
             </v-col>
           </v-row>
 
           <!-- Display active user data using v-data-table -->
-          <v-data-table
-              :items="activeUsers"
-              :headers="activeUserHeaders"
-          ></v-data-table>
+          <v-data-table :items="users" :headers="headers"></v-data-table>
         </v-tab-item>
 
         <!-- Tab content for "Archived" -->
@@ -60,34 +57,33 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
-      searchQuery: '',
+      searchQuery: "",
       activeTab: 0, // Initially, "Active" tab is active (0-based index)
-      activeUsers: [
-        { Name: "John Doe", Department: "HR", StartDate: "2023-01-15", AllowanceThisYear: 5000, AllowanceNextYear: 5500, Options: "Edit, Delete" },
-        { Name: "Jane Smith", Department: "Finance", StartDate: "2022-08-10", AllowanceThisYear: 4500, AllowanceNextYear: 4800, Options: "Edit, Delete" },
-        { Name: "Mark Johnson", Department: "IT", StartDate: "2023-03-20", AllowanceThisYear: 5200, AllowanceNextYear: 5600, Options: "Edit, Delete" },
-        // Add more dummy active user data as needed
-      ],
-      activeUserHeaders: [
-        { text: "Name", value: "Name" },
-        { text: "Start Date", value: "StartDate" },
-        { text: "Allowance This Year", value: "AllowanceThisYear" },
-        { text: "Allowance Next Year", value: "AllowanceNextYear" },
-        { text: "Options", value: "Options" },
+      headers: [
+        // Define your table headers here
+        { text: "ID", value: "id" },
+        { text: "Name", value: "name" },
+        { text: "Surname", value: "surname" },
+        { text: "Email", value: "email" },
+        // Add more headers as needed
       ],
     };
   },
-  mounted() {
-    // this.getUser();
-    this.listUsers();
+  async mounted() {
+    await this.listUsers();
+    console.log('Users data : ', this.users);
+  },
+  computed: {
+    ...mapState(["users"]),
   },
   methods: {
     async listUsers() {
       var token = localStorage.getItem('token');
-      console.log(token);
       const body = {
         token: token
       };

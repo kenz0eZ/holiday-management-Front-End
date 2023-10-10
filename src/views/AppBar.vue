@@ -88,7 +88,7 @@ export default {
     async menuActionClick(action) {
       if (action === "signOut") {
          var token = localStorage.getItem('token');
-        console.log(token);
+        // console.log(token);
         const body = {
           token:token
         };

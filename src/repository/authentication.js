@@ -57,7 +57,6 @@ export default {
     async loginUser (body) {
         try {
             const response = await apiClient.post("/login", body);
-            console.log(response);
             return response; // Return the full response object
         } catch (error) {
             console.error('Failed to Login:', error);
