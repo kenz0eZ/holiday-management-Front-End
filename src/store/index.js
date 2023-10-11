@@ -32,6 +32,9 @@ export default new Vuex.Store({
     logOutUser({commit}, token) {
       return authenticationRepo.logOutUser(token);
     },
+    deleteUser({commit},id){
+      return authenticationRepo.deleteUser(id);
+    },
     async listUsers({commit}, token) {
       const response = await authenticationRepo.listUsers(token);
       commit('SET_USERS', response.data); // Commit the users to the state

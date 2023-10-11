@@ -3,6 +3,23 @@ import axios, {patch, put} from "axios";
 const apiClient = axios.create({
     baseURL: "http://127.0.0.1:8000",
 });
+
+apiClient.interceptors.request.use(
+    (config) => {
+        // Retrieve the token from local storage or wherever you store it
+        const token = localStorage.getItem('token'); // Replace with your token retrieval logic
+
+        // If a token is available, add it to the request headers
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 export default {
     async registerUser (body) {
         try {
@@ -13,12 +30,9 @@ export default {
             throw error;
         }
     },
-    async listUsers(body) {
+    async listUsers() {
         try {
             const response = await apiClient.get("api/user", {
-                headers: {
-                    Authorization: `Bearer ${body.token}` // Adding the bearer token to the headers
-                }
             });
             return response.data; // Return the response data
         } catch (error) {
@@ -57,6 +71,15 @@ export default {
     async loginUser (body) {
         try {
             const response = await apiClient.post("/login", body);
+            return response; // Return the full response object
+        } catch (error) {
+            console.error('Failed to Login:', error);
+            throw error;
+        }
+    },
+    async deleteUser (id) {
+        try {
+            const response = await apiClient.delete(`api/user/${id}`);
             return response; // Return the full response object
         } catch (error) {
             console.error('Failed to Login:', error);

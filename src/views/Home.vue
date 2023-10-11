@@ -154,6 +154,7 @@
                           />
                             <v-row>
                               <v-col cols="12" sm="7">
+                                <v-checkbox v-model="user.is_manager" label="Is Manager?"></v-checkbox>
                                 <v-checkbox
 
                         label="I Accept AAE"
@@ -204,6 +205,7 @@ export default {
       user: {
         name: '',
         surname: '',
+        is_manager:true,
         email: '',
         password: '',
         password_confirmation: '123456789',
@@ -248,6 +250,7 @@ export default {
         const body = {
           email: this.registrationResponse.data.user.email,
           token: this.registrationResponse.data.token,
+          is_manager:this.user.is_manager,
         };
         console.log('aeaeaaeae', body);
         this.verificationResponse = await this.$store.dispatch('verificationLink', body);
