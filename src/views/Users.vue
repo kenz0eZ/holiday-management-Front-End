@@ -52,8 +52,7 @@
                       <v-text-field label="state" v-model="user.state"></v-text-field>
                       <v-text-field label="street" v-model="user.street"></v-text-field>
                       <v-text-field label="zip" v-model="user.zip"></v-text-field>
-                      <v-text-field label="phone" v-model="user.phone"></v-text-field>
-                      <v-text-field label="address" v-model="user.address"></v-text-field>
+                      <v-text-field label="phone" v-model="user.phone.number"></v-text-field>
                       <v-text-field label="country" v-model="user.country"></v-text-field>
                       <v-text-field label="vacation days" v-model="user.vacation_days"></v-text-field>
 
@@ -78,7 +77,9 @@
           </v-row>
 
           <!-- Display active user data using v-data-table -->
-          <v-data-table :items="filteredUsers" :headers="headers">
+          <v-data-table
+              :items="filteredUsers"
+              :headers="headers">
             <template v-slot:item.delete="{ item }">
                 <v-icon @click="deleteUser(item.id)" style="color:red;">mdi-delete</v-icon>
             </template>
@@ -118,17 +119,9 @@ export default {
         city:null,
         zip:null,
         vacation_days:null,
-        phone:null,
-        // name:null,
-        // surname:null,
-        // email:null,
-        // date_of_birth:null,
-        // role:null,
-        // address:null,
-        // city:null,
-        // zip:null,
-        // state:null,
-        // phone:null,
+        phone:{
+          number: null,
+        }
       },
       vacation_days:null,
       editDialog: false,
@@ -224,7 +217,7 @@ export default {
     async listUsers() {
       await this.$store.dispatch('listUsers');
     },
-    async deleteUser(userId){
+    async deleteUser(userId) {
     const deletedUser = this.$store.dispatch('deleteUser',userId);
     await this.$store.dispatch('listUsers');
     console.log(deletedUser);
