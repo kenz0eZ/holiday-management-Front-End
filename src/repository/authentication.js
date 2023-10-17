@@ -77,6 +77,15 @@ export default {
             throw error;
         }
     },
+    async createUser (body) {
+        try {
+            const response = await apiClient.post("api/user", body);
+            return response; // Return the full response object
+        } catch (error) {
+            console.error('Failed to Login:', error);
+            throw error;
+        }
+    },
     async deleteUser (id) {
         try {
             const response = await apiClient.delete(`api/user/${id}`);
