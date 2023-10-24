@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <v-app-bar app color="primary">
       <v-app-bar-title class="title" style="color: white;" @click="navigateToWallChart">Time Mozaic</v-app-bar-title>
       <v-spacer></v-spacer>
@@ -60,7 +60,7 @@
         v-model="showDetailsDialog"
         :users="userDetails"
     ></user-details-dialog>
-  </v-app>
+  </div>
 </template>
 
 <script>

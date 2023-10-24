@@ -38,14 +38,13 @@ export default new Vuex.Store({
     createUser({commit},body){
       return authenticationRepo.createUser(body);
     },
+    editUser({commit},body){
+      return authenticationRepo.editUser(body);
+    },
     async listUsers({commit}, token) {
       const response = await authenticationRepo.listUsers(token);
       commit('SET_USERS', response.data); // Commit the users to the state
       return response;
     }
-  },
-  async updateUser({commit}, body) {
-    const res = await authentication.updateUser(body);
-    return res;
   },
 });

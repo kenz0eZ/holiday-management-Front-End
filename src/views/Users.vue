@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="about" style="overflow-y:hidden">
     <div style="margin-top: 50px; max-width: 80%; margin: 0 auto;">
       <v-tabs v-model="activeTab">
         <!-- Tab for "Active" -->
@@ -8,7 +8,7 @@
         </v-tab>
         <!-- Tab for "Archived" -->
         <v-tab>
-          Archived
+          Inactive
         </v-tab>
 
         <!-- Tab content for "Active" -->
@@ -77,30 +77,53 @@
           </v-row>
 
           <!-- Display active user data using v-data-table -->
-          <v-data-table
-              :items="filteredUsers"
-              :headers="headers">
+          <v-data-table :items="filteredUsers" :headers="headers">
             <template v-slot:item.delete="{ item }">
                 <v-icon @click="deleteUser(item.id)" style="color:red;">mdi-delete</v-icon>
             </template>
+<!--need to specify the edit like this . (interesting)-->
             <template v-slot:item.edit="{ item }">
-              <v-icon style="color:orange">mdi-pencil</v-icon>
+              <v-icon @click="dialogOpenEdit(item)" style="color:orange;">mdi mdi-pencil</v-icon>
             </template>
-          </v-data-table>
+<!--            Basica lly we are going to open a dialog when we want to edit the user with the name -->
+
+            </v-data-table>
+<!--          Outside of the v-data-tables are the dialogs.-->
+<!--          TODO connect to the PATCH api, and send the information that needs to be changed.-->
+          <v-dialog v-model="openEditDialog" max-width="500">
+          <v-card elevation="2" class="overflow-x-hidden">
+            <v-card-title>Edit User</v-card-title>
+            <v-card-text>Edit a particular user!</v-card-text>
+            <v-row style="padding:20px;">
+              <v-col cols="6">
+                <v-text-field label="change name" v-model="selectedUser.name"></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field label="change surname" v-model="selectedUser.surname"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row style="padding:20px;">
+              <v-text-field label="change email" v-model="selectedUser.email"></v-text-field>
+            </v-row>
+            <v-card-actions class="d-flex justify-end">
+              <v-btn @click="editUser" class="primary">Save</v-btn>
+              <v-btn @click="closeEditDialog">Cancel</v-btn>
+            </v-card-actions>
+          </v-card>
+          </v-dialog>
+
         </v-tab-item>
 
         <!-- Tab content for "Archived" -->
         <v-tab-item>
-          <div>
-            <h2>Archived Users</h2>
-            <ul>
-              <!-- Display dummy archived user data -->
-              <li>User 1 (Archived)</li>
-              <li>User 2 (Archived)</li>
-              <li>User 3 (Archived)</li>
-              <!-- Add more archived user data as needed -->
-            </ul>
-          </div>
+          <v-card elevation="5" style="padding:10px; margin-bottom:20px;">
+            <v-card-title>
+              Deleted users
+            </v-card-title>
+          </v-card>
+         <v-data-table :items="filteredUsers" :headers="headersInactive" hide-default-footer>
+
+         </v-data-table>
         </v-tab-item>
       </v-tabs>
     </div>
@@ -112,6 +135,13 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      openEditDialog:false,
+      selectedUser:{
+        name:'',
+        surname:'',
+        id:'',
+        email:'',
+      },
       roleOptions: ['Worker', 'Manager'], // Items for the dropdown
       user:{
         country:null,
@@ -135,6 +165,12 @@ export default {
         { text:'Role', value:'role'},
         { text: "Delete", value: "delete" },
         { text:'Edit', value:"edit"}
+      ],
+      headersInactive:[
+        { text: "Name", value: "name" },
+        { text: "Surname", value: "surname" },
+        { text: "Email", value: "email" },
+        { text:'Role', value:'role'},
       ],
     };
   },
@@ -162,7 +198,18 @@ export default {
     },
   },
   methods: {
-
+   dialogOpenEdit(user){
+     this.selectedUser = {
+       name:user.name,
+       surname:user.surname,
+       email:user.email,
+       id:user.id,
+     }
+     return this.openEditDialog=true;
+   },
+    closeEditDialog(){
+     return this.openEditDialog=false;
+    },
     // Creating the user.
    //  Not sure if the createUser is going to take this kind of data.
    async createUser(){
@@ -192,37 +239,29 @@ export default {
     closeDialog(){
       return this.userDialog=false;
     },
-    // editUser(){
-    //   return this.editDialog=true;
-    // },
-    closeEditDialog() {
-      this.editDialog = false;
-      this.editedUser = {
-        id: null,
-        name: "",
-        surname: "",
-        email: "",
-      };
-    },
-
-    async updateUser() {
-      try {
-        this.closeEditDialog();
-      } catch (error) {
-        console.error('Failed to update user:', error);
-        // Handle errors
-      }
-    },
-
     async listUsers() {
       await this.$store.dispatch('listUsers');
     },
+    // Delete the user.
     async deleteUser(userId) {
     const deletedUser = this.$store.dispatch('deleteUser',userId);
     await this.$store.dispatch('listUsers');
+
+    // TODO make sure that the same user ( cant delete it's self.)
     console.log(deletedUser);
     return deletedUser;
-    }
+    },
+    async editUser(){
+     await this.$store.dispatch('editUser',this.selectedUser);
+     this.closeEditDialog();
+     await this.$store.dispatch('listUsers');
+    },
   },
 };
 </script>
+<style>
+.v-application--wrap {
+  height: 10px;
+  max-width: 100vw;
+}
+</style>

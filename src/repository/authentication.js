@@ -49,7 +49,6 @@ export default {
             throw error;
         }
     },
-
     async verificationLink(body) {
         try {
             const response = await apiClient.post(
@@ -95,19 +94,19 @@ export default {
             throw error;
         }
     },
-    async updateUser(body) {
-        try {
-            const response = await axios.patch(`user/${body.id}`, body);
-            if (response.data.resFlag) {
-                const userJson = response.data;
-                return userJson;
-            } else {
-                throw new UsersError('Invalid id');
-            }
-        } catch (error) {
-            console.error('Failed to update user:', error);
-            throw error;
-        }
-    }
+    async editUser(user){
+      try{
+          const response = await apiClient.patch(`api/user/${user.id}`, {
+              name: user.name,
+              surname: user.surname,
+              email:user.email,
+          });
+          return response;
+      }
+      catch(error){
+          console.log(error);
+          throw error;
+      }
+    },
 
 };
