@@ -9,10 +9,14 @@ export default new Vuex.Store({
   state: {
     data: [],
     users: [],
+    deletedUsers:[],
   },
   mutations: {
     SET_USERS(state, users) {
       state.users = users;
+    },
+    SET_DELETED_USERS(state,deletedUsers){
+      state.deletedUsers = deletedUsers
     }
   },
   actions: {
@@ -45,6 +49,14 @@ export default new Vuex.Store({
       const response = await authenticationRepo.listUsers(token);
       commit('SET_USERS', response.data); // Commit the users to the state
       return response;
-    }
+    },
+    async listDeletedUsers({commit}) {
+      const response = await authenticationRepo.listDeletedUsers();
+      commit('SET_DELETED_USERS', response.data); // Commit the users to the state
+      return response;
+    },
+    restoreUser({commit},id){
+      return authenticationRepo.restoreUser(id);
+    },
   },
 });

@@ -13,25 +13,31 @@
 
         <!-- Tab content for "Active" -->
         <v-tab-item>
-          <v-row>
+            <v-card elevation="5" style="margin-bottom:20px; padding:10px;">
+              <v-row>
+                <v-col cols="6">
+                  <v-card-title>Active Users
+                    <v-icon color="blue" style="margin-left:10px;">mdi mdi-account-circle</v-icon>
+                  </v-card-title>
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field
+                      v-model="searchQuery"
+                      label="Search for an active user"
+                      outlined
+                      dense
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="2">
+                  <v-btn color="primary" @click="openDialog">Add Someone</v-btn>
+                </v-col>
+              </v-row>
+              <!-- Search input for an active user -->
+
+            </v-card>
             <!-- "Active/Archived" text -->
-            <v-col cols="4">
-              <v-card-text>Active</v-card-text>
-            </v-col>
-            <!-- Search input for an active user -->
-            <v-col cols="4">
-              <v-text-field
-                  v-model="searchQuery"
-                  label="Search for an active user"
-                  outlined
-                  clearable
-                  dense
-              ></v-text-field>
-            </v-col>
             <!-- "Add Someone" button -->
-            <v-col cols="4" class="text-right">
-              <v-btn color="primary" @click="openDialog">Add Someone</v-btn>
-            </v-col>
+
             <v-dialog max-width="500px" v-model="userDialog">
               <v-card>
                 <v-card-title>Add Credentials</v-card-title>
@@ -74,7 +80,7 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-          </v-row>
+
 
           <!-- Display active user data using v-data-table -->
           <v-data-table :items="filteredUsers" :headers="headers">
@@ -90,11 +96,11 @@
             </v-data-table>
 <!--          Outside of the v-data-tables are the dialogs.-->
 <!--          TODO connect to the PATCH api, and send the information that needs to be changed.-->
-          <v-dialog v-model="openEditDialog" max-width="500">
-          <v-card elevation="2" class="overflow-x-hidden">
+          <v-dialog v-model="openEditDialog" max-width="500" persistent>
+          <v-card elevation="5" class="overflow-x-hidden">
             <v-card-title>Edit User</v-card-title>
             <v-card-text>Edit a particular user!</v-card-text>
-            <v-row style="padding:20px;">
+            <v-row style="padding-left:50px; padding-right:50px">
               <v-col cols="6">
                 <v-text-field label="change name" v-model="selectedUser.name"></v-text-field>
               </v-col>
@@ -102,7 +108,7 @@
                 <v-text-field label="change surname" v-model="selectedUser.surname"></v-text-field>
               </v-col>
             </v-row>
-            <v-row style="padding:20px;">
+            <v-row style="padding-left:50px; padding-right:50px;">
               <v-text-field label="change email" v-model="selectedUser.email"></v-text-field>
             </v-row>
             <v-card-actions class="d-flex justify-end">
@@ -116,13 +122,30 @@
 
         <!-- Tab content for "Archived" -->
         <v-tab-item>
-          <v-card elevation="5" style="padding:10px; margin-bottom:20px;">
-            <v-card-title>
-              Deleted users
-            </v-card-title>
-          </v-card>
-         <v-data-table :items="filteredUsers" :headers="headersInactive" hide-default-footer>
+          <v-card elevation="5" style="padding:10px;">
+            <v-row>
+              <v-col cols="8">
+                <v-card-title>
+                  Deleted users
+                  <v-icon color="red" style="margin-left:10px;">mdi mdi-account-minus</v-icon>
+                </v-card-title>
+              </v-col>
 
+                <v-col cols="4">
+                  <v-text-field
+                      prepend-inner-icon="mdi mdi-search-web"
+                      v-model="searchInactive"
+                      label="Search for an inactive user"
+                      outlined
+                      dense
+                  ></v-text-field>
+                </v-col>
+            </v-row>
+          </v-card>
+         <v-data-table :items="filterInactiveUsers" :headers="headersInactive">
+           <template v-slot:item.active="{ item }">
+            <v-checkbox @click="restoreUser(item)" v-model="item.makeActive"></v-checkbox>
+           </template>
          </v-data-table>
         </v-tab-item>
       </v-tabs>
@@ -135,7 +158,9 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      makeActive:false,
       openEditDialog:false,
+      searchInactive:'',
       selectedUser:{
         name:'',
         surname:'',
@@ -159,6 +184,7 @@ export default {
       userDialog:false,
       activeTab: 0,
       headers: [
+        { text: "id", value: "id" },
         { text: "Name", value: "name" },
         { text: "Surname", value: "surname" },
         { text: "Email", value: "email" },
@@ -171,20 +197,32 @@ export default {
         { text: "Surname", value: "surname" },
         { text: "Email", value: "email" },
         { text:'Role', value:'role'},
+        { text:'Active', value:'active'}
       ],
     };
   },
   async mounted() {
     await this.listUsers();
+    await this.listDeletedUsers();
+    console.log('Deleted users : ', this.deletedUsers);
     console.log('Users data : ', this.users);
   },
   computed: {
-    ...mapState(["users"]),
+    ...mapState(["users","deletedUsers"]),
     filteredUsers(){
       return this.users.filter(user =>{
          return   user.name.toLowerCase().includes(this.searchQuery.toLowerCase())||
             user.surname.toLowerCase().includes(this.searchQuery.toLowerCase())||
             user.role.toLowerCase().includes(this.searchQuery.toLowerCase())
+      })
+    },
+
+    filterInactiveUsers(){
+      return this.deletedUsers.filter(user =>{
+        return   user.name.toLowerCase().includes(this.searchInactive.toLowerCase())||
+            user.surname.toLowerCase().includes(this.searchInactive.toLowerCase())||
+            user.role.toLowerCase().includes(this.searchInactive.toLowerCase()) ||
+            user.email.toLowerCase().includes(this.searchInactive.toLowerCase())
       })
     }
   },
@@ -194,6 +232,14 @@ export default {
         user.name.toLowerCase().includes(searchQuery.toLowerCase())||
         user.surname.toLowerCase().includes(searchQuery.toLowerCase())
         user.role.toLowerCase().includes(searchQuery.toLowerCase())
+      })
+    },
+    handler2(searchQuery){
+      return this.deletedUsers.filter(user=>{
+        user.name.toLowerCase().includes(searchQuery.toLowerCase())||
+        user.surname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())
       })
     },
   },
@@ -231,6 +277,8 @@ export default {
       };
       console.log('this is my body', body)
      await this.$store.dispatch("createUser",body);
+     this.closeDialog();
+     await this.listUsers();
     },
 
     openDialog(){
@@ -242,10 +290,14 @@ export default {
     async listUsers() {
       await this.$store.dispatch('listUsers');
     },
+    async listDeletedUsers(){
+     await this.$store.dispatch('listDeletedUsers');
+    },
     // Delete the user.
     async deleteUser(userId) {
     const deletedUser = this.$store.dispatch('deleteUser',userId);
     await this.$store.dispatch('listUsers');
+    await this.$store.dispatch('listDeletedUsers');
 
     // TODO make sure that the same user ( cant delete it's self.)
     console.log(deletedUser);
@@ -256,6 +308,11 @@ export default {
      this.closeEditDialog();
      await this.$store.dispatch('listUsers');
     },
+    async restoreUser(userId){
+     await this.$store.dispatch('restoreUser',userId);
+     await this.listDeletedUsers();
+     await this.listUsers();
+   }
   },
 };
 </script>

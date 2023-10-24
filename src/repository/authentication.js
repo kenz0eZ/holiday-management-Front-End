@@ -19,7 +19,6 @@ apiClient.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-
 export default {
     async registerUser (body) {
         try {
@@ -33,6 +32,16 @@ export default {
     async listUsers() {
         try {
             const response = await apiClient.get("api/user", {
+            });
+            return response.data; // Return the response data
+        } catch (error) {
+            console.error('Failed to list users:', error);
+            throw error;
+        }
+    },
+    async listDeletedUsers() {
+        try {
+            const response = await apiClient.get("api/archivedUsers", {
             });
             return response.data; // Return the response data
         } catch (error) {
@@ -107,6 +116,17 @@ export default {
           console.log(error);
           throw error;
       }
+    },
+
+    async restoreUser(user){
+        try{
+            const response = await apiClient.patch(`api/restoreUser/${user.id}`);
+            return response;
+        }
+        catch(error){
+            console.log(error);
+            throw error;
+        }
     },
 
 };
