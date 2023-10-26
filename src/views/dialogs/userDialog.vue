@@ -8,8 +8,8 @@
           <v-col cols="3">
             <v-avatar size="100">
               <img
-                  src="https://scontent.fskp4-2.fna.fbcdn.net/v/t39.30808-6/311995759_5155837401187500_2886514852781537434_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=GCSLEBdC0b0AX-4F4IE&_nc_ht=scontent.fskp4-2.fna&oh=00_AfDMOp65f0YOx-J3I9Y0MhJ0mvLryIahma3sPWgfmxQO5g&oe=650BE879"
-                  style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
+                  src="https://w7.pngwing.com/pngs/81/570/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo.png"
+                  style="width: 150px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
               />
             </v-avatar>
           </v-col>

@@ -4,7 +4,7 @@
     <div style="display:flex; align-items:center; justify-content: space-around; width:90%;margin:auto; padding-top:20px;">
 <!--      Need to fix the image, take something different URL has expired when using a facebook img-->
       <img
-          src="https://scontent.fskp4-2.fna.fbcdn.net/v/t39.30808-6/311995759_5155837401187500_2886514852781537434_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=JBf6OyEpBhwAX84QtCf&_nc_ht=scontent.fskp4-2.fna&oh=00_AfDfM5Wwu7hPcnYtG9DoATR2M1NN5kYR-uTozy4M5tuxrg&oe=650BE879"
+          src="https://w7.pngwing.com/pngs/81/570/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo.png"
           style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
           @mouseover="scaleImage"
           @mouseout="resetImage"
