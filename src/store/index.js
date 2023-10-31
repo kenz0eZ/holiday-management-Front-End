@@ -39,6 +39,9 @@ export default new Vuex.Store({
     deleteUser({commit},id){
       return authenticationRepo.deleteUser(id);
     },
+    makeReservation({commit},body){
+      return authenticationRepo.makeReservation(body);
+    },
     createUser({commit},body){
       return authenticationRepo.createUser(body);
     },

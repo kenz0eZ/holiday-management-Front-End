@@ -117,6 +117,11 @@ export default {
           throw error;
       }
     },
+    async makeReservation(body){
+      const response = await apiClient.post('api/inquire',body)
+      console.log(response);
+        return response;
+    },
 
     async restoreUser(user){
         try{

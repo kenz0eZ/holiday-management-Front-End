@@ -30,9 +30,65 @@
     <v-row class="calendar-row" style="padding: 10px; max-width: 1200px; margin: 0 auto;">
       <div class="calendar-container">
         <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-          <div v-for="(day, index) in calendarDays" :key="index" class="day-cell">
+          <v-btn v-for="(day, index) in calendarDays" :key="index" class="day-cell" @click="openDialog">
             {{ day }}
-          </div>
+          </v-btn>
+          <v-dialog v-model="openDaysDialog" max-width="1000" persistent>
+          <v-card >
+            <v-card-title>Calendar Form</v-card-title>
+            <v-form ref="dateRangeForm" v-model="valid">
+              <v-row>
+                <!-- Start Date Input -->
+                <v-col cols="6" sm="6">
+                  <v-date-picker
+                      v-model="startDate"
+                      label="Start Date"
+                      required
+                      @input="validateDateRange"
+                      no-title
+                  ></v-date-picker>
+                </v-col>
+
+                <!-- End Date Input -->
+                <v-col cols="12" sm="6">
+                  <v-date-picker
+                      v-model="endDate"
+                      label="End Date"
+                      required
+                      @input="validateDateRange"
+                      no-title
+                  ></v-date-picker>
+                </v-col>
+              </v-row>
+              <v-select v-model="selectedEventType" :items="eventTypes" label="Event Type" item-text="text" item-value="value">
+                <template v-slot:selection="{ item }">
+                  <v-list-item>
+                    <v-list-item-icon>
+                      <v-icon :color="item.value === 'holiday' ? 'blue' : 'red'">{{ eventTypeIcons[item.value] }}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>{{ item.text }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </v-select>
+
+
+              <!-- Error Message -->
+              <v-alert v-if="!valid" type="error">Please select a valid date range.</v-alert>
+
+              <!-- Submit Button -->
+              <v-card-actions>
+                <v-btn @click="makeReservation" :disabled="!valid" color="primary">Reserve</v-btn>
+                <v-btn @click="closeDateSelectionDialog" color="error">Cancel</v-btn>
+              </v-card-actions>
+            </v-form>
+
+            <v-card-actions class="d-flex float-end" style="position:absolute; bottom:0; right:0;">
+              <v-btn color="red" style="color:white;" @click="closeDialog">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+          </v-dialog>
         </div>
       </div>
     </v-row>
@@ -42,10 +98,45 @@
 </template>
 <script>
 import {mapState} from "vuex";
+import {formatDate} from "fullcalendar";
 
 export default {
   data(){
     return {
+      holidayDetailsDialog:false,
+      meetingDetailsDialog: false, // Flag to control the dialog visibility
+      meetingReservationDates: [], // Array to store meeting reservation dates
+      holidayReservations: [], // Array to store holiday reservations
+      meetingReservations: [], // Array to store meeting reservations
+      type:1,
+      currentYear: new Date().getFullYear(),
+      MIN_YEAR: 2000, // Change this to your desired minimum year
+      eventTypes: [
+        { text: 'Holiday', value: 'holiday' },
+        { text: 'Meeting', value: 'meeting' },
+        // Add more event types here
+      ],
+      eventType: null,
+      selectedEventType: 'meeting',
+      calendarIntegrationDialog: false,
+      webcalLink: 'webcal://app.timetastic.co.uk/Feeds/MyFavouritesCalendar/13fc2f75-aa2f-44b2-a9b7-294adc723ca2',
+      reservedStartDate: null,
+      reservedEndDate: null,
+      eventTypeIcons: {
+        holiday: 'mdi-beach',
+        meeting: 'mdi-account-group',
+        // Add more event types and icons as needed
+      },
+      dialogVisible: false,
+      reservedDateRanges: [],
+      tableHeaders: [
+        { text: "Start Date", value: "startDate" },
+        { text: "End Date", value: "endDate" },
+      ],
+      valid: true,
+      startDate:null,
+      endDate:null,
+      openDaysDialog:false,
       days:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
       month: 10, // Example: 10 represents November
       year: 2023, // Example: 2023
@@ -56,6 +147,59 @@ export default {
     }
   },
   computed:{
+
+    lastMeetingReservationDate() {
+      const meetingReservations = this.reservedDateRanges.filter(
+          (range) => range.eventType === 'meeting'
+      );
+
+      if (meetingReservations.length > 0) {
+        // Find the reservation with the latest end date
+        const lastReservation = meetingReservations.reduce((latest, reservation) => {
+          return new Date(reservation.endDate) > new Date(latest.endDate) ? reservation : latest;
+        });
+
+        // Format the date as needed (e.g., using a date formatting library)
+        return formatDate(lastReservation.endDate); // Replace formatDate with your formatting logic
+      }
+
+      return 'No meeting reservations'; // Message when there are no meeting reservations
+    },
+
+
+    lastHolidayReservationDate() {
+      const meetingReservations = this.reservedDateRanges.filter(
+          (range) => range.eventType === 'holiday'
+      );
+      if (meetingReservations.length > 0) {
+        // Find the reservation with the latest end date
+        const lastReservation = meetingReservations.reduce((latest, reservation) => {
+          return new Date(reservation.endDate) > new Date(latest.endDate) ? reservation : latest;
+        });
+
+        // Format the date as needed (e.g., using a date formatting library)
+        return formatDate(lastReservation.endDate); // Replace formatDate with your formatting logic
+      }
+
+      return 'No meeting reservations'; // Message when there are no meeting reservations
+    },
+
+
+    getReservedIcon() {
+      return (eventType) => {
+        return eventType === 'holiday' ? 'reserved-icon mdi-beach' : 'reserved-icon mdi-account-group';
+      };
+    },
+
+    monthGroups() {
+      // Split the months into groups of 4
+      const groups = [];
+      for (let i = 0; i < 12; i += 4) {
+        groups.push([i + 1, i + 2, i + 3, i + 4]);
+      }
+      return groups;
+    },
+
   // Initialize the Active Users here. Only the active ones.
     ...mapState(["users"]),
     calendarDays() {
@@ -78,10 +222,67 @@ export default {
     },
   },
   methods:{
+    makeReservation(){
+      const body = {
+        start:this.startDate,
+        end:this.endDate,
+        type:this.type
+      }
+      this.$store.dispatch('makeReservation',body);
+    },
+    closeDateSelectionDialog() {
+      this.dialogVisible = false;
+    },
+    reserveDateRange() {
+      this.reservedStartDate = this.startDate;
+      this.reservedEndDate = this.endDate;
+
+      this.reservedDateRanges.push({
+        startDate: this.startDate,
+        endDate: this.endDate,
+        eventType: this.selectedEventType, // Store the selected event type
+      });
+      console.log('Selected Event Type:', this.selectedEventType);
+      console.log('Event Type Icon Class:', this.eventTypeIcons[this.selectedEventType]);
+
+      if (this.selectedEventType === 'holiday') {
+        this.holidayReservations.push({
+          startDate: this.startDate,
+          endDate: this.endDate,
+        });
+      } else if (this.selectedEventType === 'meeting') {
+        this.meetingReservations.push({
+          startDate: this.startDate,
+          endDate: this.endDate,
+        });
+      }
+      // Getting the date here.
+      console.log(this.startDate);
+      console.log(this.endDate);
+
+      // Reset form and close the dialog
+      this.startDate = null;
+      this.endDate = null;
+      this.selectedEventType = null; // Reset the event type
+      this.valid = true;
+      this.$refs.dateRangeForm.resetValidation();
+      this.dialogVisible = false;
+
+    },
+    validateDateRange() {
+      this.valid = this.startDate <= this.endDate;
+    },
     async listUsers() {
       await this.$store.dispatch('listUsers');
     },
+    openDialog() {
+    this.openDaysDialog = true;
+    },
+    closeDialog() {
+      this.openDaysDialog = false;
+    }
   },
+
   async mounted() {
     await this.listUsers();
     console.log('Users data : ', this.users);
