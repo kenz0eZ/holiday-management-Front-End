@@ -1,329 +1,160 @@
 <template>
-  <div class="about">
-<!--    TODO make the v-select where i will have all of the users. (active)-->
-<!--    Now when i selected the nikola user for example. I need to display only that user.-->
-    <v-row style="margin-left:20px;">
-      <v-col cols="2">
-        <v-select v-model="selectedUser" :items="users" item-text="name" label="Select a user"></v-select>
-      </v-col>
+  <v-app class="overflow-y-hidden">
+    <div style="overflow-y:hidden">
+      <v-container>
+        <div class="ma=2" style="display:flex;align-items:flex-start;justify-content: center;">
+          <div style="margin-right:10px;">
+            <v-btn @click="prevMonth" rounded color="blue" style="color:white; font-size:10px;">Previous Month</v-btn>
+          </div>
+          <div>
+            <v-btn @click="nextMonth" rounded color="blue" style="color:white; font-size:10px;">Next Month</v-btn>
+          </div>
+          <v-col>
 
-    </v-row>
-      <v-row>
-<!--        <v-col>-->
-<!--          <v-card width="300" style="margin-left:10px;" class="pa-2">-->
-<!--            <v-card-title>Users</v-card-title>-->
-<!--              <div v-for="user in users" :key="user.id" style="display:flex; margin:10px 0px;">-->
-<!--                <v-avatar size="50" color="red">-->
-<!--                  <div style="display:flex; align-items:center; justify-content: center; text-align:center; margin-top:15px; color:white; font-size:20px;">-->
-<!--                    <p>{{ user.name.charAt(0).toUpperCase() }}</p>-->
-<!--                    <p style="margin-left:1px">{{ user.surname.charAt(0).toUpperCase() }}</p>-->
-<!--                  </div>-->
-<!--                </v-avatar>-->
-<!--                <div style="display:flex; align-items:center; justify-content: center; font-size:13px;">-->
-<!--                  <p style="margin-left:10px;">{{user.name}}</p>-->
-<!--                  <p style="margin-left:10px;">{{user.surname}}</p>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--          </v-card>-->
-<!--        </v-col>-->
-      </v-row>
-    <v-row class="calendar-row" style="padding: 10px; max-width: 1200px; margin: 0 auto;">
-      <div class="calendar-container">
-        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-          <v-btn v-for="(day, index) in calendarDays" :key="index" class="day-cell" @click="openDialog">
-            {{ day }}
-          </v-btn>
-          <v-dialog v-model="openDaysDialog" max-width="1000" persistent>
-          <v-card >
-            <v-card-title>Calendar Form</v-card-title>
-            <v-form ref="dateRangeForm" v-model="valid">
-              <v-row>
-                <!-- Start Date Input -->
-                <v-col cols="6" sm="6">
-                  <v-date-picker
-                      v-model="startDate"
-                      label="Start Date"
-                      required
-                      @input="validateDateRange"
-                      no-title
-                  ></v-date-picker>
-                </v-col>
-
-                <!-- End Date Input -->
-                <v-col cols="12" sm="6">
-                  <v-date-picker
-                      v-model="endDate"
-                      label="End Date"
-                      required
-                      @input="validateDateRange"
-                      no-title
-                  ></v-date-picker>
-                </v-col>
-              </v-row>
-              <v-select v-model="selectedEventType" :items="eventTypes" label="Event Type" item-text="text" item-value="value">
-                <template v-slot:selection="{ item }">
-                  <v-list-item>
-                    <v-list-item-icon>
-                      <v-icon :color="item.value === 'holiday' ? 'blue' : 'red'">{{ eventTypeIcons[item.value] }}</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title>{{ item.text }}</v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
-              </v-select>
-
-
-              <!-- Error Message -->
-              <v-alert v-if="!valid" type="error">Please select a valid date range.</v-alert>
-
-              <!-- Submit Button -->
-              <v-card-actions>
-                <v-btn @click="makeReservation" :disabled="!valid" color="primary">Reserve</v-btn>
-                <v-btn @click="closeDateSelectionDialog" color="error">Cancel</v-btn>
-              </v-card-actions>
-            </v-form>
-
-            <v-card-actions class="d-flex float-end" style="position:absolute; bottom:0; right:0;">
-              <v-btn color="red" style="color:white;" @click="closeDialog">Close</v-btn>
-            </v-card-actions>
-          </v-card>
-          </v-dialog>
+            <h2 class="text-right" style="font-size:15px; letter-spacing:1px;">{{ monthNames[month] }} {{ year }}</h2>
+          </v-col>
         </div>
-      </div>
+        <!-- Day names row -->
+        <!-- Days row -->
+        <v-row class="mt-5">
+          <v-col v-for="day in daysInMonth" :key="day" cols="1" class="elevation-1" style="cursor:pointer;">
+            <div @click="selectDate(day)" style="font-size: 12px;" class="d-flex align-center justify-center flex-column-reverse">
+              {{ day }}
+              <div style="font-size: 10px;">{{ getDayName(day) }}</div>
+              <v-icon v-if="!selectedUser && getDayName(day)==='Mon'" class="mdi mdi-airplane" color="blue"></v-icon>
+              <v-icon v-if="!selectedUser && getDayName(day)==='Fri'" class="mdi mdi-car-hatchback" color="orange"></v-icon>
+              <v-icon v-if="!selectedUser && getDayName(day)==='Tue'" class="mdi mdi-bus-school" color="green"></v-icon>
+              <v-icon v-else-if="getIconForDay(day)" :class="getIconClass(getIconForDay(day))" :color="getIconColor(getIconForDay(day))" style="font-size:20px;"></v-icon>
+            </div>
+          </v-col>
+        </v-row>
+        <!--      <div v-for="user in users" :key="user.id">-->
+        <!--        {{user.name}}-->
+        <!--      </div>-->
+        <div>
+          <v-row class="mt-10">
+            <v-col cols="6">
+              <p>Active Users</p>
+            </v-col>
+            <v-col cols="6" style="padding-left:30px;">
+              <p>Select Users</p>
+            </v-col>
+          </v-row>
+
+        </div>
+      </v-container>
+
+    </div>
+
+    <v-row style="padding-left:160px; padding-right:100px;">
+      <v-col cols="6">
+        <v-data-table
+            :items="users"
+            :headers="headers"
+            :items-per-page="5"
+            class="elevation-1"
+        >
+        </v-data-table>
+      </v-col>
+      <v-col cols="5">
+        <v-row class="mt-5">
+            <v-select v-model="selectedUser" :items="users" item-text="name" label="Select User" @change="updateUserIcon"></v-select>
+        </v-row>
+      </v-col>
     </v-row>
 
-<!--    What we need to do is get the users, print their data.-->
-  </div>
+  </v-app>
 </template>
+
 <script>
-import {mapState} from "vuex";
-import {formatDate} from "fullcalendar";
-
 export default {
-  data(){
+  data() {
     return {
-      holidayDetailsDialog:false,
-      meetingDetailsDialog: false, // Flag to control the dialog visibility
-      meetingReservationDates: [], // Array to store meeting reservation dates
-      holidayReservations: [], // Array to store holiday reservations
-      meetingReservations: [], // Array to store meeting reservations
-      type:1,
-      currentYear: new Date().getFullYear(),
-      MIN_YEAR: 2000, // Change this to your desired minimum year
-      eventTypes: [
-        { text: 'Holiday', value: 'holiday' },
-        { text: 'Meeting', value: 'meeting' },
-        // Add more event types here
+      headers:[
+        {text: 'ID' , value : 'id'},
+        {text : 'Name', value :'name'},
+        {text:'Surname', value:'surname'}
       ],
-      eventType: null,
-      selectedEventType: 'meeting',
-      calendarIntegrationDialog: false,
-      webcalLink: 'webcal://app.timetastic.co.uk/Feeds/MyFavouritesCalendar/13fc2f75-aa2f-44b2-a9b7-294adc723ca2',
-      reservedStartDate: null,
-      reservedEndDate: null,
-      eventTypeIcons: {
-        holiday: 'mdi-beach',
-        meeting: 'mdi-account-group',
-        // Add more event types and icons as needed
-      },
-      dialogVisible: false,
-      reservedDateRanges: [],
-      tableHeaders: [
-        { text: "Start Date", value: "startDate" },
-        { text: "End Date", value: "endDate" },
+      selectedUser: null,
+      users: [], // Assuming you have a list of users here
+      userIcons: {}, // Store user icons dynamically
+
+
+      daysInMonth: [],
+      year: new Date().getFullYear(),
+      month: new Date().getMonth(),
+      monthNames: [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
       ],
-      valid: true,
-      startDate:null,
-      endDate:null,
-      openDaysDialog:false,
-      days:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-      month: 10, // Example: 10 represents November
-      year: 2023, // Example: 2023
-      selectedUser:{
-        name:'',
-        surname:'',
-      }
-    }
+      dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    };
   },
-  computed:{
-
-    lastMeetingReservationDate() {
-      const meetingReservations = this.reservedDateRanges.filter(
-          (range) => range.eventType === 'meeting'
-      );
-
-      if (meetingReservations.length > 0) {
-        // Find the reservation with the latest end date
-        const lastReservation = meetingReservations.reduce((latest, reservation) => {
-          return new Date(reservation.endDate) > new Date(latest.endDate) ? reservation : latest;
-        });
-
-        // Format the date as needed (e.g., using a date formatting library)
-        return formatDate(lastReservation.endDate); // Replace formatDate with your formatting logic
-      }
-
-      return 'No meeting reservations'; // Message when there are no meeting reservations
+  methods: {
+    getIconForDay(day) {
+      // Return the icon associated with the selected user
+      return this.userIcons[this.selectedUser?.id];
     },
-
-
-    lastHolidayReservationDate() {
-      const meetingReservations = this.reservedDateRanges.filter(
-          (range) => range.eventType === 'holiday'
-      );
-      if (meetingReservations.length > 0) {
-        // Find the reservation with the latest end date
-        const lastReservation = meetingReservations.reduce((latest, reservation) => {
-          return new Date(reservation.endDate) > new Date(latest.endDate) ? reservation : latest;
-        });
-
-        // Format the date as needed (e.g., using a date formatting library)
-        return formatDate(lastReservation.endDate); // Replace formatDate with your formatting logic
-      }
-
-      return 'No meeting reservations'; // Message when there are no meeting reservations
+    getIconClass(icon) {
+      return icon ? `mdi mdi-${icon}` : ''; // Add the mdi prefix to the icon class
     },
-
-
-    getReservedIcon() {
-      return (eventType) => {
-        return eventType === 'holiday' ? 'reserved-icon mdi-beach' : 'reserved-icon mdi-account-group';
-      };
+    getIconColor(icon) {
+      // Customize icon colors based on your requirements
+      if (icon === 'umbrella') return 'blue';
+      if (icon === 'car-hatchback') return 'red';
+      if (icon === 'airplane') return 'green';
+      return '';
     },
+    updateUserIcon() {
+      // Update the user icon based on the selected user
+      // For demonstration purposes, generating a random icon here
+      const randomIcons = ['umbrella', 'car-hatchback', 'airplane'];
+      const randomIcon = randomIcons[Math.floor(Math.random() * randomIcons.length)];
 
-    monthGroups() {
-      // Split the months into groups of 4
-      const groups = [];
-      for (let i = 0; i < 12; i += 4) {
-        groups.push([i + 1, i + 2, i + 3, i + 4]);
-      }
-      return groups;
+      this.$set(this.userIcons, this.selectedUser?.id, randomIcon);
     },
-
-  // Initialize the Active Users here. Only the active ones.
-    ...mapState(["users"]),
-    calendarDays() {
-      const firstDayOfMonth = new Date(this.year, this.month, 1).getDay(); // Get the day of the week for the 1st day of the month
-      const daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
-      const calendar = [];
-
-      // Define the order of days of the week starting from Monday
-      const daysOfWeek = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-
-      // Calculate the index of the first day in the 'daysOfWeek' array
-      const startingDayIndex = daysOfWeek.indexOf('M');
-
-      for (let i = 1; i <= daysInMonth; i++) {
-        const dayIndex = (i + startingDayIndex - 1) % 7;
-        calendar.push(daysOfWeek[dayIndex] + ' ' + i);
+    selectDate(day) {
+      // Implement your logic when a date is selected
+      console.log(`Selected date: ${this.year}-${this.month + 1}-${day}`);
+    },
+    generateCalendar() {
+      const totalDays = new Date(this.year, this.month + 1, 0).getDate();
+      this.daysInMonth = Array.from({ length: totalDays }, (_, i) => i + 1);
+    },
+    getDayName(day) {
+      const date = new Date(this.year, this.month, day ); // Add 1 to consider the first day of the month
+      return this.dayNames[date.getDay()];
+    },
+    prevMonth() {
+      if (this.month === 0) {
+        this.year--;
+        this.month = 11;
+      } else {
+        this.month--;
       }
-
-      return calendar;
+      this.generateCalendar();
+    },
+    async listUsers(){
+    const response= await this.$store.dispatch('listUsers');
+    this.users = response.data;
+    },
+    nextMonth() {
+      if (this.month === 11) {
+        this.year++;
+        this.month = 0;
+      } else {
+        this.month++;
+      }
+      this.generateCalendar();
     },
   },
-  methods:{
-    makeReservation(){
-      const body = {
-        start:this.startDate,
-        end:this.endDate,
-        type:this.type
-      }
-      this.$store.dispatch('makeReservation',body);
-    },
-    closeDateSelectionDialog() {
-      this.dialogVisible = false;
-    },
-    reserveDateRange() {
-      this.reservedStartDate = this.startDate;
-      this.reservedEndDate = this.endDate;
-
-      this.reservedDateRanges.push({
-        startDate: this.startDate,
-        endDate: this.endDate,
-        eventType: this.selectedEventType, // Store the selected event type
-      });
-      console.log('Selected Event Type:', this.selectedEventType);
-      console.log('Event Type Icon Class:', this.eventTypeIcons[this.selectedEventType]);
-
-      if (this.selectedEventType === 'holiday') {
-        this.holidayReservations.push({
-          startDate: this.startDate,
-          endDate: this.endDate,
-        });
-      } else if (this.selectedEventType === 'meeting') {
-        this.meetingReservations.push({
-          startDate: this.startDate,
-          endDate: this.endDate,
-        });
-      }
-      // Getting the date here.
-      console.log(this.startDate);
-      console.log(this.endDate);
-
-      // Reset form and close the dialog
-      this.startDate = null;
-      this.endDate = null;
-      this.selectedEventType = null; // Reset the event type
-      this.valid = true;
-      this.$refs.dateRangeForm.resetValidation();
-      this.dialogVisible = false;
-
-    },
-    validateDateRange() {
-      this.valid = this.startDate <= this.endDate;
-    },
-    async listUsers() {
-      await this.$store.dispatch('listUsers');
-    },
-    openDialog() {
-    this.openDaysDialog = true;
-    },
-    closeDialog() {
-      this.openDaysDialog = false;
-    }
+  mounted() {
+    this.generateCalendar();
+    this.listUsers();
   },
-
-  async mounted() {
-    await this.listUsers();
-    console.log('Users data : ', this.users);
-  },
-}
-
+};
 </script>
 
 <style scoped>
-.about {
-  /* Your existing styles for the .about container */
-}
-
-.calendar-title {
-  font-size: 1.5rem;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.calendar-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.calendar-row {
-  display: flex;
-  width: 100%;
-}
-
-.day-cell {
-  flex: 1;
-  text-align: center;
-  padding-left:10px;
-  padding-right:10px;
-  border: 1px solid #ccc;
-  cursor:pointer;
-}
-
-/* Add more styling as needed */
-
+/* Add your custom styles here */
 </style>
