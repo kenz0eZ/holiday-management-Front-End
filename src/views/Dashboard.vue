@@ -9,9 +9,11 @@
           <div>
             <v-btn @click="nextMonth" rounded color="blue" style="color:white; font-size:10px;">Next Month</v-btn>
           </div>
-          <v-col>
-
-            <h2 class="text-right" style="font-size:15px; letter-spacing:1px;">{{ monthNames[month] }} {{ year }}</h2>
+          <v-col cols="8">
+            <h2 class="text-right mt-5" style="font-size:15px; letter-spacing:1px;">{{ monthNames[month] }} {{ year }}</h2>
+          </v-col>
+          <v-col cols="1">
+            <v-btn class="btn-animation ml-10" color="primary" style="width:30px; height:60px; font-size:40px; border-radius: 50%;">+</v-btn>
           </v-col>
         </div>
         <!-- Day names row -->
