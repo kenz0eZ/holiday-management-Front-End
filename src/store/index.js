@@ -51,6 +51,7 @@ export default new Vuex.Store({
     async listUsers({commit}, token) {
       const response = await authenticationRepo.listUsers(token);
       commit('SET_USERS', response.data); // Commit the users to the state
+      console.log('treqwwqeqw', response);
       return response;
     },
     async listDeletedUsers({commit}) {
