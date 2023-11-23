@@ -10,6 +10,7 @@ export default new Vuex.Store({
     data: [],
     users: [],
     deletedUsers:[],
+    roleName: '',
   },
   mutations: {
     SET_USERS(state, users) {
@@ -17,6 +18,10 @@ export default new Vuex.Store({
     },
     SET_DELETED_USERS(state,deletedUsers){
       state.deletedUsers = deletedUsers
+    },
+    SET_ROLE_NAME(state, payload){
+      console.log('payload', payload);
+      state.roleName = payload
     }
   },
   actions: {
@@ -29,15 +34,25 @@ export default new Vuex.Store({
       return authenticationRepo.verificationLink(body);
     },
     // eslint-disable-next-line no-unused-vars
-    loginUser({commit}, body) {
-      return authenticationRepo.loginUser(body);
+    async loginUser({ commit }, body) {
+      try {
+        const response = await authenticationRepo.loginUser(body);
+        const roleName = response.data.role;
+        commit('SET_ROLE_NAME', roleName);
+
+        return response;
+      } catch (error) {
+        // Handle error or rethrow it
+        throw error;
+      }
     },
     // eslint-disable-next-line no-unused-vars
     logOutUser({commit}, token) {
       return authenticationRepo.logOutUser(token);
     },
     deleteUser({commit},id){
-      return authenticationRepo.deleteUser(id);
+      return authenticationRepo.deleteUser(id)
+          ;
     },
     makeReservation({commit},body){
       return authenticationRepo.makeReservation(body);
@@ -51,7 +66,6 @@ export default new Vuex.Store({
     async listUsers({commit}, token) {
       const response = await authenticationRepo.listUsers(token);
       commit('SET_USERS', response.data); // Commit the users to the state
-      console.log('treqwwqeqw', response);
       return response;
     },
     async listDeletedUsers({commit}) {
@@ -60,7 +74,8 @@ export default new Vuex.Store({
       return response;
     },
     restoreUser({commit},id){
-      return authenticationRepo.restoreUser(id);
+      return authenticationRepo.restoreUser(id)
+          ;
     },
   },
 });
