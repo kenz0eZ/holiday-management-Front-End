@@ -219,7 +219,7 @@
 
             <!-- Submit Button -->
             <v-card-actions>
-              <v-btn @click="reserveDateRange" :disabled="!valid" color="primary">Reserve</v-btn>
+              <v-btn @click="makeReservation" :disabled="!valid" color="primary">Reserve</v-btn>
               <v-btn @click="closeDateSelectionDialog" color="error">Cancel</v-btn>
             </v-card-actions>
           </v-form>
@@ -380,6 +380,14 @@ export default {
     closeMeetingDetailsDialog() {
       // Close the Meeting Days Details dialog
       this.meetingDetailsDialog = false;
+    },
+    makeReservation(){
+      const body = {
+        type:2,
+        start:this.startDate,
+        end:this.endDate
+      }
+      this.$store.dispatch('makeReservation',body);
     },
 
     getMeetingReservationDates() {
