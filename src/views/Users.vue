@@ -212,6 +212,7 @@ export default {
       users: state => state.users,
       deletedUsers: state => state.deletedUsers,
       roleName: state => state.roleName,
+      // test
     }),
     filteredHeaders () {
       return this.roleName === 'Employee'
