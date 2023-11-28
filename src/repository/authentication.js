@@ -39,6 +39,16 @@ export default {
             throw error;
         }
     },
+    async vacationTypes() {
+        try {
+            const response = await apiClient.get("api/types", {
+            });
+            return response.data; // Return the response data
+        } catch (error) {
+            console.error('Failed to list users:', error);
+            throw error;
+        }
+    },
     async listDeletedUsers() {
         try {
             const response = await apiClient.get("api/archivedUsers", {
@@ -59,6 +69,7 @@ export default {
         }
     },
     async verificationLink(body) {
+        console.log('kole kokole', body);
         try {
             const response = await apiClient.post(
                 "/email/verification-notification",

@@ -40,47 +40,43 @@
 
           <v-dialog max-width="500px" v-model="userDialog">
             <v-card>
-              <v-card-title>Add Credentials</v-card-title>
-              <v-row>
-                <!--                  Display name , surname ,-->
-                <v-col cols="6">
-                </v-col>
-                <v-col cols="6">
-                </v-col>
-              </v-row>
-
-
-              <!--                  Make sure that we are going to take all of the input fields.-->
+              <v-card-title class="font-weight-bold" style="background-color: #2196F3; color: white; border-radius: 4px; padding: 10px;">Add User</v-card-title>
+              <!-- Input fields -->
               <v-card-text>
-                <v-text-field label="name" v-model="user.name"></v-text-field>
-                <v-text-field label="surname" v-model="user.surname"></v-text-field>
-                <v-text-field label="city" v-model="user.city"></v-text-field>
-                <v-text-field label="state" v-model="user.state"></v-text-field>
-                <v-text-field label="street" v-model="user.street"></v-text-field>
-                <v-text-field label="zip" v-model="user.zip"></v-text-field>
-                <v-text-field label="phone" v-model="user.phone.number"></v-text-field>
-                <v-text-field label="country" v-model="user.country"></v-text-field>
-                <v-text-field label="vacation days" v-model="user.vacation_days"></v-text-field>
+                <v-row class="mt-3">
+                  <!-- First column -->
+                  <v-col cols="12" md="6">
+                    <v-text-field dense outlined label="Name" v-model="user.name"></v-text-field>
+                    <v-text-field dense outlined label="Surname" v-model="user.surname"></v-text-field>
+                    <v-text-field dense outlined label="Email" v-model="user.email"></v-text-field>
+                    <v-text-field dense outlined label="Phone" v-model="user.phone.number"></v-text-field>
+                    <v-menu>
+                      <template v-slot:activator="{ on }">
+                        <v-text-field dense outlined label="date of birth" v-model="user.date_of_birth" v-on="on"></v-text-field>
+                      </template>
+                      <v-date-picker v-model="user.date_of_birth" @input="() => {}"></v-date-picker>
+                    </v-menu>
+                  </v-col>
 
-                <!--                      Important to know who-->
-                <v-menu>
-                  <template v-slot:activator="{ on }">
-                    <v-text-field label="date of birth" v-model="user.date_of_birth" v-on="on"></v-text-field>
-                  </template>
-                  <v-date-picker v-model="user.date_of_birth" @input="() => {}"></v-date-picker>
-                </v-menu>
-                <!--                      Need to add the calendar when i have the date of birth.-->
-                <v-text-field label="email" v-model="user.email"></v-text-field>
-                <!--                  We are going to have 2 roles, 1 manager, other worker.-->
-                <v-select label="role" :items="roleOptions" v-model="user.role"></v-select>
+                  <!-- Second column -->
+                  <v-col cols="12" md="6">
+                    <v-text-field dense outlined label="Country" v-model="user.country"></v-text-field>
+                    <v-text-field dense outlined label="City" v-model="user.city"></v-text-field>
+                    <v-text-field dense outlined label="Street" v-model="user.street"></v-text-field>
+                    <v-text-field dense outlined label="Zip" v-model="user.zip"></v-text-field>
+                    <v-text-field dense outlined label="Vacation days" v-model="user.vacation_days"></v-text-field>
+
+                  </v-col>
+                </v-row>
               </v-card-text>
+
+              <!-- Action buttons -->
               <v-card-actions>
-                <v-btn color="primary" @click="createUser" >Add User</v-btn>
-                <v-btn color="danger" @click="closeDialog">Cancel</v-btn>
+                <v-btn color="primary" @click="createUser">Add User</v-btn>
+                <v-btn color="error" @click="closeDialog">Cancel</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
-
 
           <!-- Display active user data using v-data-table -->
           <v-data-table
@@ -104,18 +100,18 @@
           <!--          TODO connect to the PATCH api, and send the information that needs to be changed.-->
           <v-dialog v-model="openEditDialog" max-width="500" persistent>
             <v-card elevation="5" class="overflow-x-hidden">
-              <v-card-title>Edit User</v-card-title>
-              <v-card-text>Edit a particular user!</v-card-text>
+              <v-card-title class="font-weight-bold" style="background-color: #2196F3; color: white; border-radius: 4px; padding: 10px;">Edit User</v-card-title>
+              <v-card-text class="mt-3">Edit a particular user!</v-card-text>
               <v-row style="padding-left:50px; padding-right:50px">
                 <v-col cols="6">
-                  <v-text-field label="change name" v-model="selectedUser.name"></v-text-field>
+                  <v-text-field outlined label="change name" v-model="selectedUser.name"></v-text-field>
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field label="change surname" v-model="selectedUser.surname"></v-text-field>
+                  <v-text-field outlined label="change surname" v-model="selectedUser.surname"></v-text-field>
                 </v-col>
               </v-row>
               <v-row style="padding-left:50px; padding-right:50px;">
-                <v-text-field label="change email" v-model="selectedUser.email"></v-text-field>
+                <v-text-field outlined label="change email" v-model="selectedUser.email"></v-text-field>
               </v-row>
               <v-card-actions class="d-flex justify-end">
                 <v-btn @click="editUser" class="primary">Save</v-btn>
@@ -132,7 +128,7 @@
             <v-row>
               <v-col cols="8">
                 <v-card-title>
-                  Deleted users
+                  Deleted Users
                   <v-icon color="red" style="margin-left:10px;">mdi mdi-account-minus</v-icon>
                 </v-card-title>
               </v-col>
@@ -283,7 +279,7 @@ export default {
         phone:this.user.phone,
         vacation_days:this.user.vacation_days,
         address:{
-          state:this.user.state,
+          state: 'MK',
           city:this.user.city,
           zip:this.user.zip,
           street:this.user.street,

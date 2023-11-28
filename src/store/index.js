@@ -9,12 +9,16 @@ export default new Vuex.Store({
   state: {
     data: [],
     users: [],
+    vacationType: [],
     deletedUsers:[],
     roleName: '',
   },
   mutations: {
     SET_USERS(state, users) {
       state.users = users;
+    },
+    SET_VACATION_TYPES(state, commit) {
+      state.vacationType = commit;
     },
     SET_DELETED_USERS(state,deletedUsers){
       state.deletedUsers = deletedUsers
@@ -51,8 +55,7 @@ export default new Vuex.Store({
       return authenticationRepo.logOutUser(token);
     },
     deleteUser({commit},id){
-      return authenticationRepo.deleteUser(id)
-          ;
+      return authenticationRepo.deleteUser(id);
     },
     makeReservation({commit},body){
       return authenticationRepo.makeReservation(body);
@@ -66,6 +69,11 @@ export default new Vuex.Store({
     async listUsers({commit}, token) {
       const response = await authenticationRepo.listUsers(token);
       commit('SET_USERS', response.data); // Commit the users to the state
+      return response;
+    },
+    async vacationTypes({commit}, token) {
+      const response = await authenticationRepo.vacationTypes(token);
+      commit('SET_VACATION_TYPES', response); // Commit the users to the state
       return response;
     },
     async listDeletedUsers({commit}) {

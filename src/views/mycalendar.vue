@@ -200,14 +200,11 @@
                 ></v-date-picker>
               </v-col>
             </v-row>
-            <v-select v-model="selectedEventType" :items="eventTypes" label="Event Type" item-text="text" item-value="value">
+            <v-select v-model="selectedEventType" :items="vacationType" label="Event Type" item-text="name" item-value="id">
               <template v-slot:selection="{ item }">
                 <v-list-item>
-                  <v-list-item-icon>
-                    <v-icon :color="item.value === 'holiday' ? 'blue' : 'red'">{{ eventTypeIcons[item.value] }}</v-icon>
-                  </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title>{{ item.text }}</v-list-item-title>
+                    <v-list-item-title>{{ item.name }}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -264,11 +261,9 @@
 
 <script>
 import {formatDate} from "fullcalendar";
+import { mapState } from "vuex";
 
 export default {
-  watch:{
-    currentYear:'updateCalendar',
-  },
   data() {
     return {
       holidayDetailsDialog:false,
@@ -284,7 +279,7 @@ export default {
         // Add more event types here
       ],
       eventType: null,
-      selectedEventType: 'meeting',
+      selectedEventType: '',
       calendarIntegrationDialog: false,
       webcalLink: 'webcal://app.timetastic.co.uk/Feeds/MyFavouritesCalendar/13fc2f75-aa2f-44b2-a9b7-294adc723ca2',
 
@@ -307,6 +302,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      vacationType: state => state.vacationType,
+    }),
     lastMeetingReservationDate() {
       const meetingReservations = this.reservedDateRanges.filter(
           (range) => range.eventType === 'meeting'
@@ -359,8 +357,13 @@ export default {
       return groups;
     },
   },
+  watch:{
+    currentYear:'updateCalendar',
+  },
+  mounted () {
+    this.$store.dispatch('vacationTypes');
+    },
   methods: {
-
     viewMeetingDetails() {
       // Populate the meetingReservationDates array with meeting reservation dates
       this.meetingReservationDates = this.getMeetingReservationDates();
@@ -388,6 +391,7 @@ export default {
         end:this.endDate
       }
       this.$store.dispatch('makeReservation',body);
+      this.closeDateSelectionDialog();
     },
 
     getMeetingReservationDates() {
@@ -459,39 +463,6 @@ export default {
     },
     validateDateRange() {
       this.valid = this.startDate <= this.endDate;
-    },
-    reserveDateRange() {
-      this.reservedStartDate = this.startDate;
-      this.reservedEndDate = this.endDate;
-
-      this.reservedDateRanges.push({
-        startDate: this.startDate,
-        endDate: this.endDate,
-        eventType: this.selectedEventType, // Store the selected event type
-      });
-      console.log('Selected Event Type:', this.selectedEventType);
-      console.log('Event Type Icon Class:', this.eventTypeIcons[this.selectedEventType]);
-      if (this.selectedEventType === 'holiday') {
-        this.holidayReservations.push({
-          startDate: this.startDate,
-          endDate: this.endDate,
-        });
-      } else if (this.selectedEventType === 'meeting') {
-        this.meetingReservations.push({
-          startDate: this.startDate,
-          endDate: this.endDate,
-        });
-      }
-
-
-      // Reset form and close the dialog
-      this.startDate = null;
-      this.endDate = null;
-      this.selectedEventType = null; // Reset the event type
-      this.valid = true;
-      this.$refs.dateRangeForm.resetValidation();
-      this.dialogVisible = false;
-
     },
     getMonthName(month) {
       const monthNames = [
