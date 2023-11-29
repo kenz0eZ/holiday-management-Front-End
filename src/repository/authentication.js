@@ -4,6 +4,10 @@ const apiClient = axios.create({
     baseURL: "http://127.0.0.1:8000",
 });
 
+const apiClientNoAuth = axios.create({
+    baseURL: "http://127.0.0.1:8000",
+});
+
 apiClient.interceptors.request.use(
     (config) => {
         // Retrieve the token from local storage or wherever you store it
@@ -63,6 +67,7 @@ export default {
     async logOutUser (token){
         try {
             const response = await apiClient.post("/logout", token)
+            localStorage.removeItem('token');
             return response;
         } catch (error) {
             console.error('Failed to Logout:', error);
@@ -146,5 +151,15 @@ export default {
             throw error;
         }
     },
+    async verifyEmail(link) {
+        try{
+            const response = await apiClientNoAuth.get(`${link}`);
+            return response;
+        }
+        catch(error){
+            console.log(error);
+            throw error;
+        }
+    }
 
 };

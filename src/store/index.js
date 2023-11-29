@@ -37,6 +37,10 @@ export default new Vuex.Store({
     verificationLink({commit}, body) {
       return authenticationRepo.verificationLink(body);
     },
+    verifyEmail({commit}, body) {
+      console.log('BODY', body);
+      return authenticationRepo.verifyEmail(body);
+    },
     // eslint-disable-next-line no-unused-vars
     async loginUser({ commit }, body) {
       try {

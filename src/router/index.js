@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import MyCalendar from "../views/mycalendar.vue";
 import Users from "@/views/Users.vue";
 import Dashboard from "@/views/Dashboard.vue";
+import Verify from "@/views/Verify.vue";
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,11 @@ const routes = [
     //   // which is lazy-loaded when the route is visited.
     //   component: () => import(/* webpackChunkName: "about" */ '../views/AppBar.vue')
     // }
+    {
+        path: '/verify-email/:id/:hash',
+        name: 'Verify',
+        component: Verify
+    }
 
 ]
 

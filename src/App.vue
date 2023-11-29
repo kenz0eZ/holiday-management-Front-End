@@ -20,7 +20,7 @@ export default {
     ...mapGetters(["isAuthenticated"]),
     shouldShowAppBar() {
       // Hide AppBar on the '/login' route
-      return this.$route.path !== '/login';
+      return this.$route.name !== 'Home' && this.$route.name !== 'Verify';
     },
   },
 };
