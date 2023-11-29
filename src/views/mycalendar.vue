@@ -391,7 +391,7 @@ export default {
         end:this.endDate
       }
       this.$store.dispatch('makeReservation',body);
-      this.closeDateSelectionDialog();
+      this.closeDateSelectio
     },
 
     getMeetingReservationDates() {
