@@ -44,6 +44,26 @@ export default {
             throw error;
         }
     },
+    async getMyInqueries() {
+        try {
+            const response = await apiClient.get("api/myInquires", {
+            });
+            return response.data; // Return the response data
+        } catch (error) {
+            console.error('Failed to list users:', error);
+            throw error;
+        }
+    },
+    async getInqueries() {
+        try {
+            const response = await apiClient.get("api/inquire", {
+            });
+            return response.data; // Return the response data
+        } catch (error) {
+            console.error('Failed to list users:', error);
+            throw error;
+        }
+    },
     async vacationTypes() {
         try {
             const response = await apiClient.get("api/types", {
@@ -64,6 +84,7 @@ export default {
             throw error;
         }
     },
+
     async logOutUser (token){
         try {
             const response = await apiClient.post("/logout", token)

@@ -10,12 +10,26 @@
       <v-btn text style="color:white" @click="navigateToUsers">Users</v-btn>
 
       <!-- Icon Buttons -->
-      <v-btn icon>
-        <v-icon>mdi-bell</v-icon>
-      </v-btn>
-      <v-btn icon>
-        <v-icon>mdi-email</v-icon>
-      </v-btn>
+      <v-tooltip bottom >
+        <template v-slot:activator="{on}">
+          <v-btn icon v-on="on">
+            <v-icon @click="inqueriesDialog">mdi mdi-file-multiple</v-icon>
+          </v-btn>
+        </template>
+        <span>List Inqueries</span>
+      </v-tooltip>
+<!--      My inqueries -->
+    <v-tooltip bottom >
+      <template v-slot:activator="{on}">
+        <v-btn icon v-on="on">
+          <v-icon @click="notificationDialog">mdi mdi-file-document</v-icon>
+        </v-btn>
+      </template>
+      <span>My inqueries</span>
+    </v-tooltip>
+
+<!--      This is goin to be the dialog for the notifications-->
+
 
       <!-- Avatar Menu -->
       <v-menu bottom left offset-y origin="top right" transition="scale-transition">
@@ -60,19 +74,35 @@
         v-model="showDetailsDialog"
         :users="userDetails"
     ></user-details-dialog>
+
+    <notification-dialog
+        v-model="openNotificationDialog"
+    ></notification-dialog>
+    <inqueries
+        v-model="openInqueries"
+    ></inqueries>
+
+
   </div>
 </template>
 
 <script>
 import UserDetailsDialog from "@/views/dialogs/userDialog.vue"; // Adjust the path as needed
+import NotificationDialog from "./dialogs/NotificationDialog.vue";
+import Inqueries from "./dialogs/Inqueries.vue";
+import {mapState} from "vuex";
 
 export default {
   components: {
     UserDetailsDialog,
+    NotificationDialog,
+    Inqueries
   },
   data() {
     return {
       showDetailsDialog: false,
+      openNotificationDialog:false,
+      openInqueries:false,
       userDetails: {
         // name: "John Doe", // Example user details
         // email: "john@example.com",
@@ -82,6 +112,12 @@ export default {
     };
   },
   methods: {
+    notificationDialog(){
+      this.openNotificationDialog=true;
+    },
+    inqueriesDialog(){
+      this.openInqueries=true;
+    },
     openDetailsDialog() {
       this.showDetailsDialog = true;
     },
@@ -112,6 +148,9 @@ export default {
       }
     },
   },
+  // ...mapState({
+  //   roleName: state => state.roleName,
+  // }),
 
 };
 </script>

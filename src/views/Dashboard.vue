@@ -51,7 +51,8 @@
     <v-row style="padding-left:160px; padding-right:100px;">
       <v-col cols="6">
         <v-data-table
-            :items="users"
+            :items="
+            users"
             :headers="headers"
             :items-per-page="5"
             class="elevation-1"

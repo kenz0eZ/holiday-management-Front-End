@@ -11,11 +11,19 @@ export default new Vuex.Store({
     users: [],
     vacationType: [],
     deletedUsers:[],
+    inqueries:[],
     roleName: '',
+    allInqueries:[],
   },
   mutations: {
     SET_USERS(state, users) {
       state.users = users;
+    },
+    GET_INQUERIES(state, inqueries) {
+      state.inqueries = inqueries;
+    },
+    GET_ALL_INQUERIES(state,allInqueries){
+      state.allInqueries = allInqueries
     },
     SET_VACATION_TYPES(state, commit) {
       state.vacationType = commit;
@@ -75,6 +83,17 @@ export default new Vuex.Store({
       commit('SET_USERS', response.data); // Commit the users to the state
       return response;
     },
+    async getMyInqueries({commit}, token) {
+      const response = await authenticationRepo.getMyInqueries(token);
+      commit('GET_INQUERIES', response.data); // Commit the users to the state
+      return response;
+    },
+    async getInqueries({commit}, token) {
+      const response = await authenticationRepo.getInqueries(token);
+      commit('GET_ALL_INQUERIES', response.data); // Commit the users to the state
+      return response;
+    },
+
     async vacationTypes({commit}, token) {
       const response = await authenticationRepo.vacationTypes(token);
       commit('SET_VACATION_TYPES', response); // Commit the users to the state
