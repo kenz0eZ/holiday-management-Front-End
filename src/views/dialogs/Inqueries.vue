@@ -16,7 +16,7 @@
             <td>{{ item.type_name }}</td>
             <td>{{ item.status_id }}</td>
               <td v-if="item.status_name ==='PENDING'">
-                <v-chip @click="openDialog" color="primary">{{ item.status_name }}</v-chip>
+                <v-chip color="primary">{{ item.status_name }}</v-chip>
               </td>
             <td v-if="item.status_name ==='DECLINED'">
               <v-chip color="red">{{ item.status_name }}</v-chip>
@@ -37,6 +37,9 @@
 export default {
   data() {
     return {
+      getRole:null,
+      myRole:'',
+      id:null,
       headers: [
         { text: 'User', value: 'user_name' },
         { text: 'Inquire ID', value: 'inquire_id' },
@@ -60,10 +63,12 @@ export default {
     value: Boolean,
   },
   async mounted() {
+    this.myRole=localStorage.getItem('role');
+    if(this.myRole==='Manager'){
       await this.getInqueries();
-   this.statuses= this.inqueries.map(inqueries => inqueries.status_name);
-   console.log('weqew', this.statuses);
-  },
+    }
+      // this.statuses= this.inqueries.map(inqueries => inqueries.status_name);
+    },
   computed: {
     dialog: {
       get() {
@@ -78,10 +83,16 @@ export default {
     closeDialog() {
       this.dialog = false;
     },
+    async getUser(id){
+      const res = await this.$store.dispatch('getUser',id);
+      this.getRole = res.data.role;
+      this.id = res.data.id;
+    },
     async getInqueries() {
       try {
         const response = await this.$store.dispatch('getInqueries');
         this.inqueries = response; // Assuming your response is an array of inqueries
+        this.id = response.user_id;
       } catch (error) {
         console.error('Error fetching inqueries:', error);
       }

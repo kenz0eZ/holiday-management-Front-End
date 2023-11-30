@@ -85,6 +85,18 @@ export default {
         }
     },
 
+
+    async getUser(id) {
+        try {
+            const response = await apiClient.get(`api/user/${id}`, {
+            });
+            return response.data; // Return the response data
+        } catch (error) {
+            console.error('Failed to list users:', error);
+            throw error;
+        }
+    },
+
     async logOutUser (token){
         try {
             const response = await apiClient.post("/logout", token)

@@ -31,10 +31,9 @@ export default new Vuex.Store({
     SET_DELETED_USERS(state,deletedUsers){
       state.deletedUsers = deletedUsers
     },
-    SET_ROLE_NAME(state, payload){
-      console.log('payload', payload);
-      state.roleName = payload
-    }
+    SET_ROLE_NAME(state, roleName) {
+      state.roleName = roleName;
+    },
   },
   actions: {
     // eslint-disable-next-line no-unused-vars
@@ -46,7 +45,6 @@ export default new Vuex.Store({
       return authenticationRepo.verificationLink(body);
     },
     verifyEmail({commit}, body) {
-      console.log('BODY', body);
       return authenticationRepo.verifyEmail(body);
     },
     // eslint-disable-next-line no-unused-vars
@@ -55,7 +53,6 @@ export default new Vuex.Store({
         const response = await authenticationRepo.loginUser(body);
         const roleName = response.data.role;
         commit('SET_ROLE_NAME', roleName);
-
         return response;
       } catch (error) {
         // Handle error or rethrow it
@@ -68,6 +65,9 @@ export default new Vuex.Store({
     },
     deleteUser({commit},id){
       return authenticationRepo.deleteUser(id);
+    },
+    getUser({commit},id){
+      return authenticationRepo.getUser(id);
     },
     makeReservation({commit},body){
       return authenticationRepo.makeReservation(body);
@@ -108,5 +108,8 @@ export default new Vuex.Store({
       return authenticationRepo.restoreUser(id)
           ;
     },
+  },
+  getters: {
+    getRoleName: (state) => state.roleName,
   },
 });

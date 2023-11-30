@@ -227,7 +227,9 @@ export default {
 
       if (this.loginResponse && this.loginResponse.status === 200) {
         const token = this.loginResponse.data.token;
+        const role = this.loginResponse.data.role;
         localStorage.setItem('token', token);
+        localStorage.setItem('role',role);
         // await this.$store.dispatch('setAuthToken', token);
         await this.$router.push('/dashboard');
       }

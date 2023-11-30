@@ -29,6 +29,7 @@
 export default {
   data() {
     return {
+      myRole:'',
       headers: [
         { text: 'User', value: 'user_name' },
         { text: 'Inquire ID', value: 'inquire_id' },
@@ -41,7 +42,7 @@ export default {
         { text: 'Status ID', value: 'status_id' },
         { text: 'Status Name', value: 'status_name' },
         { text: 'Start', value: 'start' },
-        { text: 'End', value: 'end' },
+        { text: 'End', value: 'end' },``
       ],
       inqueries: null,
     };
@@ -51,8 +52,10 @@ export default {
     value: Boolean,
   },
   async mounted() {
-    await this.getMyInqueries();
-    console.log(this.inqueries);
+  this.myRole=localStorage.getItem('role');
+  if(this.myRole==='Employee'){
+    await this.getMyInqueries()
+    }
   },
   computed: {
     dialog: {

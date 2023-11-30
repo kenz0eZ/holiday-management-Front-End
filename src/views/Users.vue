@@ -233,7 +233,6 @@ export default {
     }
   },
   mounted() {
-    console.log('MOUNTED : ', this.roleName);
     this.listUsers();
     this.listDeletedUsers();
   },
@@ -286,7 +285,6 @@ export default {
           country:this.user.country
         },
       };
-      console.log('this is my body', body)
       await this.$store.dispatch("createUser",body);
       this.closeDialog();
       await this.listUsers();
@@ -299,7 +297,7 @@ export default {
       return this.userDialog=false;
     },
     async listUsers() {
-      await this.$store.dispatch('listUsers');
+      var res = await this.$store.dispatch('listUsers');
     },
     async listDeletedUsers(){
       await this.$store.dispatch('listDeletedUsers');
@@ -311,7 +309,6 @@ export default {
       await this.$store.dispatch('listDeletedUsers');
 
       // TODO make sure that the same user ( cant delete it's self.)
-      console.log(deletedUser);
       return deletedUser;
     },
     async editUser(){

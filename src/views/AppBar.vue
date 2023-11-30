@@ -10,27 +10,33 @@
       <v-btn text style="color:white" @click="navigateToUsers">Users</v-btn>
 
       <!-- Icon Buttons -->
-      <v-tooltip bottom >
-        <template v-slot:activator="{on}">
-          <v-btn icon v-on="on">
-            <v-icon @click="inqueriesDialog">mdi mdi-file-multiple</v-icon>
-          </v-btn>
-        </template>
-        <span>List Inqueries</span>
-      </v-tooltip>
-<!--      My inqueries -->
-    <v-tooltip bottom >
-      <template v-slot:activator="{on}">
-        <v-btn icon v-on="on">
-          <v-icon @click="notificationDialog">mdi mdi-file-document</v-icon>
-        </v-btn>
-      </template>
-      <span>My inqueries</span>
-    </v-tooltip>
+      <div v-if="this.testRole==='Manager'">
+        <v-tooltip bottom >
+          <template v-slot:activator="{on}">
+            <v-btn icon v-on="on">
+              <v-icon @click="inqueriesDialog">mdi mdi-file-multiple</v-icon>
+            </v-btn>
+          </template>
+          <span>List Inqueries</span>
+        </v-tooltip>
+      </div>
+
+
+        <!--
+              </div>
+                  My inqueries -->
+      <div v-if="this.testRole==='Employee'">
+        <v-tooltip bottom >
+          <template v-slot:activator="{on}">
+            <v-btn icon v-on="on">
+              <v-icon @click="notificationDialog">mdi mdi-file-document</v-icon>
+            </v-btn>
+          </template>
+          <span>My inqueries</span>
+        </v-tooltip>
+      </div>
 
 <!--      This is goin to be the dialog for the notifications-->
-
-
       <!-- Avatar Menu -->
       <v-menu bottom left offset-y origin="top right" transition="scale-transition">
         <template v-slot:activator="{ attrs, on }">
@@ -90,7 +96,7 @@
 import UserDetailsDialog from "@/views/dialogs/userDialog.vue"; // Adjust the path as needed
 import NotificationDialog from "./dialogs/NotificationDialog.vue";
 import Inqueries from "./dialogs/Inqueries.vue";
-import {mapState} from "vuex";
+import {mapGetters, mapState} from "vuex";
 
 export default {
   components: {
@@ -98,11 +104,23 @@ export default {
     NotificationDialog,
     Inqueries
   },
+  computed:{
+    ...mapState({
+      roleName: state => state.roleName,
+    }),
+    ...mapGetters(['getRoleName'])
+  },
+  mounted() {
+    this.testRole=localStorage.getItem('role');
+    },
   data() {
     return {
       showDetailsDialog: false,
       openNotificationDialog:false,
       openInqueries:false,
+      getRole:'',
+      testRole:'',
+      id:null,
       userDetails: {
         // name: "John Doe", // Example user details
         // email: "john@example.com",
@@ -132,6 +150,9 @@ export default {
        await this.$router.push('/login');
       }
     },
+    // async getUser(id){
+    //   await this.$store.dispatch('getUser',id);
+    // },
     navigateToCalendar() {
       if (this.$route.name !== 'mycalendar') {
         this.$router.push({ name: 'mycalendar' });
@@ -148,9 +169,7 @@ export default {
       }
     },
   },
-  // ...mapState({
-  //   roleName: state => state.roleName,
-  // }),
+
 
 };
 </script>
