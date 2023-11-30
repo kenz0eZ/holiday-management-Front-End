@@ -65,8 +65,8 @@
                     <v-text-field dense outlined label="Street" v-model="user.street"></v-text-field>
                     <v-text-field dense outlined label="Zip" v-model="user.zip"></v-text-field>
                     <v-text-field dense outlined label="Vacation days" v-model="user.vacation_days"></v-text-field>
-
                   </v-col>
+                  <v-select dense outlined label="Role" v-model="user.role_id" :items="roleOptions"></v-select>
                 </v-row>
               </v-card-text>
 
@@ -169,8 +169,12 @@ export default {
         id:'',
         email:'',
       },
-      roleOptions: ['Worker', 'Manager'], // Items for the dropdown
+      roleOptions: [
+        { text: 'Employee', value: '2' },
+        { text: 'Manager', value: '1' },
+      ],
       user:{
+        role_id: null,
         country:null,
         street:null,
         city:null,
@@ -273,7 +277,7 @@ export default {
         name:this.user.name,
         surname:this.user.surname,
         date_of_birth:this.user.date_of_birth,
-        role:this.user.role,
+        role_id: this.user.role_id,
         email:this.user.email,
         phone:this.user.phone,
         vacation_days:this.user.vacation_days,
