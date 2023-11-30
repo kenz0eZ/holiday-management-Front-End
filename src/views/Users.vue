@@ -301,7 +301,7 @@ export default {
       return this.userDialog=false;
     },
     async listUsers() {
-      var res = await this.$store.dispatch('listUsers');
+     await this.$store.dispatch('listUsers');
     },
     async listDeletedUsers(){
       await this.$store.dispatch('listDeletedUsers');
@@ -312,7 +312,6 @@ export default {
       await this.$store.dispatch('listUsers');
       await this.$store.dispatch('listDeletedUsers');
 
-      // TODO make sure that the same user ( cant delete it's self.)
       return deletedUser;
     },
     async editUser(){

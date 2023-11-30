@@ -14,6 +14,7 @@ export default new Vuex.Store({
     inqueries:[],
     roleName: '',
     allInqueries:[],
+    updateInquery:null
   },
   mutations: {
     SET_USERS(state, users) {
@@ -34,6 +35,9 @@ export default new Vuex.Store({
     SET_ROLE_NAME(state, roleName) {
       state.roleName = roleName;
     },
+    UPDATE_INQUIRE_STATUS(state,update){
+      state.updateInquery = update;
+    }
   },
   actions: {
     // eslint-disable-next-line no-unused-vars
@@ -59,6 +63,7 @@ export default new Vuex.Store({
         throw error;
       }
     },
+
     // eslint-disable-next-line no-unused-vars
     logOutUser({commit}, token) {
       return authenticationRepo.logOutUser(token);
@@ -72,6 +77,17 @@ export default new Vuex.Store({
     makeReservation({commit},body){
       return authenticationRepo.makeReservation(body);
     },
+    async updateInquire({ commit }, body) {
+      try {
+        const response = await authenticationRepo.updateInquireStatus(body);
+        // Commit a mutation if needed
+        commit('UPDATE_INQUIRE_STATUS', response);
+        return response; // Return the updated data if needed
+      } catch (error) {
+        console.error('Failed to update inquiry status:', error);
+        throw error;
+      }
+    },
     createUser({commit},body){
       return authenticationRepo.createUser(body);
     },
@@ -80,7 +96,8 @@ export default new Vuex.Store({
     },
     async listUsers({commit}, token) {
       const response = await authenticationRepo.listUsers(token);
-      commit('SET_USERS', response.data); // Commit the users to the state
+      commit('SET_USERS', response.data); // Commit the users to the statecon
+      console.log('res : ', response);
       return response;
     },
     async getMyInqueries({commit}, token) {

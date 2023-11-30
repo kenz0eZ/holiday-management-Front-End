@@ -136,6 +136,15 @@ export default {
             throw error;
         }
     },
+    async updateInquireStatus({ inquireId, statusId }) {
+        try {
+            const response = await apiClient.patch(`api/inquire/${inquireId}`, { status_id: statusId });
+            return response.data; // Return the updated data if needed
+        } catch (error) {
+            console.error('Failed to update inquiry status:', error);
+            throw error;
+        }
+    },
     async createUser (body) {
         try {
             const response = await apiClient.post("api/user", body);

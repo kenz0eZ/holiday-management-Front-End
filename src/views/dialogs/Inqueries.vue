@@ -27,10 +27,10 @@
             <td>{{ item.start }}</td>
             <td>{{ item.end }}</td>
             <td v-if="item.status_name === 'PENDING'">
-              <v-icon @click="approveInquiry(item)">mdi-check</v-icon>
+              <v-icon @click="approveInquiry(item)" color="green">mdi-check</v-icon>
             </td>
             <td v-if="item.status_name === 'PENDING'">
-              <v-icon @click="declineInquiry(item)">mdi-close</v-icon>
+              <v-icon @click="declineInquiry(item)" color="red">mdi-close</v-icon>
             </td>
           </tr>
         </template>
@@ -59,8 +59,8 @@ export default {
         { text: 'Status Name', value: 'status_name' },
         { text: 'Start', value: 'start' },
         { text: 'End', value: 'end' },
-        { text: '' },
-        { text: '' },
+        { text: 'Accept', value:'accept' },
+        { text: 'Decline',value:'decline' },
       ],
       inqueries: null,
       statuses:null,
@@ -75,6 +75,7 @@ export default {
     if(this.myRole==='Manager'){
       await this.getInqueries();
     }
+    console.log('inqueries : ', this.inqueries);
       // this.statuses= this.inqueries.map(inqueries => inqueries.status_name);
     },
   computed: {
@@ -99,14 +100,40 @@ export default {
 
     approveInquiry(item) {
       console.log('APPROVE', item);
-    },
+      console.log(item.inquire_id);
 
+      const statusId = 3; // Set the desired status_id
+
+      this.$store.dispatch('updateInquire', { inquireId: item.inquire_id, statusId })
+          .then(updatedData => {
+            console.log('Update successful:', updatedData);
+            // Handle the response or perform additional actions
+          })
+          .catch(error => {
+            console.error('Failed to update inquiry status:', error);
+            // Handle the error appropriately
+          });
+    },
     declineInquiry(item) {
       console.log('DECLINE', item);
+      console.log(item.inquire_id);
+
+      const statusId = 2; // Set the desired status_id
+
+      this.$store.dispatch('updateInquire', { inquireId: item.inquire_id, statusId })
+          .then(updatedData => {
+            console.log('Update successful:', updatedData);
+            // Handle the response or perform additional actions
+          })
+          .catch(error => {
+            console.error('Failed to update inquiry status:', error);
+            // Handle the error appropriately
+          });
     },
     closeDialog() {
       this.dialog = false;
     },
+
     async getUser(id){
       const res = await this.$store.dispatch('getUser',id);
       this.getRole = res.data.role;
