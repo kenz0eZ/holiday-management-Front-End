@@ -2,8 +2,11 @@
   <v-dialog v-model="dialog" max-width="1500">
     <v-card height="620">
       <!-- Displaying the notifications here. -->
-      <v-card-title style="background-color: #3788d8; color: white; border-radius: 0px !important;">Notifications Table</v-card-title>
-      <v-data-table :items="inqueries" :headers="headers" class="elevation-3" height="500">
+        <v-card-title style="background-color: #3788d8; color: white; border-radius: 0px !important; display:flex; align-items: center; justify-content:space-between;">Notifications Table
+          <v-icon @click="closeDialog" style="cursor:pointer; color:white;">mdi mdi-close</v-icon>
+        </v-card-title>
+
+      <v-data-table :items="inqueries" :headers="headers" fixed-header class="elevation-3" height="500">
         <template v-slot:item="{ item }">
           <tr>
             <td>{{ item.user_name }} {{ item.user_surname }}</td>
