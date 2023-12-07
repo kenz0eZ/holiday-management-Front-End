@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app color="primary">
+    <v-app-bar app style="background-color:#19003F">
       <v-app-bar-title class="title" style="color: white;" @click="navigateToWallChart">Time Mozaic</v-app-bar-title>
       <v-spacer></v-spacer>
 
@@ -14,7 +14,7 @@
         <v-tooltip bottom >
           <template v-slot:activator="{on}">
             <v-btn icon v-on="on">
-              <v-icon @click="inqueriesDialog">mdi mdi-file-multiple</v-icon>
+              <v-icon color="white" @click="inqueriesDialog">mdi mdi-file-multiple</v-icon>
             </v-btn>
           </template>
           <span>List Inqueries</span>
