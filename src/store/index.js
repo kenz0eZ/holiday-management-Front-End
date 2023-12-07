@@ -75,6 +75,9 @@ export default new Vuex.Store({
     deleteUser({commit},id){
       return authenticationRepo.deleteUser(id);
     },
+    updateUser({commit},id){
+      return authenticationRepo.updateUser(id);
+    },
     async getUser({commit},id){
       const response = await authenticationRepo.getUser(id);
       commit('GET_USER_DETAILS', response.data);

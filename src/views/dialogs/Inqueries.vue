@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="1500">
     <v-card height="620 ">
       <!-- Displaying the notifications here. -->
-        <v-card-title style="background-color: #3788d8; color: white; border-radius: 0px !important; display:flex; align-items: center; justify-content:space-between; position:sticky; top:0; z-index:1000;">Notifications Table
+        <v-card-title style="background-color: #19003F; color: white; border-radius: 0px !important; display:flex; align-items: center; justify-content:space-between; position:sticky; top:0; z-index:1000;">Notifications Table
           <v-icon @click="closeDialog" style="cursor:pointer; color:white;">mdi mdi-close</v-icon>
         </v-card-title>
 

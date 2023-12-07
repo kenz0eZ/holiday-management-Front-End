@@ -200,8 +200,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn @click="saveChanges" style="position:absolute;right:100px; bottom:10px; background-color:#19003F; color:white;">Save</v-btn>
-        <v-btn  @click="closeDialog" style="position:absolute;right:20px; bottom:10px;background-color:#19003F; color:white;">Close</v-btn>
+        <v-btn @click="saveChanges" style="position:absolute;right:120px; bottom:10px; background-color:#19003F; color:white; padding:20px;">Save</v-btn>
+        <v-btn  @click="closeDialog" style="position:absolute;right:20px; bottom:10px;background-color:#19003F; color:white;padding:20px;">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -252,6 +252,7 @@ export default {
     await this.$store.dispatch('getUser',this.getUserId);
     console.log('THIS IS THE REPSOSNE LEO : ', this.userDetails);
     console.log(this.userDetails.name);
+   await this.$store.dispatch('updateUser',this.userDetails.getUserId);
   },
   methods: {
     closeDialog() {

@@ -163,6 +163,15 @@ export default {
             throw error;
         }
     },
+    async updateUser (id) {
+        try {
+            const response = await apiClient.patch(`api/user/${id}`);
+            return response; // Return the full response object
+        } catch (error) {
+            console.error('Failed to Login:', error);
+            throw error;
+        }
+    },
     async editUser(user){
       try{
           const response = await apiClient.patch(`api/user/${user.id}`, {

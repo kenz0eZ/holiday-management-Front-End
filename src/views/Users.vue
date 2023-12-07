@@ -1,13 +1,13 @@
 <template>
   <div class="about" style="overflow-y:hidden">
-    <div style="margin-top: 50px; max-width: 80%; margin: 0 auto;">
+    <div style="margin-top: 50px; max-width: 95%; margin: 0 auto;">
       <v-tabs v-model="activeTab">
         <!-- Tab for "Active" -->
-        <v-tab>
+        <v-tab style="color:#19003F">
           Active
         </v-tab>
         <!-- Tab for "Archived" -->
-        <v-tab>
+        <v-tab style="color:#19003F">
           Inactive
         </v-tab>
 
@@ -17,7 +17,7 @@
             <v-row>
               <v-col cols="6">
                 <v-card-title>Active Users
-                  <v-icon color="blue" style="margin-left:10px;">mdi mdi-account-circle</v-icon>
+                  <v-icon color="#19003F" style="margin-left:10px;">mdi mdi-account-circle</v-icon>
                 </v-card-title>
               </v-col>
               <v-col cols="4">
@@ -29,7 +29,7 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="2">
-                <v-btn color="primary" @click="openDialog">Add Someone</v-btn>
+                <v-btn style="background-color:#19003F; color:white;" @click="openDialog">Add Someone</v-btn>
               </v-col>
             </v-row>
             <!-- Search input for an active user -->
@@ -81,7 +81,9 @@
           <!-- Display active user data using v-data-table -->
           <v-data-table
               :items="filteredUsers"
-              :headers="filteredHeaders">
+              :headers="filteredHeaders"
+              height="465"
+          >
             <template v-slot:item.delete="{ item }">
               <v-icon v-if="roleName === 'Manager'" @click="deleteUser(item.id)" style="color:red;">mdi-delete</v-icon>
             </template>

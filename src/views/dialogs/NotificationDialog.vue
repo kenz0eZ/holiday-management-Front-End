@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="1800">
     <v-card height="620">
       <!-- Displaying the notifications here. -->
-      <v-card-title style="background-color: #3788d8; color: white; border-radius: 0px !important;">Notifications Table</v-card-title>
+      <v-card-title style="background-color: #19003F; color: white; border-radius: 0px !important;">Notifications Table</v-card-title>
       <v-data-table :items="inqueries" :headers="headers" class="elevation-3" height="500">
         <template v-slot:item="{ item }">
           <tr>
