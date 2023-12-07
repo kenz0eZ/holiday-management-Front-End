@@ -14,7 +14,8 @@ export default new Vuex.Store({
     inqueries:[],
     roleName: '',
     allInqueries:[],
-    updateInquery:null
+    updateInquery:null,
+    userDetails:[],
   },
   mutations: {
     SET_USERS(state, users) {
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     UPDATE_INQUIRE_STATUS(state,update){
       state.updateInquery = update;
+    },
+    GET_USER_DETAILS(state,payload){
+      state.userDetails = payload;
     }
   },
   actions: {
@@ -71,8 +75,12 @@ export default new Vuex.Store({
     deleteUser({commit},id){
       return authenticationRepo.deleteUser(id);
     },
-    getUser({commit},id){
-      return authenticationRepo.getUser(id);
+    async getUser({commit},id){
+      const response = await authenticationRepo.getUser(id);
+      commit('GET_USER_DETAILS', response.data);
+      return response.data;
+      // return authenticationRepo.getUser(id);
+
     },
     makeReservation({commit},body){
       return authenticationRepo.makeReservation(body);

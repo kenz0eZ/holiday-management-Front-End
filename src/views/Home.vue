@@ -226,10 +226,14 @@ export default {
       this.loginResponse = await this.$store.dispatch('loginUser', body);
 
       if (this.loginResponse && this.loginResponse.status === 200) {
+        console.log(this.loginResponse);
         const token = this.loginResponse.data.token;
         const role = this.loginResponse.data.role;
+        const userId = this.loginResponse.data.user.id;
         localStorage.setItem('token', token);
         localStorage.setItem('role',role);
+        localStorage.setItem('id', userId );
+
         // await this.$store.dispatch('setAuthToken', token);
         await this.$router.push('/dashboard');
       }

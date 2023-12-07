@@ -1,27 +1,31 @@
 <template>
-  <v-dialog v-model="dialog" max-width="900">
-    <v-card height="620">
-      <v-card-title class="custom-text">User Details</v-card-title>
+  <v-dialog v-model="dialog" max-width="900" persistent>
+    <v-card height="620" elevation="10">
+      <v-card-title class="custom-text" style="background-color:#19003F; color:white;">User Details
+        <v-spacer></v-spacer>
+        <v-icon style="color:white; cursor:pointer;" @click="closeDialog">mdi mdi-close</v-icon>
+      </v-card-title>
+
       <v-card-text>
         <!-- Profile Photo and Name/Department -->
         <v-row align="center" justify="space-between">
-          <v-col cols="3">
-            <v-avatar size="100">
+          <v-col cols="1">
+            <v-avatar size="100" style="margin-top:20px;">
               <img
-                  src="https://w7.pngwing.com/pngs/81/570/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo.png"
+                src="https://media.fiction.com/or62db208a90c6073814b9143e/renders/1440566616234073760/1440566616234073760-9.webp"
                   style="width: 150px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
               />
             </v-avatar>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="1">
             <div class="custom-text">{{ user.name }}</div>
 <!--            <div class="caption">{{ user.department }}</div>-->
           </v-col>
-          <v-col cols="5">
+          <v-col cols="10">
             <!-- Navigation Tabs -->
             <v-tabs v-model="activeTab">
               <v-tab href="#profile">Profile</v-tab>
-              <v-tab href="#details">Details</v-tab>
+<!--              <v-tab href="#details">Details</v-tab>-->
               <!-- Add more tabs as needed -->
             </v-tabs>
           </v-col>
@@ -33,8 +37,9 @@
             <!-- First Name -->
             <v-col cols="6">
               <v-text-field
+                  style="margin-top:10px;"
                   label="First Name"
-                  v-model="user.firstName"
+                  v-model="userDetails.name"
                   outlined
                   hide-details
                   dense
@@ -45,10 +50,11 @@
             <v-col cols="6">
               <v-text-field
                   label="Last Name"
-                  v-model="user.lastName"
+                  v-model="userDetails.surname"
                   outlined
                   hide-details
                   dense
+                  style="margin-top:10px;"
                   class="custom-text"
               ></v-text-field>
             </v-col>
@@ -58,7 +64,7 @@
             <v-col cols="6">
               <v-text-field
                   label="Email Address"
-                  v-model="user.email"
+                  v-model="userDetails.email"
                   outlined
                   hide-details
                   dense
@@ -67,58 +73,35 @@
             </v-col>
             <v-col cols="6">
               <v-text-field
-                  label="Phone"
-                  v-model="user.phone"
+                  label="Role"
+                  v-model="userDetails.role"
                   outlined
                   hide-details
                   dense
                   class="custom-text"
               ></v-text-field>
             </v-col>
-            <!-- Employment Start Date -->
             <v-col cols="6">
-              <v-menu
-                  ref="menu"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                      label="Employment start date"
-                      prepend-inner-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                      outlined
-                      hide-details
-                      dense
-                      class="custom-text"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-
-                    no-title
-                    scrollable
-                >
-                  <v-spacer></v-spacer>
-                  <v-btn
-                      text
-                      color="primary"
-                  >
-                    Cancel
-                  </v-btn>
-                  <v-btn
-                      text
-                      color="primary"
-                  >
-                    OK
-                  </v-btn>
-                </v-date-picker>
-              </v-menu>
+              <v-text-field
+                  label="Vacation Days"
+                  v-model="userDetails.vacation_days"
+                  outlined
+                  hide-details
+                  dense
+                  class="custom-text"
+              ></v-text-field>
             </v-col>
+<!--            <v-col cols="6">-->
+<!--              <v-text-field-->
+<!--                  label="Phone"-->
+<!--                  v-model="user.phone"-->
+<!--                  outlined-->
+<!--                  hide-details-->
+<!--                  dense-->
+<!--                  class="custom-text"-->
+<!--              ></v-text-field>-->
+<!--            </v-col>-->
+            <!-- Employment Start Date -->
           </v-row>
           <v-row>
             <!-- Date of Birth -->
@@ -127,34 +110,22 @@
                       label="Date of Birth"
                       append-icon="mdi-calendar"
                       outlined
-                      v-model="user.dateOfBirth"
+                      v-model="userDetails.date_of_birth"
                       hide-details
                       dense
                       class="custom-text"
                   ></v-text-field>
-              <v-row>
-                <v-col cols="12" class="d-flex align-center mt-8">
-                  <v-checkbox
-                      label="Administrator"
-                      class="custom-text"
-                  ></v-checkbox>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-card-text style="font-size:15px;" class="custom-text">Administrators can access and change everything, including all settings.</v-card-text>
-              </v-row>
             </v-col>
-            <!-- Department -->
-            <v-col cols="6" style="margin-top:160px;">
+            <v-col cols="6" style="margin-top:-65px;">
               <v-text-field
                   label="Department"
-                  v-model="user.department"
+                  v-model="this.userDetails.company[0].name"
                   outlined
                   hide-details
                   dense
                   class="custom-text"
               ></v-text-field>
-              <div style="margin-top:15px;">
+              <div style="margin-top:35px; font-size:16px; font-weight:bold;">
                 <a href="/mycalendar" class="text-decoration-none">
                   <v-icon left color="primary" style="font-size:20px;">
                     mdi-calendar <!-- Calendar icon -->
@@ -229,8 +200,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="saveChanges" style="position:absolute;right:100px; bottom:10px;">Save</v-btn>
-        <v-btn color="primary" @click="closeDialog" style="position:absolute;right:20px; bottom:10px;">Close</v-btn>
+        <v-btn @click="saveChanges" style="position:absolute;right:100px; bottom:10px; background-color:#19003F; color:white;">Save</v-btn>
+        <v-btn  @click="closeDialog" style="position:absolute;right:20px; bottom:10px;background-color:#19003F; color:white;">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -238,14 +209,16 @@
 
 <script>
 import index from "vuex";
+import {mapState} from "vuex";
 
 export default {
   data() {
     return {
       activeTab: 'profile', // Set the default active tab
+      getUserId : localStorage.getItem('id'),
       user: {
         profilePhotoUrl: 'URL_OF_PROFILE_PHOTO',
-        name: 'Leo Pavlovski',
+        name: this.userDetails,
         department: 'HR',
         firstName: '',
         lastName: '',
@@ -263,6 +236,9 @@ export default {
     value: Boolean, // Controls the visibility of the dialog
   },
   computed: {
+    ...mapState({
+      userDetails: state => state.userDetails,
+    }),
     dialog: {
       get() {
         return this.value;
@@ -271,6 +247,11 @@ export default {
         this.$emit("input", newValue);
       },
     },
+  },
+  async mounted() {
+    await this.$store.dispatch('getUser',this.getUserId);
+    console.log('THIS IS THE REPSOSNE LEO : ', this.userDetails);
+    console.log(this.userDetails.name);
   },
   methods: {
     closeDialog() {

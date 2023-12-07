@@ -147,6 +147,7 @@ export default {
           token:token
         };
         await this.$store.dispatch('logOutUser', body);
+        localStorage.removeItem('id')
        await this.$router.push('/login');
       }
     },
