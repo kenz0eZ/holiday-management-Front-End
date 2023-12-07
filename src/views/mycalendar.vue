@@ -386,7 +386,7 @@ export default {
     },
     makeReservation(){
       const body = {
-        type:2,
+        type:this.selectedEventType,
         start:this.startDate,
         end:this.endDate
       }
