@@ -76,6 +76,7 @@
                   label="Role"
                   v-model="userDetails.role"
                   outlined
+                  readonly
                   hide-details
                   dense
                   class="custom-text"
@@ -119,7 +120,7 @@
             <v-col cols="6" style="margin-top:-65px;">
               <v-text-field
                   label="Department"
-                  v-model="this.userDetails.company[0].name"
+                  v-model="userDetails.company[0].name"
                   outlined
                   hide-details
                   dense
@@ -250,7 +251,7 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch('getUser',this.getUserId);
-    console.log('THIS IS THE REPSOSNE LEO : ', this.userDetails);
+    console.log('My data  : ', this.userDetails);
     console.log(this.userDetails.name);
    await this.$store.dispatch('updateUser',this.userDetails.getUserId);
   },
@@ -260,15 +261,17 @@ export default {
     },
     async saveChanges() {
       const body = {
-        // id: this.userDetails.id,
-        name: this.user.firstName,
-        surname: this.user.lastName,
-        phone: this.user.phone,
-        email: this.user.email,
-        // address: this.user.address,
-        birthdate: this.user.dateOfBirth,
+        id: this.userDetails.id,
+        name: this.userDetails.name,
+        surname: this.userDetails.surname,
+        email: this.userDetails.email,
+        vacation_days: this.userDetails.vacation_days,
+        date_of_birth: this.userDetails.date_of_birth,
+        company:this.userDetails.company[0].name
       };
-      await this.$store.dispatch('updateUser', body);
+
+      // await this.$store.dispatch('updateUser', body);
+      await this.$store.dispatch('editUser2', body);
       console.log('xD', body);
     }
   },

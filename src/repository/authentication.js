@@ -163,15 +163,15 @@ export default {
             throw error;
         }
     },
-    async updateUser (id) {
-        try {
-            const response = await apiClient.patch(`api/user/${id}`);
-            return response; // Return the full response object
-        } catch (error) {
-            console.error('Failed to Login:', error);
-            throw error;
-        }
-    },
+    // async updateUser (user) {
+    //     try {
+    //         const response = await apiClient.patch(`api/user/${id}`);
+    //         return response; // Return the full response object
+    //     } catch (error) {
+    //         console.error('Failed to Login:', error);
+    //         throw error;
+    //     }
+    // },
     async editUser(user){
       try{
           const response = await apiClient.patch(`api/user/${user.id}`, {
@@ -185,6 +185,21 @@ export default {
           console.log(error);
           throw error;
       }
+    },
+    async editUser2(user){
+        try{
+            const response = await apiClient.patch(`api/user/${user.id}`, {
+                name: user.name,
+                surname: user.surname,
+                email:user.email,
+                company:user.company
+            });
+            return response;
+        }
+        catch(error){
+            console.log(error);
+            throw error;
+        }
     },
     async makeReservation(body){
       const response = await apiClient.post('api/inquire',body)

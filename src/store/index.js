@@ -75,8 +75,8 @@ export default new Vuex.Store({
     deleteUser({commit},id){
       return authenticationRepo.deleteUser(id);
     },
-    updateUser({commit},id){
-      return authenticationRepo.updateUser(id);
+    async updateUser({commit},id){
+      return await authenticationRepo.updateUser(id);
     },
     async getUser({commit},id){
       const response = await authenticationRepo.getUser(id);
@@ -104,6 +104,9 @@ export default new Vuex.Store({
     },
     editUser({commit},body){
       return authenticationRepo.editUser(body);
+    },
+    editUser2({commit},body){
+      return authenticationRepo.editUser2(body);
     },
     async listUsers({commit}, token) {
       const response = await authenticationRepo.listUsers(token);
