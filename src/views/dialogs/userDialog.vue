@@ -1,5 +1,6 @@
 <template>
   <v-dialog v-model="dialog" max-width="900" persistent>
+    <v-alert type="success" v-if="apiPassed"></v-alert>
     <v-card height="620" elevation="10">
       <v-card-title class="custom-text" style="background-color:#19003F; color:white;">User Details
         <v-spacer></v-spacer>
@@ -216,6 +217,7 @@ export default {
   data() {
     return {
       activeTab: 'profile', // Set the default active tab
+      apiPassed:false,
       getUserId : localStorage.getItem('id'),
       user: {
         profilePhotoUrl: 'URL_OF_PROFILE_PHOTO',
@@ -259,20 +261,38 @@ export default {
     closeDialog() {
       this.dialog = false;
     },
-    async saveChanges() {
-      const body = {
-        id: this.userDetails.id,
-        name: this.userDetails.name,
-        surname: this.userDetails.surname,
-        email: this.userDetails.email,
-        vacation_days: this.userDetails.vacation_days,
-        date_of_birth: this.userDetails.date_of_birth,
-        company:this.userDetails.company[0].name
-      };
 
-      // await this.$store.dispatch('updateUser', body);
-      await this.$store.dispatch('editUser2', body);
-      console.log('xD', body);
+    async saveChanges() {
+      if(this.userDetails.role==='Manager'){
+        const body = {
+          id: this.userDetails.id,
+          name: this.userDetails.name,
+          surname: this.userDetails.surname,
+          email: this.userDetails.email,
+          vacation_days: this.userDetails.vacation_days,
+          date_of_birth: this.userDetails.date_of_birth,
+          company:this.userDetails.company[0].name
+        };
+        // await this.$store.dispatch('updateUser', body);
+        await this.$store.dispatch('editUser2', body)
+        this.closeDialog();
+        console.log('xD', body);
+      }
+      if(this.userDetails.role==='Employee'){
+        const body = {
+          id: this.userDetails.id,
+          name: this.userDetails.name,
+          surname: this.userDetails.surname,
+          email: this.userDetails.email,
+          vacation_days: this.userDetails.vacation_days,
+          date_of_birth: this.userDetails.date_of_birth,
+        };
+
+        // await this.$store.dispatch('updateUser', body);
+        await this.$store.dispatch('editUser2', body);
+        this.closeDialog();
+        console.log('xD', body);
+      }
     }
   },
 };

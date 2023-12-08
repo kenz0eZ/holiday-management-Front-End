@@ -49,28 +49,16 @@
         <v-list dense>
           <v-list-item @click="openDetailsDialog">
             <v-list-item-icon>
-              <v-icon>mdi-dark mdi-account</v-icon>
+              <v-icon color="#19003F"> mdi-account</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>My Details</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="menuActionClick('preferences')">
-            <v-list-item-icon>
-              <v-icon>mdi-wrench</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>My Preferences</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="menuActionClick('help')">
-            <v-list-item-icon>
-              <v-icon>mdi-help</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Help & Support</v-list-item-title>
+            <v-list-item-title style="font-weight: bold;">My Details</v-list-item-title>
           </v-list-item>
           <v-divider></v-divider>
           <v-list-item @click="menuActionClick('signOut')">
             <v-list-item-icon>
-              <v-icon>mdi-exit-to-app</v-icon>
+              <v-icon color="#19003F">mdi-exit-to-app</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Sign Out</v-list-item-title>
+            <v-list-item-title style="font-weight: bold;">Sign Out</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>

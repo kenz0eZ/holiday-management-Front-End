@@ -192,7 +192,9 @@ export default {
                 name: user.name,
                 surname: user.surname,
                 email:user.email,
-                company:user.company
+                vacation_days:user.vacation_days,
+                company:user.company,
+                date_of_birth:user.date_of_birth,
             });
             return response;
         }
