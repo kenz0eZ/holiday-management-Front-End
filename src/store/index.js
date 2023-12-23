@@ -85,9 +85,9 @@ export default new Vuex.Store({
       // return authenticationRepo.getUser(id);
 
     },
-    makeReservation({commit},body){
-      return authenticationRepo.makeReservation(body);
-    },
+      makeReservation({commit},body){
+        return authenticationRepo.makeReservation(body);
+      },
     async updateInquire({ commit }, body) {
       try {
         const response = await authenticationRepo.updateInquireStatus(body);

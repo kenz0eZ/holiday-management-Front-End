@@ -26,10 +26,10 @@
               </div>
                   My inqueries -->
       <div v-if="this.testRole==='Employee'">
-        <v-tooltip bottom >
+        <v-tooltip bottom  color="#19003F">
           <template v-slot:activator="{on}">
             <v-btn icon v-on="on">
-              <v-icon @click="notificationDialog">mdi mdi-file-document</v-icon>
+              <v-icon @click="notificationDialog" color="white">mdi mdi-file-document</v-icon>
             </v-btn>
           </template>
           <span>My inqueries</span>
