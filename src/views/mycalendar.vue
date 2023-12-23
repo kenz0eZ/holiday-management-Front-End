@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- Button to Open the Date Selection Dialog -->
+
     <div style="display:flex; align-items:center; justify-content: space-around; width:90%;margin:auto; padding-top:20px;">
 <!--      Need to fix the image, take something different URL has expired when using a facebook img-->
       <img
@@ -15,9 +16,10 @@
         </v-card-text>
       </div>
       <div class="d-flex">
+
         <v-icon @click="decrementYear" color="#19003F"  v-if="currentYear > MIN_YEAR">mdi-chevron-left</v-icon>
         <!-- Display Current Year -->
-        <h6 class="current-year custom-text">September {{ currentYear }} to October {{currentYear +1  }}</h6>
+        <h6 class="current-year custom-text"> {{ currentYear }}  {{currentYear +1  }}</h6>
         <!-- Right Arrow Button -->
         <v-icon @click="incrementYear" color="#19003F" class="arrow-button">mdi-chevron-right</v-icon>
       </div>
