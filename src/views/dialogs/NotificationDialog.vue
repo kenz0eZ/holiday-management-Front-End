@@ -7,14 +7,14 @@
         <template v-slot:item="{ item }">
           <tr>
             <td>{{ item.user_name }} {{ item.user_surname }}</td>
-            <td>{{ item.inquire_id }}</td>
-            <td>{{ item.user_id }}</td>
+<!--            <td>{{ item.inquire_id }}</td>-->
+<!--            <td>{{ item.user_id }}</td>-->
             <td>{{ item.user_email }}</td>
-            <td>{{ item.company_id }}</td>
+<!--            <td>{{ item.company_id }}</td>-->
             <td>{{ item.company_name }}</td>
-            <td>{{ item.type_id }}</td>
+<!--            <td>{{ item.type_id }}</td>-->
             <td>{{ item.type_name }}</td>
-            <td>{{ item.status_id }}</td>
+<!--            <td>{{ item.status_id }}</td>-->
             <td>{{ item.status_name }}</td>
             <td>{{ item.start }}</td>
             <td>{{ item.end }}</td>
