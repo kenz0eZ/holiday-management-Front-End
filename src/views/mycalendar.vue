@@ -193,6 +193,7 @@ export default {
   mounted () {
     this.$store.dispatch('vacationTypes');
     console.log('adskljadsda0', this.userDetails);
+    console.log('Vacation Days: ' , this.userDetails.vacation_days )
     },
   methods: {
   validateSelection(){
@@ -209,6 +210,7 @@ export default {
       this.startDate='';
       this.endDate='';
       this.selectedEventType='';
+      console.log('Funkcija , ' , this.userDetails.vacation_days);
     },
     scaleImage(event) {
       event.target.style.transform = 'translateY(10px)'; // Scale up the image on hover

@@ -13,7 +13,7 @@
               <v-btn @click="prevMonth" style="color:white; font-size:10px; background-color:#19003F">Previous Month</v-btn>
             </div>
             <div>
-              <v-btn @click="nextMonth" style="color:white; font-size:10px; background-color:#19003F">Previous Month</v-btn>
+              <v-btn @click="nextMonth" style="color:white; font-size:10px; background-color:#19003F">Next Month</v-btn>
             </div>
             <div style="display:flex;align-items:center;justify-content: flex-end; margin-top:-10px; margin-right:37px;" class="ml-auto">
               <h2 class="text-right" style="font-size:15px; letter-spacing:1px; margin-right:15px; font-weight: bold;">{{ monthNames[month] }} {{ year }}</h2>
@@ -39,44 +39,44 @@
         <!--      <div v-for="user in users" :key="user.id">-->
         <!--        {{user.name}}-->
         <!--      </div>-->
-        <div style="margin-left:40px; background-color:#19003F;color:white; padding-left:10px;  height: 30px; width:97%;">
-            <v-row>
-              <v-col cols="6" style="margin-top:-5px;">
-                <p class="text-center">Active Users</p>
-              </v-col>
-              <v-col cols="6" style="padding-left:30px; margin-top:-5px;">
-                <p class="text-center">Select Users</p>
-              </v-col>
-            </v-row>
-        </div>
-        <div style="overflow:auto; max-height:600px;">
-          <v-row style="padding: 50px;" justify="center">
-            <v-col xs="12" sm="6" md="6" lg="6">
-              <v-data-table
-                  :items="users"
-                  :headers="headers"
-                  :items-per-page="5"
-                  class="elevation-15"
-                  height="500"
+<!--        <div style="margin-left:40px; background-color:#19003F;color:white; padding-left:10px;  height: 30px; width:97%;">-->
+<!--            <v-row>-->
+<!--              <v-col cols="6" style="margin-top:-5px;">-->
+<!--                <p class="text-center">Active Users</p>-->
+<!--              </v-col>-->
+<!--              <v-col cols="6" style="padding-left:30px; margin-top:-5px;">-->
+<!--                <p class="text-center">Select Users</p>-->
+<!--              </v-col>-->
+<!--            </v-row>-->
+<!--        </div>-->
+<!--        <div style="overflow:auto; max-height:600px;">-->
+<!--          <v-row style="padding: 50px;" justify="center">-->
+<!--            <v-col xs="12" sm="6" md="6" lg="6">-->
+<!--              <v-data-table-->
+<!--                  :items="users"-->
+<!--                  :headers="headers"-->
+<!--                  :items-per-page="5"-->
+<!--                  class="elevation-15"-->
+<!--                  height="500"-->
 
-              ></v-data-table>
-            </v-col>
-            <v-col xs="12" sm="6" md="4" lg="6" style="padding: 10px; margin-top:15px;">
-              <v-row>
-                <v-card elevation="12" width="100%" style="padding:15px;" height="560">
-                  <v-select
-                      v-model="selectedUser"
-                      :items="users"
-                      item-text="name"
-                      label="Select User"
-                      @change="updateUserIcon"
-                  ></v-select>
-                </v-card>
+<!--              ></v-data-table>-->
+<!--            </v-col>-->
+<!--            <v-col xs="12" sm="6" md="4" lg="6" style="padding: 10px; margin-top:15px;">-->
+<!--              <v-row>-->
+<!--                <v-card elevation="12" width="100%" style="padding:15px;" height="560">-->
+<!--                  <v-select-->
+<!--                      v-model="selectedUser"-->
+<!--                      :items="users"-->
+<!--                      item-text="name"-->
+<!--                      label="Select User"-->
+<!--                      @change="updateUserIcon"-->
+<!--                  ></v-select>-->
+<!--                </v-card>-->
 
-              </v-row>
-            </v-col>
-          </v-row>
-        </div>
+<!--              </v-row>-->
+<!--            </v-col>-->
+<!--          </v-row>-->
+<!--        </div>-->
       </div>
     </div>
 <!--Maybe do a footer-->
