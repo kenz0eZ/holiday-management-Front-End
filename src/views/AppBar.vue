@@ -64,10 +64,10 @@
       </v-menu>
     </v-app-bar>
 
-    <user-details-dialog
+    <user-dialog
         v-model="showDetailsDialog"
         :users="userDetails"
-    ></user-details-dialog>
+    ></user-dialog>
 
     <notification-dialog
         v-model="openNotificationDialog"
@@ -81,14 +81,14 @@
 </template>
 
 <script>
-import UserDetailsDialog from "@/views/dialogs/userDialog.vue"; // Adjust the path as needed
+import UserDialog from "./dialogs/userDialog.vue";
 import NotificationDialog from "./dialogs/NotificationDialog.vue";
 import Inqueries from "./dialogs/Inqueries.vue";
 import {mapGetters, mapState} from "vuex";
 
 export default {
   components: {
-    UserDetailsDialog,
+    UserDialog,
     NotificationDialog,
     Inqueries
   },
