@@ -39,41 +39,45 @@
           <!-- "Add Someone" button -->
 
           <v-dialog max-width="500px" v-model="userDialog">
-            <v-card>
-              <v-card-title class="font-weight-bold" style="background-color: #2196F3; color: white; border-radius: 4px; padding: 10px;">Add User</v-card-title>
+            <v-card class="overflow-auto">
+              <v-card-title class="font-weight-bold" style="background-color: #19003F; color: white; border-radius: 4px; padding: 10px;">
+                <h6 class="ml-4"  style="font-size:16px; font-weight:normal">Add User</h6>
+                <v-spacer></v-spacer>
+                <v-icon color="white" @click="closeDialog">mdi mdi-close</v-icon>
+              </v-card-title>
               <!-- Input fields -->
               <v-card-text>
                 <v-row class="mt-3">
                   <!-- First column -->
                   <v-col cols="12" md="6">
-                    <v-text-field dense outlined label="Name" v-model="user.name"></v-text-field>
-                    <v-text-field dense outlined label="Surname" v-model="user.surname"></v-text-field>
-                    <v-text-field dense outlined label="Email" v-model="user.email"></v-text-field>
-                    <v-text-field dense outlined label="Phone" v-model="user.phone.number"></v-text-field>
+                    <v-text-field dense outlined label="Name" v-model="user.name" color="#19003F"></v-text-field>
+                    <v-text-field dense outlined label="Surname" color="#19003F" v-model="user.surname"></v-text-field>
+                    <v-text-field dense outlined color="#19003F" label="Email" v-model="user.email"></v-text-field>
+                    <v-text-field color="#19003F" dense outlined label="Phone" v-model="user.phone.number"></v-text-field>
                     <v-menu>
                       <template v-slot:activator="{ on }">
-                        <v-text-field dense outlined label="date of birth" v-model="user.date_of_birth" v-on="on"></v-text-field>
+                        <v-text-field dense outlined color="#19003F" label="date of birth" v-model="user.date_of_birth" v-on="on"></v-text-field>
                       </template>
-                      <v-date-picker v-model="user.date_of_birth" @input="() => {}"></v-date-picker>
+                      <v-date-picker color="#19003F" v-model="user.date_of_birth" @input="() => {}"></v-date-picker>
                     </v-menu>
                   </v-col>
 
                   <!-- Second column -->
                   <v-col cols="12" md="6">
-                    <v-text-field dense outlined label="Country" v-model="user.country"></v-text-field>
-                    <v-text-field dense outlined label="City" v-model="user.city"></v-text-field>
-                    <v-text-field dense outlined label="Street" v-model="user.street"></v-text-field>
-                    <v-text-field dense outlined label="Zip" v-model="user.zip"></v-text-field>
-                    <v-text-field dense outlined label="Vacation days" v-model="user.vacation_days"></v-text-field>
+                    <v-text-field dense outlined label="Country" v-model="user.country" color="#19003F"></v-text-field>
+                    <v-text-field dense outlined label="City" v-model="user.city" color="#19003F"></v-text-field>
+                    <v-text-field dense outlined label="Street"  color="#19003F" v-model="user.street"></v-text-field>
+                    <v-text-field dense outlined color="#19003F" label="Zip" v-model="user.zip"></v-text-field>
+                    <v-text-field color="#19003F" dense outlined label="Vacation days" v-model="user.vacation_days"></v-text-field>
                   </v-col>
-                  <v-select dense outlined label="Role" v-model="user.role_id" :items="roleOptions"></v-select>
+                  <v-select class="mx-3" color="#19003F" dense outlined label="Role" v-model="user.role_id" :items="roleOptions"></v-select>
                 </v-row>
               </v-card-text>
 
               <!-- Action buttons -->
-              <v-card-actions>
-                <v-btn color="primary" @click="createUser">Add User</v-btn>
-                <v-btn color="error" @click="closeDialog">Cancel</v-btn>
+              <v-card-actions class="float-right">
+                <v-btn color="secondary" @click="closeDialog">Cancel</v-btn>
+                <v-btn style="color:white;" color="#19003f" @click="createUser">Add User</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
