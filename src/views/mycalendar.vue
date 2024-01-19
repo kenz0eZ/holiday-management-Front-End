@@ -137,6 +137,7 @@ export default {
   data() {
     return {
       holidayDetailsDialog:false,
+      inqueries: null,
       meetingDetailsDialog: false, // Flag to control the dialog visibility
       meetingReservationDates: [], // Array to store meeting reservation dates
       holidayReservations: [], // Array to store holiday reservations
@@ -196,21 +197,41 @@ export default {
     console.log('Vacation Days: ' , this.userDetails.vacation_days )
     },
   methods: {
+    async getMyInqueries() {
+      try {
+        const response = await this.$store.dispatch('getMyInqueries');
+        this.inqueries = response; // Assuming your response is an array of inqueries
+      } catch (error) {
+        console.error('Error fetching inqueries:', error);
+      }
+    },
   validateSelection(){
     this.validate=true;
   },
-    makeReservation(){
+    async makeReservation() {
       const body = {
-        type:this.selectedEventType,
-        start:this.startDate,
-        end:this.endDate
+        type: this.selectedEventType,
+        start: this.startDate,
+        end: this.endDate
       }
-      this.$store.dispatch('makeReservation',body);
-      this.closeDateSelectionDialog();
-      this.startDate='';
-      this.endDate='';
-      this.selectedEventType='';
-      console.log('Funkcija , ' , this.userDetails.vacation_days);
+
+      try {
+        // Dispatch the makeReservation action
+        await this.$store.dispatch('makeReservation', body);
+
+        // Once the reservation is made, fetch the updated data
+        await this.getMyInqueries();
+
+        // Reset your form or perform any other actions
+        this.closeDateSelectionDialog();
+        this.startDate = '';
+        this.endDate = '';
+        this.selectedEventType = '';
+
+        console.log('Function,', this.userDetails.vacation_days);
+      } catch (error) {
+        console.error('Error making reservation:', error);
+      }
     },
     scaleImage(event) {
       event.target.style.transform = 'translateY(10px)'; // Scale up the image on hover

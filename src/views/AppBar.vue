@@ -118,8 +118,17 @@ export default {
     };
   },
   methods: {
-    notificationDialog(){
-      this.openNotificationDialog=true;
+    async getMyInqueries() {
+      try {
+        const response = await this.$store.dispatch('getMyInqueries');
+        this.inqueries = response; // Assuming your response is an array of inqueries
+      } catch (error) {
+        console.error('Error fetching inqueries:', error);
+      }
+    },
+    async notificationDialog() {
+      this.openNotificationDialog = true;
+      await this.getMyInqueries(); // Fetch the latest data before opening the dialog
     },
     inqueriesDialog(){
       this.openInqueries=true;

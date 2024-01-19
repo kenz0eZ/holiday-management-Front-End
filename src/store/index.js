@@ -16,6 +16,7 @@ export default new Vuex.Store({
     allInqueries:[],
     updateInquery:null,
     userDetails:[],
+    setInq:[],
   },
   mutations: {
     SET_USERS(state, users) {
@@ -41,7 +42,10 @@ export default new Vuex.Store({
     },
     GET_USER_DETAILS(state,payload){
       state.userDetails = payload;
-    }
+    },
+    SET_INQUERIES(state, inqueries) {
+      state.setInq = inqueries;
+    },
   },
   actions: {
     // eslint-disable-next-line no-unused-vars
@@ -114,14 +118,18 @@ export default new Vuex.Store({
       console.log('res : ', response);
       return response;
     },
-    async getMyInqueries({commit}, token) {
-      const response = await authenticationRepo.getMyInqueries(token);
-      commit('GET_INQUERIES', response.data); // Commit the users to the state
-      return response;
+    async getMyInqueries({ commit }, token) {
+      try {
+        const response = await authenticationRepo.getMyInqueries(token);
+        // Commit the new inquiries to the state
+        commit('SET_INQUERIES', response);
+      } catch (error) {
+        console.error('Error fetching inqueries:', error);
+      }
     },
     async getInqueries({commit}, token) {
       const response = await authenticationRepo.getInqueries(token);
-      commit('GET_ALL_INQUERIES', response.data); // Commit the users to the state
+      commit('GET_ALL_INQUERIES', response); // Commit the users to the state
       return response;
     },
 

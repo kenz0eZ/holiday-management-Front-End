@@ -159,10 +159,12 @@ export default {
           .then(updatedData => {
             console.log('Update successful:', updatedData);
             // Handle the response or perform additional actions
+            this.getInqueries();
           })
           .catch(error => {
             console.error('Failed to update inquiry status:', error);
             // Handle the error appropriately
+            this.getInqueries();
           });
     },
     declineInquiry(item) {
@@ -174,10 +176,12 @@ export default {
       this.$store.dispatch('updateInquire', { inquireId: item.inquire_id, statusId })
           .then(updatedData => {
             console.log('Update successful:', updatedData);
+            this.getInqueries();
             // Handle the response or perform additional actions
           })
           .catch(error => {
             console.error('Failed to update inquiry status:', error);
+            this.getInqueries();
             // Handle the error appropriately
           });
     },

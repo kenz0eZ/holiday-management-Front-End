@@ -47,7 +47,6 @@ export default {
         { text: 'Start', value: 'start' },
         { text: 'End', value: 'end' },``
       ],
-      inqueries: null,
     };
   },
   props: {
@@ -56,11 +55,14 @@ export default {
   },
   async mounted() {
   this.myRole=localStorage.getItem('role');
-  if(this.myRole==='Employee'){
-    await this.getMyInqueries()
+    if (this.myRole === 'Employee') {
+      await this.$store.dispatch('getMyInqueries');
     }
   },
   computed: {
+    inqueries() {
+      return this.$store.state.setInq;
+    },
     dialog: {
       get() {
         return this.value;
@@ -74,14 +76,14 @@ export default {
     closeDialog() {
       this.dialog = false;
     },
-    async getMyInqueries() {
-      try {
-        const response = await this.$store.dispatch('getMyInqueries');
-        this.inqueries = response; // Assuming your response is an array of inqueries
-      } catch (error) {
-        console.error('Error fetching inqueries:', error);
-      }
-    },
+      async getMyInqueries() {
+        try {
+          const response = await this.$store.dispatch('getMyInqueries');
+          this.inqueries = response; // Assuming your response is an array of inqueries
+        } catch (error) {
+          console.error('Error fetching inqueries:', error);
+        }
+      },
   },
 };
 </script>
