@@ -131,10 +131,6 @@ export default {
 
       this.$set(this.userIcons, this.selectedUser?.id, randomIcon);
     },
-    selectDate(day) {
-      // Implement your logic when a date is selected
-      console.log(`Selected date: ${this.year}-${this.month + 1}-${day}`);
-    },
     generateCalendar() {
       const totalDays = new Date(this.year, this.month + 1, 0).getDate();
       this.daysInMonth = Array.from({ length: totalDays }, (_, i) => i + 1);

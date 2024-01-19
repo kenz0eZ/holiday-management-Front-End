@@ -193,8 +193,6 @@ export default {
   },
   mounted () {
     this.$store.dispatch('vacationTypes');
-    console.log('adskljadsda0', this.userDetails);
-    console.log('Vacation Days: ' , this.userDetails.vacation_days )
     },
   methods: {
     async getMyInqueries() {
@@ -228,7 +226,6 @@ export default {
         this.endDate = '';
         this.selectedEventType = '';
 
-        console.log('Function,', this.userDetails.vacation_days);
       } catch (error) {
         console.error('Error making reservation:', error);
       }

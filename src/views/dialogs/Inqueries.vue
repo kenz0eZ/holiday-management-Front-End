@@ -115,7 +115,6 @@ export default {
     if(this.myRole==='Manager'){
       await this.getInqueries();
     }
-    console.log('inqueries : ', this.inqueries);
       // this.statuses= this.inqueries.map(inqueries => inqueries.status_name);
     },
   computed: {
@@ -150,8 +149,6 @@ export default {
       return this.inqueries;
     },
     approveInquiry(item) {
-      console.log('APPROVE', item);
-      console.log(item.inquire_id);
 
       const statusId = 3; // Set the desired status_id
 
@@ -168,9 +165,6 @@ export default {
           });
     },
     declineInquiry(item) {
-      console.log('DECLINE', item);
-      console.log(item.inquire_id);
-
       const statusId = 2; // Set the desired status_id
 
       this.$store.dispatch('updateInquire', { inquireId: item.inquire_id, statusId })

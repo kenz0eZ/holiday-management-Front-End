@@ -188,8 +188,6 @@ export default {
   },
   methods: {
     checkPasswords(){
-      console.log('password' , this.user.password);
-      console.log('Confirm password' , this.user.password_confirmation);
       if (this.user.password_confirmation === this.user.password){
         return true;
       }
@@ -205,7 +203,6 @@ export default {
       this.loginResponse = await this.$store.dispatch('loginUser', body);
 
       if (this.loginResponse && this.loginResponse.status === 200) {
-        console.log(this.loginResponse);
         const token = this.loginResponse.data.token;
         const role = this.loginResponse.data.role;
         const userId = this.loginResponse.data.user.id;
@@ -229,12 +226,7 @@ export default {
           email: this.registrationResponse.data.user.email,
           token: this.registrationResponse.data.token,
         };
-        console.log('aeaeaaeae', body);
-        console.log('dslkadsa' , this.user.password)
         this.verificationResponse = await this.$store.dispatch('verificationLink', body);
-        console.log("Registration successful");
-      } else {
-        console.log("Registration failed");
       }
     },
   },

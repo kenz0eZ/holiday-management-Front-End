@@ -26,10 +26,8 @@ export default {
     async verifyEmailFromLink() {
       try {
         const link = this.getVerificationLink();
-        console.log('Generated Verification Link:', link);
 
         const response = await this.$store.dispatch('verifyEmail', link);
-        console.log('Response from verifyEmail:', response);
 
         if (response.status === 201) {
           this.message = response.data.status || 'Email verification failed';

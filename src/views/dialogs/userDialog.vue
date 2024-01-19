@@ -253,8 +253,6 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch('getUser',this.getUserId);
-    console.log('My data  : ', this.userDetails);
-    console.log(this.userDetails.name);
    await this.$store.dispatch('updateUser',this.userDetails.getUserId);
   },
   methods: {
@@ -276,7 +274,6 @@ export default {
         // await this.$store.dispatch('updateUser', body);
         await this.$store.dispatch('editUser2', body)
         this.closeDialog();
-        console.log('xD', body);
       }
       if(this.userDetails.role==='Employee'){
         const body = {
@@ -291,7 +288,6 @@ export default {
         // await this.$store.dispatch('updateUser', body);
         await this.$store.dispatch('editUser2', body);
         this.closeDialog();
-        console.log('xD', body);
       }
     }
   },

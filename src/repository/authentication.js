@@ -182,7 +182,6 @@ export default {
           return response;
       }
       catch(error){
-          console.log(error);
           throw error;
       }
     },
@@ -205,7 +204,6 @@ export default {
     },
     async makeReservation(body){
       const response = await apiClient.post('api/inquire',body)
-      console.log(response);
         return response;
     },
 

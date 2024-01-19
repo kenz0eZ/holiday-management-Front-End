@@ -115,7 +115,6 @@ export default new Vuex.Store({
     async listUsers({commit}, token) {
       const response = await authenticationRepo.listUsers(token);
       commit('SET_USERS', response.data); // Commit the users to the statecon
-      console.log('res : ', response);
       return response;
     },
     async getMyInqueries({ commit }, token) {
