@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="900" persistent>
     <v-alert type="success" v-if="apiPassed"></v-alert>
     <v-card height="620" elevation="10">
-      <v-card-title class="custom-text" style="background-color:#19003F; color:white;">User Details
+      <v-card-title class="custom-text" style="background-color:#fff; color:white;">User Details
         <v-spacer></v-spacer>
         <v-icon style="color:white; cursor:pointer;" @click="closeDialog">mdi mdi-close</v-icon>
       </v-card-title>
