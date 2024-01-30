@@ -104,29 +104,33 @@
         <div v-for="(month, index) in monthGroup" :key="index" class="month elevation-5">
           <v-chip class="mb-5 text-center justify-center d-flex" style="color:white" color="#19003F">{{ getMonthName(month) }}</v-chip>
           <div class="days">
-            <div v-for="day in getDaysInMonth(month)" :key="day" class="day" :class="{ 'reserved': isDayReserved(month, day) }">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
-                  <div v-if="isDayReserved(month, day)">
-                    <v-icon v-on="on" class="reserved-icon" :color="isDayReserved(month, day) === 'holiday' ? 'blue' : 'red'">
-                      {{ isDayReserved(month, day) === 'holiday' ? 'mdi-beach' : 'mdi-account-group' }}
-                    </v-icon>
-                  </div>
-                  <div v-else>
-                    <span v-if="isDayReserved(month, day)">
-                    {{ 'This day is reserved' }}
-                  </span>
-                    <p v-else>{{ day }}</p>
-                  </div>
-                </template>
-                <span>This day is reserved {{day}}</span>
-              </v-tooltip>
+            <div v-for="day in getDaysInMonth(month)" :key="day" class="day">
+              <!-- Check if the day is within the range of any pending inquiry -->
+              <div v-if="isDayPending(month, day)">
+                <v-chip color="white"  style="color:blue; font-size:25px;">?</v-chip>
+              </div>
+              <div v-if="isDayApproved(month, day)">
+                <v-icon color="orange">mdi-checkbox-marked-circle</v-icon>
+              </div>
+              <div v-if="isDayDeclined(month, day)">
+                <v-icon color="red">mdi-close</v-icon>
+              </div>
+              <div v-if="!isDayPending(month,day) && !isDayApproved(month,day) && !isDayDeclined(month,day)">
+                {{day}}
+              </div>
+
             </div>
           </div>
         </div>
       </div>
     </div>
-    <v-data-table :items="reservedDateRanges" :headers="tableHeaders" style="width: 500px;"></v-data-table>
+<!--    Add a loader in the v-data-table to make a better UI -->
+    <v-data-table
+        :headers="headers"
+        :items="getInquires"
+        :items-per-page="5"
+        class="elevation-1"
+    ></v-data-table>
   </div>
 </template>
 
@@ -136,6 +140,14 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+
+      headers: [
+        { text: 'Company', value: 'company_name',  sortable: true, },
+        { text: 'Type', value: 'type_name' },
+        { text: 'Status', value: 'status_name' },
+        { text: 'Start', value: 'start' },
+        { text: 'End', value: 'end' },
+      ],
       holidayDetailsDialog:false,
       inqueries: null,
       meetingDetailsDialog: false, // Flag to control the dialog visibility
@@ -177,7 +189,8 @@ export default {
   computed: {
     ...mapState({
       vacationType: state => state.vacationType,
-      userDetails:state =>state.userDetails
+      userDetails:state =>state.userDetails,
+      getInquires : state =>state.setInq
     }),
     monthGroups() {
       // Split the months into groups of 4
@@ -191,14 +204,54 @@ export default {
   watch:{
     currentYear:'updateCalendar',
   },
-  mounted () {
+  async mounted () {
     this.$store.dispatch('vacationTypes');
+    await this.getMyInqueries();
+    console.log('Inquires : ' , this.inqueries);
+    console.log('TEISAJI', this.getInquires);
     },
   methods: {
+    isDayPending(month, day) {
+      // Check if there is any pending inquiry for the current month and day
+      return this.getInquires.some(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'PENDING' && currentDate >= startDate && currentDate <= endDate;
+      });
+    },
+    isDayApproved(month, day) {
+      return this.getInquires.some(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'APPROVED' && currentDate >= startDate && currentDate <= endDate;
+      });
+    },
+    isDayDeclined(month, day) {
+      return this.getInquires.some(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'DECLINED' && currentDate >= startDate && currentDate <= endDate;
+      });
+    },
+    isMonthInRange(item, currentMonth) {
+      // Parse the start and end dates of the inquiry to compare with the current month
+      const startDate = new Date(item.start);
+      const endDate = new Date(item.end);
+
+      // Check if the current month is within the start and end dates of the pending inquiry
+      return currentMonth >= startDate.getMonth() && currentMonth <= endDate.getMonth();
+    },
+    isPendingForDay(item) {
+      // Add your logic to check if the item's status is "PENDING" and if the item's date matches the current day
+      return item.status_name === 'PENDING';
+    },
     async getMyInqueries() {
       try {
         const response = await this.$store.dispatch('getMyInqueries');
-        this.inqueries = response; // Assuming your response is an array of inqueries
+        console.log(response);
       } catch (error) {
         console.error('Error fetching inqueries:', error);
       }
