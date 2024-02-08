@@ -7,7 +7,6 @@
       </v-row>
       <div>
 
-        <div style="overflow-y:hidden;">
           <div style="display:flex; margin-top:17px; margin-left:37px;">
             <div style="margin-right:5px; margin-left:3px;">
               <v-btn @click="prevMonth" style="color:white; font-size:10px; background-color:#19003F">Previous Month</v-btn>
@@ -22,18 +21,22 @@
           </div>
           <!-- Day names row -->
           <!-- Days row -->
-          <v-row class="mt-5" style="padding:50px;">
-            <v-col v-for="day in daysInMonth" :key="day" cols="1" class="elevation-3" style="cursor:pointer; border:.1px dotted black;">
-              <div @click="selectDate(day)" style="font-size: 12px;" class="d-flex align-center justify-center flex-column-reverse ma-0 pa-0">
-                <h6 style="font-size:13px;">{{day}}</h6>
-                <div style="font-size: 13px; color:#19003F" class="ma-0 pa-0">{{ getDayName(day) }}</div>
-                <v-icon v-if="!selectedUser && getDayName(day)==='Mon'" class="mdi mdi-airplane" color="blue"></v-icon>
-                <v-icon v-if="!selectedUser && getDayName(day)==='Fri'" class="mdi mdi-car-hatchback" color="orange"></v-icon>
-                <v-icon v-if="!selectedUser && getDayName(day)==='Tue'" class="mdi mdi-bus-school" color="green"></v-icon>
-                <v-icon v-else-if="getIconForDay(day)" :class="getIconClass(getIconForDay(day))" :color="getIconColor(getIconForDay(day))" style="font-size:20px;"></v-icon>
-              </div>
-            </v-col>
-          </v-row>
+        <v-row class="mt-5" style="padding:50px;">
+          <v-col v-for="day in daysInMonth" :key="day" cols="1" class="elevation-3" style="cursor:pointer; border:.1px dotted black;">
+            <v-tooltip top>
+              <template v-slot:activator="{on}">
+                <div v-on="on" v-if="isDayApproved(getCurrentMonth(), day)">
+                  <v-icon color="orange">mdi-checkbox-marked-circle</v-icon>
+                </div>
+              </template>
+              {{ getUsernameForDay(getCurrentMonth(), day) }}
+            </v-tooltip>
+            <h6 style="font-size:13px;">{{day}}</h6>
+          </v-col>
+        </v-row>
+          <div v-for="item in this.getInqures" :key="item.id">
+            {{item}}
+          </div>
         </div>
 
         <!--      <div v-for="user in users" :key="user.id">-->
@@ -77,7 +80,6 @@
 <!--            </v-col>-->
 <!--          </v-row>-->
 <!--        </div>-->
-      </div>
     </div>
 <!--Maybe do a footer-->
 
@@ -85,6 +87,8 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   data() {
     return {
@@ -109,6 +113,60 @@ export default {
     };
   },
   methods: {
+    getUsernameForDay(month, day) {
+      const reservationsForDay = this.getInqures.filter(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.year, month - 1, day);
+        return item.status_name === 'APPROVED' && currentDate >= startDate && currentDate <= endDate;
+      });
+
+      // Assuming that each day has a single reservation, modify as needed
+      if (reservationsForDay.length > 0) {
+        return reservationsForDay[0].user_name;
+      }
+
+      return ''; // Return an empty string if no reservation for the day
+    },
+    getCurrentMonth() {
+      return new Date().getMonth() + 1;
+    },
+    isDayApproved(month, day) {
+      const reservedDates = this.getInqures.filter(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.year, month - 1, day);
+        return item.status_name === 'APPROVED' && currentDate >= startDate && currentDate <= endDate;
+      });
+
+      // Assuming each reservation has a unique icon associated with it
+      const icons = reservedDates.map(reservation => {
+        // Logic to determine the icon based on reservation details
+        // You can customize this logic according to your requirements
+        if (reservation.type_name === 'Vacation') {
+          return 'mdi-beach';
+        } else if (reservation.type_name === 'Business Trip') {
+          return 'mdi-airplane';
+        } else {
+          // Add more cases as needed
+          return 'mdi-checkbox-marked-circle';
+        }
+      });
+
+      // Store the icons in a map for each day
+      this.$set(this.userIcons, `${month}-${day}`, icons);
+
+      // Return true if there are reservations for the current day
+      return reservedDates.length > 0;
+    },
+    async getMyInqueries() {
+      try {
+        const response = await this.$store.dispatch('getMyInqueries');
+        console.log(response);
+      } catch (error) {
+        console.error('Error fetching inqueries:', error);
+      }
+    },
     getIconForDay(day) {
       // Return the icon associated with the selected user
       return this.userIcons[this.selectedUser?.id];
@@ -169,9 +227,16 @@ export default {
       this.generateCalendar();
     },
   },
-  mounted() {
-    this.generateCalendar();
-    this.listUsers();
+  computed:{
+    ...mapState({
+    getInqures : state => state.allInqueries
+    }),
+  },
+  async mounted() {
+    console.log(this.getInqures);
+    await this.generateCalendar();
+    await  this.listUsers();
+    await this.getMyInqueries();
   },
 };
 </script>

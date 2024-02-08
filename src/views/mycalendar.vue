@@ -208,7 +208,7 @@ export default {
     this.$store.dispatch('vacationTypes');
     await this.getMyInqueries();
     console.log('Inquires : ' , this.inqueries);
-    console.log('TEISAJI', this.getInquires);
+    console.log('INQURES ', this.getInquires);
     },
   methods: {
     isDayPending(month, day) {
