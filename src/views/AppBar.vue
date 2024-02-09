@@ -6,7 +6,7 @@
 
       <!-- Text Buttons -->
       <v-btn v-if="testRole === 'Manager'" text style="color:white" @click="navigateToWallChart">WallChart</v-btn>
-      <v-btn v-if="!testRole === 'Manager'" text style="color:white" @click="navigateToCalendar">My Calendar</v-btn>
+      <v-btn v-if="testRole === 'Employee'" text style="color:white" @click="navigateToCalendar">My Calendar</v-btn>
       <v-btn v-if="testRole === 'Manager'" text style="color:white" @click="navigateToUsers">Users</v-btn>
 
       <!-- Icon Buttons -->
