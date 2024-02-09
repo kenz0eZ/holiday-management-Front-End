@@ -134,12 +134,6 @@
       </div>
     </div>
 <!--    Add a loader in the v-data-table to make a better UI -->
-    <v-data-table
-        :headers="headers"
-        :items="getInquires"
-        :items-per-page="5"
-        class="elevation-1"
-    ></v-data-table>
   </div>
 </template>
 

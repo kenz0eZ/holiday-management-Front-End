@@ -32,7 +32,7 @@
                     <br>
                     {{user.user_surname}}
                     <br>
-                    <h6 style="font-size:20px; text-transform: uppercase">
+                    <h6 style="font-size:15px; text-transform: uppercase">
                     {{user.type_name}}
                     </h6>
                     <br>
@@ -57,7 +57,7 @@
                     <br>
                     {{user.user_surname}}
                     <br>
-                    <h6 style="font-size:20px; text-transform: uppercase">
+                    <h6 style="font-size:15px; text-transform: uppercase">
                       {{user.type_name}}
                     </h6>
                     <br>
@@ -82,7 +82,9 @@
                     <br>
                     {{user.user_surname}}
                     <br>
-                    {{user.type_name}}
+                    <h6 style="font-size:15px; text-transform: uppercase">
+                      {{user.type_name}}
+                    </h6>
                     <br>
                     <h6 style="font-size:25px; margin-top:5px; margin-bottom:5px;">
                       {{user.status_name}}

@@ -42,7 +42,8 @@
         <template v-slot:activator="{ attrs, on }">
           <v-btn class="ml-2" min-width="0" v-bind="attrs" v-on="on" id="mdi-account" rounded>
             <v-icon class="mr-3">mdi-account</v-icon>
-            <span class="initials">TM</span>
+            <span class="initials" v-if="testRole ==='Manager'">Manager</span>
+            <span class="initials" v-if="testRole ==='Employee'">Employee</span>
           </v-btn>
         </template>
 

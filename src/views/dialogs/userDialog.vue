@@ -85,6 +85,7 @@
             </v-col>
             <v-col cols="6">
               <v-text-field
+                  readonly
                   label="Vacation Days"
                   v-model="userDetails.vacation_days"
                   outlined
@@ -119,8 +120,10 @@
                   ></v-text-field>
             </v-col>
             <v-col cols="6" style="margin-top:-65px;">
+
               <v-text-field
                   label="Department"
+                  :readonly="role ==='Employee'"
                   v-model="userDetails.company[0].name"
                   outlined
                   hide-details
@@ -221,6 +224,7 @@ export default {
       getUserId : localStorage.getItem('id'),
       user: {
         profilePhotoUrl: 'URL_OF_PROFILE_PHOTO',
+        role:null,
         name: this.userDetails,
         department: 'HR',
         firstName: '',
@@ -253,6 +257,8 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch('getUser',this.getUserId);
+    this.role = localStorage.getItem('role');
+
   },
   methods: {
     closeDialog() {
