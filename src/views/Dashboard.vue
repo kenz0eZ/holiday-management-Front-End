@@ -2,11 +2,11 @@
   <div>
     <!--  Calendar Days  -->
     <div class="d-flex justify-center align-center mb-2 mt-5">
-      <v-btn @click="decrementYear" class="arrow-button">
+      <v-btn style="color:white;" color="#19003F" @click="decrementYear" class="arrow-button">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <div class="current-year">{{ currentYear }}</div>
-      <v-btn @click="incrementYear" class="arrow-button">
+      <v-btn style="color:white;" color="#19003F" @click="incrementYear" class="arrow-button">
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
     </div>
@@ -18,32 +18,75 @@
           <div class="days">
             <div v-for="day in getDaysInMonth(month)" :key="day - 1" class="day">
               <div v-if="isDayApproved(month, day)">
-                <v-tooltip top color="green">
+                <v-tooltip left nudge-left="20px" color="green">
                   <template v-slot:activator="{on}">
-                    <v-icon color="green" v-on="on">mdi mdi-calendar-check</v-icon>
+                    <v-icon color="green" v-on="on">mdi mdi-calendar-question</v-icon>
                   </template>
-                  <div v-for="user in getApprovedInquiryForDay(month, day)">
-                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}
+                  <h6 style="font-size:25px;">
+                    Day : {{day}}
+                  </h6>
+                  <div v-for="user in getApprovedInquiryForDay  (month, day)">
+                    <br>
+                    <!--                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}-->
+                    {{user.user_name}}
+                    <br>
+                    {{user.user_surname}}
+                    <br>
+                    <h6 style="font-size:20px; text-transform: uppercase">
+                    {{user.type_name}}
+                    </h6>
+                    <br>
                   </div>
+                  <h6 style="font-size:25px; margin:0px">
+                    APPROVED
+                  </h6>
                 </v-tooltip>
               </div>
               <div v-if="isDayPending(month, day)">
-                <v-tooltip top color="orange">
+                <v-tooltip left nudge-left="20px" color="orange">
                   <template v-slot:activator="{on}">
                     <v-icon color="orange" v-on="on">mdi mdi-calendar-question</v-icon>
                   </template>
-                  <div v-for="user in getPendingDay(month, day)">
-                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}
+                  <h6 style="font-size:25px;">
+                    Day : {{day}}
+                  </h6>
+                  <div v-for="user in getPendingDay (month, day)">
+                    <br>
+                    <!--                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}-->
+                    {{user.user_name}}
+                    <br>
+                    {{user.user_surname}}
+                    <br>
+                    <h6 style="font-size:20px; text-transform: uppercase">
+                      {{user.type_name}}
+                    </h6>
+                    <br>
                   </div>
+                  <h6 style="font-size:25px; margin:0px">
+                    PENDING
+                  </h6>
                 </v-tooltip>
               </div>
               <div v-if="isDayDeclined(month, day)">
-                <v-tooltip top color="red">
+                <v-tooltip left nudge-left="20px" color="red">
                   <template v-slot:activator="{on}">
                     <v-icon color="red" v-on="on">mdi-calendar-remove</v-icon>
                   </template>
                   <div v-for="user in getDeclinedDay(month, day)">
-                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}
+                    <h6 style="font-size:25px; margin-top:5px;">
+                      Day : {{day}}
+                    </h6>
+                    <br>
+<!--                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}-->
+                    {{user.user_name}}
+                    <br>
+                    {{user.user_surname}}
+                    <br>
+                    {{user.type_name}}
+                    <br>
+                    <h6 style="font-size:25px; margin-top:5px; margin-bottom:5px;">
+                      {{user.status_name}}
+                    </h6>
                   </div>
                 </v-tooltip>
               </div>
