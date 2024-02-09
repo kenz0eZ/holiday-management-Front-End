@@ -23,20 +23,21 @@
           <!-- Days row -->
         <v-row class="mt-5" style="padding:50px;">
           <v-col v-for="day in daysInMonth" :key="day" cols="1" class="elevation-3" style="cursor:pointer; border:.1px dotted black;">
-            <v-tooltip top>
-              <template v-slot:activator="{on}">
-                <div v-on="on" v-if="isDayApproved(getCurrentMonth(), day)">
-                  <v-icon color="orange">mdi-checkbox-marked-circle</v-icon>
-                </div>
-              </template>
-              <span v-if="getUsernameAndInfoForDay(getCurrentMonth(), day)">
+            <div v-for="item in getInqures">
+              <v-tooltip top>
+                <template v-slot:activator="{on}">
+                  <div v-on="on" v-if="isDayApproved(getCurrentMonth(), day)">
+                <v-icon>mdi mdi-check</v-icon>
+                  </div>
+                </template>
+                <span v-if="getUsernameAndInfoForDay(getCurrentMonth(), day)">
               <div v-for="(reservation, index) in getUsernameAndInfoForDay(getCurrentMonth(), day)" :key="index">
                 <span>{{ reservation.userName }} - {{ reservation.start }} to {{ reservation.end }} ({{ reservation.typeName }})</span>
                 <br>
               </div>
             </span>
-            </v-tooltip>
-
+              </v-tooltip>
+            </div>
             <h6 style="font-size:13px;">{{day}}</h6>
           </v-col>
         </v-row>
