@@ -216,7 +216,13 @@ export default {
         localStorage.setItem('id', userId );
 
         // await this.$store.dispatch('setAuthToken', token);
-        await this.$router.push('/dashboard');
+        if(role==='Employee'){
+          await this.$router.push('/mycalendar');
+        }
+        if(role ==='Manager'){
+          await this.$router.push('/dashboard')
+        }
+
       }
     },
 
