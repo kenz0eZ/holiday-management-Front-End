@@ -142,6 +142,11 @@
                               class="mt-n3"
                               @input="checkPasswords"
                           />
+                          <div v-if="errorMessage" class="error-message d-flex justify-space-around pb-3 mt-n3">
+            <span v-for="(error, key) in errorMessage" :key="key">
+                <span v-for="message in error">{{ message }}</span><br>
+            </span>
+                          </div>
                           <div style="width:90%" class="d-flex align-center justify-center mx-5 m">
                             <v-btn @click="register" style="color:white;" color="#19003F" width="100%" rounded >Sign up</v-btn>
                           </div>
@@ -177,7 +182,7 @@ export default {
       registrationResponse: null,
       verificationResponse: null,
       loginResponse: null,
-
+      errorMessage: '',
       props: {
         source: String
       },
@@ -218,21 +223,41 @@ export default {
     async register() {
       const body = this.user;
 
-      this.registrationResponse = await this.$store.dispatch('registerUser', body);
+      try {
+        this.registrationResponse = await this.$store.dispatch('registerUser', body);
 
-      if (this.registrationResponse && this.registrationResponse.status === 201 || this.registrationResponse && this.registrationResponse.status === 200 ) {
-        this.step = 1;
-        const body = {
-          email: this.registrationResponse.data.user.email,
-          token: this.registrationResponse.data.token,
-        };
-        this.verificationResponse = await this.$store.dispatch('verificationLink', body);
+        if (this.registrationResponse && (this.registrationResponse.status === 201 || this.registrationResponse.status === 200)) {
+          this.step = 1;
+          const body = {
+            email: this.registrationResponse.data.user.email,
+            token: this.registrationResponse.data.token,
+          };
+          this.verificationResponse = await this.$store.dispatch('verificationLink', body);
+        }
+      } catch (error) {
+        // Handle error response from the API
+        console.error('Registration Error:', error);
+        this.errorMessage = error;
       }
     },
   },
 };
 </script>
 <style scoped>
+.error-message {
+  color: red;
+  text-align: center;
+  animation: blink-animation 1s infinite alternate; /* Blinking animation */
+}
+
+@keyframes blink-animation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 .v-application .rounded-bl-xl {
     border-bottom-left-radius: 300px !important;
 }

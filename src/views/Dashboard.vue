@@ -29,8 +29,14 @@
                   <v-icon color="orange">mdi-checkbox-marked-circle</v-icon>
                 </div>
               </template>
-              {{ getUsernameForDay(getCurrentMonth(), day) }}
+              <span v-if="getUsernameAndInfoForDay(getCurrentMonth(), day)">
+              <div v-for="(reservation, index) in getUsernameAndInfoForDay(getCurrentMonth(), day)" :key="index">
+                <span>{{ reservation.userName }} - {{ reservation.start }} to {{ reservation.end }} ({{ reservation.typeName }})</span>
+                <br>
+              </div>
+            </span>
             </v-tooltip>
+
             <h6 style="font-size:13px;">{{day}}</h6>
           </v-col>
         </v-row>
@@ -113,7 +119,7 @@ export default {
     };
   },
   methods: {
-    getUsernameForDay(month, day) {
+    getUsernameAndInfoForDay(month, day) {
       const reservationsForDay = this.getInqures.filter(item => {
         const startDate = new Date(item.start);
         const endDate = new Date(item.end);
@@ -121,13 +127,15 @@ export default {
         return item.status_name === 'APPROVED' && currentDate >= startDate && currentDate <= endDate;
       });
 
-      // Assuming that each day has a single reservation, modify as needed
-      if (reservationsForDay.length > 0) {
-        return reservationsForDay[0].user_name;
-      }
-
-      return ''; // Return an empty string if no reservation for the day
+      // Return an array of reservation objects
+      return reservationsForDay.map(reservation => ({
+        userName: reservation.user_name,
+        start: reservation.start,
+        end: reservation.end,
+        typeName: reservation.type_name
+      }));
     },
+
     getCurrentMonth() {
       return new Date().getMonth() + 1;
     },

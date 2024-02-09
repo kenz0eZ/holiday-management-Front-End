@@ -30,8 +30,12 @@ export default {
             localStorage.setItem('token', response.data.token);
             return response; // Return the full response object
         } catch (error) {
-            console.error('Failed to Register:', error);
-            throw error;
+            if (error.response && error.response.data && error.response.data.errors) {
+                throw error.response.data.errors;
+            } else {
+                console.error('Failed to Register:', error);
+                throw error;
+            }
         }
     },
     async listUsers() {

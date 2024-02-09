@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app-bar app style="background-color:#19003F">
-      <v-app-bar-title class="title" style="color: white;" @click="navigateToWallChart">Time Mozaic</v-app-bar-title>
+      <span class="title" style="color: white;" @click="navigateToWallChart">Time Mosaic</span>
       <v-spacer></v-spacer>
 
       <!-- Text Buttons -->

@@ -5,26 +5,35 @@
     <div style="display:flex; align-items:center; justify-content: space-around; width:90%;margin:auto; padding-top:20px;">
 <!--      Need to fix the image, take something different URL has expired when using a facebook img-->
       <img
-          src="https://media.fiction.com/or62db208a90c6073814b9143e/renders/1440566616234073760/1440566616234073760-9.webp"          style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
+          v-if="roleName === 'Manager'"
+          src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3159137/manager-clipart-md.png"
+          style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
+          @mouseover="scaleImage"
+          @mouseout="resetImage"
+      />
+      <img
+          v-else
+          src="https://png.pngtree.com/png-vector/20220901/ourmid/pngtree-company-employee-avatar-icon-wearing-a-suit-png-image_6133899.png"
+          style="width: 150px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
           @mouseover="scaleImage"
           @mouseout="resetImage"
       />
       <div class=" ml-5">
         <!--       Credentials-->
         <v-card-text style="font-size:17px" class="custom-text">
-          <h6 style="color:#19003F; font-size:16px;" class="text-uppercase"> {{userDetails.name}} {{userDetails.surname}}</h6>
+          <h6 style="color:#19003F; font-size:16px" class="text-uppercase"> {{userDetails.name}} {{userDetails.surname}}</h6>
         </v-card-text>
       </div>
       <div class="d-flex">
 
-        <v-icon @click="decrementYear" color="#19003F"  v-if="currentYear > MIN_YEAR">mdi-chevron-left</v-icon>
-        <!-- Display Current Year -->
-        <h6 class="current-year custom-text"> {{ currentYear }}  {{currentYear +1  }}</h6>
-        <!-- Right Arrow Button -->
-        <v-icon @click="incrementYear" color="#19003F" class="arrow-button">mdi-chevron-right</v-icon>
+<!--        <v-icon @click="decrementYear" color="#19003F"  v-if="currentYear > MIN_YEAR">mdi-chevron-left</v-icon>-->
+<!--        &lt;!&ndash; Display Current Year &ndash;&gt;-->
+<!--        <h6 class="current-year custom-text"> {{ currentYear }}  {{currentYear +1  }}</h6>-->
+<!--        &lt;!&ndash; Right Arrow Button &ndash;&gt;-->
+<!--        <v-icon @click="incrementYear" color="#19003F" class="arrow-button">mdi-chevron-right</v-icon>-->
       </div>
 
-        <v-chip color="#19003F" style="color:white; cursor: pointer;" class="mr-5">Reserved Days :{{userDetails.vacation_days}}</v-chip>
+        <v-chip v-if="roleName !== 'Manager'" color="#19003F" style="color:white; cursor: pointer;" class="mr-5">Reserved Days :{{userDetails.vacation_days}}</v-chip>
 
       <v-tooltip bottom color="#19003F">
         <template v-slot:activator="{on}">
@@ -190,7 +199,8 @@ export default {
     ...mapState({
       vacationType: state => state.vacationType,
       userDetails:state =>state.userDetails,
-      getInquires : state =>state.setInq
+      getInquires : state =>state.setInq,
+      roleName: state => state.roleName,
     }),
     monthGroups() {
       // Split the months into groups of 4
