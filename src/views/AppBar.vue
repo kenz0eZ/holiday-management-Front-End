@@ -5,9 +5,9 @@
       <v-spacer></v-spacer>
 
       <!-- Text Buttons -->
-      <v-btn v-if="roleName === 'Manager'" text style="color:white" @click="navigateToWallChart">WallChart</v-btn>
-      <v-btn text style="color:white" @click="navigateToCalendar">My Calendar</v-btn>
-      <v-btn v-if="roleName === 'Manager'" text style="color:white" @click="navigateToUsers">Users</v-btn>
+      <v-btn v-if="testRole === 'Manager'" text style="color:white" @click="navigateToWallChart">WallChart</v-btn>
+      <v-btn v-if="!testRole === 'Manager'" text style="color:white" @click="navigateToCalendar">My Calendar</v-btn>
+      <v-btn v-if="testRole === 'Manager'" text style="color:white" @click="navigateToUsers">Users</v-btn>
 
       <!-- Icon Buttons -->
       <div v-if="this.testRole==='Manager'">
@@ -100,6 +100,7 @@ export default {
   },
   mounted() {
     this.testRole=localStorage.getItem('role');
+    console.log(this.testRole);
     },
   data() {
     return {

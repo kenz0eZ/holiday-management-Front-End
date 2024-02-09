@@ -40,7 +40,7 @@
             <h6 style="font-size:13px;">{{day}}</h6>
           </v-col>
         </v-row>
-          <div v-for="item in this.getInqures" :key="item.id">
+          <div v-for="item in getInqures" :key="item.id">
             {{item}}
           </div>
         </div>
@@ -170,7 +170,15 @@ export default {
     async getMyInqueries() {
       try {
         const response = await this.$store.dispatch('getMyInqueries');
-        console.log(response);
+        console.log('TESTING : ' , response);
+      } catch (error) {
+        console.error('Error fetching inqueries:', error);
+      }
+    },
+    async getInqueries() {
+      try {
+        const response = await this.$store.dispatch('getInqueries');
+        console.log('TESTING : ' , response);
       } catch (error) {
         console.error('Error fetching inqueries:', error);
       }
@@ -240,11 +248,17 @@ export default {
     getInqures : state => state.allInqueries
     }),
   },
-  async mounted() {
-    console.log(this.getInqures);
-    await this.generateCalendar();
-    await  this.listUsers();
+  async created() {
+    await this.listUsers();
     await this.getMyInqueries();
+    await this.getInqueries();
+    this.generateCalendar();
+  },
+  async mounted() {
+    await this.generateCalendar();
+    await this.listUsers();
+    await this.getMyInqueries();
+    console.log('sdsads', this.getInqures);
   },
 };
 </script>

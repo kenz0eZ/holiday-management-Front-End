@@ -65,6 +65,7 @@ export default new Vuex.Store({
         const response = await authenticationRepo.loginUser(body);
         const roleName = response.data.role;
         commit('SET_ROLE_NAME', roleName);
+        console.log('THIS IS RESP : ' , response);
         return response;
       } catch (error) {
         // Handle error or rethrow it
