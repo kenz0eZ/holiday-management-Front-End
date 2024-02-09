@@ -1,7 +1,35 @@
 <template>
   <v-container>
-    <v-row align="center" justify="center" >
-          <v-col cols="12" sm="10">
+    <v-row align="center" justify="center">
+      <v-progress-circular
+          v-if="spinner"
+          indeterminate
+          color="primary"
+          :size="95"
+          class="pa-5"
+          :width="9"
+          style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+      >
+        <h6 class="my-5 pa-5">Loading...</h6>
+      </v-progress-circular>
+      <v-alert
+          border="top"
+          color="red lighten-2"
+          dark
+          class="customClass"
+          v-if="showAlert"
+          type="alert"
+      >Failed To Login. Check Credentials</v-alert>
+      <v-alert
+          border="top"
+          color="green lighten-2"
+          dark
+          class="customClass"
+          v-if="showSuccessAlert"
+          type="alert"
+      >Successfull Login.
+      </v-alert>
+          <v-col cols="12" sm="10" v-if="!spinner">
             <v-card class="elevation-10 mt-10" style="border-radius:50px;">
              <v-window v-model="step">
                 <v-window-item :value="1">
@@ -170,6 +198,10 @@ export default {
     return {
       passwordSame : false,
       step: 1,
+      showSuccessAlert:false,
+      showAlert:false,
+      spinner:false,
+      showProgressBar: true,
       user: {
         name: '',
         surname: '',
@@ -200,29 +232,43 @@ export default {
     },
 
     async login() {
+
       const body = {
         email: this.user.email,
         password: this.user.password,
       };
 
-      this.loginResponse = await this.$store.dispatch('loginUser', body);
+      try {
+        this.loginResponse = await this.$store.dispatch('loginUser', body);
 
-      if (this.loginResponse && this.loginResponse.status === 200) {
-        const token = this.loginResponse.data.token;
-        const role = this.loginResponse.data.role;
-        const userId = this.loginResponse.data.user.id;
-        localStorage.setItem('token', token);
-        localStorage.setItem('role',role);
-        localStorage.setItem('id', userId );
-
-        // await this.$store.dispatch('setAuthToken', token);
-        if(role==='Employee'){
-          await this.$router.push('/mycalendar');
+        if (this.loginResponse && this.loginResponse.status === 200) {
+          const token = this.loginResponse.data.token;
+          const role = this.loginResponse.data.role;
+          const userId = this.loginResponse.data.user.id;
+          this.spinner=true;
+          localStorage.setItem('token', token);
+          localStorage.setItem('role', role);
+          localStorage.setItem('id', userId);
+          //Adding the spinner
+          setTimeout(() =>{
+            if (role === 'Employee') {
+               this.$router.push('/mycalendar');
+            } else if (role === 'Manager') {
+               this.$router.push('/dashboard');
+            }
+            this.spinner=true;
+          },3000);
         }
-        if(role ==='Manager'){
-          await this.$router.push('/dashboard')
-        }
-
+      } catch (error) {
+        // Handle error response from the API
+        console.error('Login Error:', error);
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        }, 3000)
+        this.errorMessage = error;
+      } finally {
+        this.showProgressBar = true; // Hide the loader whether the API call succeeds or fails
       }
     },
 
