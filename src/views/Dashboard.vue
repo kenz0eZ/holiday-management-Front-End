@@ -1,269 +1,362 @@
 <template>
-  <v-app>
-
-    <div >
-      <v-row v-if="loading" justify="center" style="margin-top:0.1px;">
-        <v-progress-linear indeterminate color="primary"></v-progress-linear>
-      </v-row>
-      <div>
-
-          <div style="display:flex; margin-top:17px; margin-left:37px;">
-            <div style="margin-right:5px; margin-left:3px;">
-              <v-btn @click="prevMonth" style="color:white; font-size:10px; background-color:#19003F">Previous Month</v-btn>
-            </div>
-            <div>
-              <v-btn @click="nextMonth" style="color:white; font-size:10px; background-color:#19003F">Next Month</v-btn>
-            </div>
-            <div style="display:flex;align-items:center;justify-content: flex-end; margin-top:-10px; margin-right:37px;" class="ml-auto">
-              <h2 class="text-right" style="font-size:15px; letter-spacing:1px; margin-right:15px; font-weight: bold;">{{ monthNames[month] }} {{ year }}</h2>
-              <v-btn class="btn-animation " style="width:30px; height:60px; font-size:30px; border-radius: 50%; background-color:#19003F;color:white;">+</v-btn>
-            </div>
-          </div>
-          <!-- Day names row -->
-          <!-- Days row -->
-        <v-row class="mt-5" style="padding:50px;">
-          <v-col v-for="day in daysInMonth" :key="day" cols="1" class="elevation-3" style="cursor:pointer; border:.1px dotted black;">
-            <div v-for="item in getInqures">
-              <v-tooltip top>
-                <template v-slot:activator="{on}">
-                  <div v-on="on" v-if="isDayApproved(getCurrentMonth(), day)">
-                <v-icon>mdi mdi-check</v-icon>
-                  </div>
-                </template>
-                <span v-if="getUsernameAndInfoForDay(getCurrentMonth(), day)">
-              <div v-for="(reservation, index) in getUsernameAndInfoForDay(getCurrentMonth(), day)" :key="index">
-                <span>{{ reservation.userName }} - {{ reservation.start }} to {{ reservation.end }} ({{ reservation.typeName }})</span>
-                <br>
-              </div>
-            </span>
-              </v-tooltip>
-            </div>
-            <h6 style="font-size:13px;">{{day}}</h6>
-          </v-col>
-        </v-row>
-          <div v-for="item in getInqures" :key="item.id">
-            {{item}}
-          </div>
-        </div>
-
-        <!--      <div v-for="user in users" :key="user.id">-->
-        <!--        {{user.name}}-->
-        <!--      </div>-->
-<!--        <div style="margin-left:40px; background-color:#19003F;color:white; padding-left:10px;  height: 30px; width:97%;">-->
-<!--            <v-row>-->
-<!--              <v-col cols="6" style="margin-top:-5px;">-->
-<!--                <p class="text-center">Active Users</p>-->
-<!--              </v-col>-->
-<!--              <v-col cols="6" style="padding-left:30px; margin-top:-5px;">-->
-<!--                <p class="text-center">Select Users</p>-->
-<!--              </v-col>-->
-<!--            </v-row>-->
-<!--        </div>-->
-<!--        <div style="overflow:auto; max-height:600px;">-->
-<!--          <v-row style="padding: 50px;" justify="center">-->
-<!--            <v-col xs="12" sm="6" md="6" lg="6">-->
-<!--              <v-data-table-->
-<!--                  :items="users"-->
-<!--                  :headers="headers"-->
-<!--                  :items-per-page="5"-->
-<!--                  class="elevation-15"-->
-<!--                  height="500"-->
-
-<!--              ></v-data-table>-->
-<!--            </v-col>-->
-<!--            <v-col xs="12" sm="6" md="4" lg="6" style="padding: 10px; margin-top:15px;">-->
-<!--              <v-row>-->
-<!--                <v-card elevation="12" width="100%" style="padding:15px;" height="560">-->
-<!--                  <v-select-->
-<!--                      v-model="selectedUser"-->
-<!--                      :items="users"-->
-<!--                      item-text="name"-->
-<!--                      label="Select User"-->
-<!--                      @change="updateUserIcon"-->
-<!--                  ></v-select>-->
-<!--                </v-card>-->
-
-<!--              </v-row>-->
-<!--            </v-col>-->
-<!--          </v-row>-->
-<!--        </div>-->
+  <div>
+    <!--  Calendar Days  -->
+    <div class="d-flex justify-center align-center mb-2 mt-5">
+      <v-btn @click="decrementYear" class="arrow-button">
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+      <div class="current-year">{{ currentYear }}</div>
+      <v-btn @click="incrementYear" class="arrow-button">
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
     </div>
-<!--Maybe do a footer-->
 
-  </v-app>
+    <div class="ma-10">
+      <div v-for="(monthGroup, groupIndex) in monthGroups" :key="groupIndex" class="month-group">
+        <div v-for="(month, index) in monthGroup" :key="index" class="month elevation-5">
+          <v-chip class="mb-5 text-center justify-center d-flex" style="color:white" color="#19003F">{{ getMonthName(month) }}</v-chip>
+          <div class="days">
+            <div v-for="day in getDaysInMonth(month)" :key="day - 1" class="day">
+              <div v-if="isDayApproved(month, day)">
+                <v-tooltip top color="green">
+                  <template v-slot:activator="{on}">
+                    <v-icon color="green" v-on="on">mdi mdi-calendar-check</v-icon>
+                  </template>
+                  <div v-for="user in getApprovedInquiryForDay(month, day)">
+                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}
+                  </div>
+                </v-tooltip>
+              </div>
+              <div v-if="isDayPending(month, day)">
+                <v-tooltip top color="orange">
+                  <template v-slot:activator="{on}">
+                    <v-icon color="orange" v-on="on">mdi mdi-calendar-question</v-icon>
+                  </template>
+                  <div v-for="user in getPendingDay(month, day)">
+                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}
+                  </div>
+                </v-tooltip>
+              </div>
+              <div v-if="isDayDeclined(month, day)">
+                <v-tooltip top color="red">
+                  <template v-slot:activator="{on}">
+                    <v-icon color="red" v-on="on">mdi-calendar-remove</v-icon>
+                  </template>
+                  <div v-for="user in getDeclinedDay(month, day)">
+                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}
+                  </div>
+                </v-tooltip>
+              </div>
+              <!-- Check if the day is within the range of any pending inquiry -->
+              <div v-if="!isDayPending(month, day) && !isDayApproved(month, day) && !isDayDeclined(month, day)">
+                {{ day }}
+              </div>
+            </div>          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   data() {
     return {
-      headers:[
-        {text: 'ID' , value : 'id'},
-        {text : 'Name', value :'name'},
-        {text:'Surname', value:'surname'}
-      ],
-      selectedUser: null,
-      users: [], // Assuming you have a list of users here
-      userIcons: {}, // Store user icons dynamically
-  loading:false,
 
-      daysInMonth: [],
-      year: new Date().getFullYear(),
-      month: new Date().getMonth(),
-      monthNames: [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
+      headers: [
+        { text: 'Company', value: 'company_name',  sortable: true, },
+        { text: 'Type', value: 'type_name' },
+        { text: 'Status', value: 'status_name' },
+        { text: 'Start', value: 'start' },
+        { text: 'End', value: 'end' },
       ],
-      dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      holidayDetailsDialog:false,
+      inqueries: null,
+      meetingDetailsDialog: false, // Flag to control the dialog visibility
+      meetingReservationDates: [], // Array to store meeting reservation dates
+      holidayReservations: [], // Array to store holiday reservations
+      meetingReservations: [], // Array to store meeting reservations
+      currentYear: new Date().getFullYear(),
+      MIN_YEAR: 2000, // Change this to your desired minimum year
+      eventTypes: [
+        { text: 'Holiday', value: 'holiday' },
+        { text: 'Meeting', value: 'meeting' },
+        // Add more event types here
+      ],
+      eventType: null,
+      validate:false,
+      selectedEventType: '',
+      calendarIntegrationDialog: false,
+      webcalLink: 'webcal://app.timetastic.co.uk/Feeds/MyFavouritesCalendar/13fc2f75-aa2f-44b2-a9b7-294adc723ca2',
+
+      startDate: null,
+      endDate: null,
+      valid: true,
+      selectedVacation:false,
+      reservedStartDate: null,
+      reservedEndDate: null,
+      eventTypeIcons: {
+        holiday: 'mdi-beach',
+        meeting: 'mdi-account-group',
+        // Add more event types and icons as needed
+      },
+      dialogVisible: false,
+      reservedDateRanges: [],
+      tableHeaders: [
+        { text: "Start Date", value: "startDate" },
+        { text: "End Date", value: "endDate" },
+      ],
     };
   },
+  computed: {
+    ...mapState({
+      vacationType: state => state.vacationType,
+      userDetails:state =>state.userDetails,
+      getInquires : state =>state.allInqueries,
+      roleName: state => state.roleName,
+    }),
+    monthGroups() {
+      // Split the months into groups of 4
+      const groups = [];
+      for (let i = 0; i < 12; i += 4) {
+        groups.push([i + 1, i + 2, i + 3, i + 4]);
+      }
+      return groups;
+    },
+  },
+  watch:{
+    currentYear:'updateCalendar',
+  },
+  async mounted () {
+    this.$store.dispatch('vacationTypes');
+    console.log('INQURES ', this.getInquires);
+  },
   methods: {
-    getUsernameAndInfoForDay(month, day) {
-      const reservationsForDay = this.getInqures.filter(item => {
+    getApprovedInquiryForDay(month, day) {
+      return this.getInquires.filter(item => {
         const startDate = new Date(item.start);
         const endDate = new Date(item.end);
-        const currentDate = new Date(this.year, month - 1, day);
+        const currentDate = new Date(this.currentYear, month - 1, day);
         return item.status_name === 'APPROVED' && currentDate >= startDate && currentDate <= endDate;
       });
-
-      // Return an array of reservation objects
-      return reservationsForDay.map(reservation => ({
-        userName: reservation.user_name,
-        start: reservation.start,
-        end: reservation.end,
-        typeName: reservation.type_name
-      }));
     },
-
-    getCurrentMonth() {
-      return new Date().getMonth() + 1;
+    getPendingDay(month, day) {
+      return this.getInquires.filter(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'PENDING' && currentDate >= startDate && currentDate <= endDate;
+      });
+    },
+    getDeclinedDay(month, day) {
+      return this.getInquires.filter(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'DECLINED' && currentDate >= startDate && currentDate <= endDate;
+      });
+    },
+    isDayPending(month, day) {
+      // Check if there is any pending inquiry for the current month and day
+      return this.getInquires.some(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'PENDING' && currentDate >= startDate && currentDate <= endDate;
+      });
     },
     isDayApproved(month, day) {
-      const reservedDates = this.getInqures.filter(item => {
+      return this.getInquires.some(item => {
         const startDate = new Date(item.start);
         const endDate = new Date(item.end);
-        const currentDate = new Date(this.year, month - 1, day);
+        const currentDate = new Date(this.currentYear, month - 1, day);
         return item.status_name === 'APPROVED' && currentDate >= startDate && currentDate <= endDate;
       });
-
-      // Assuming each reservation has a unique icon associated with it
-      const icons = reservedDates.map(reservation => {
-        // Logic to determine the icon based on reservation details
-        // You can customize this logic according to your requirements
-        if (reservation.type_name === 'Vacation') {
-          return 'mdi-beach';
-        } else if (reservation.type_name === 'Business Trip') {
-          return 'mdi-airplane';
-        } else {
-          // Add more cases as needed
-          return 'mdi-checkbox-marked-circle';
-        }
+    },
+    isDayDeclined(month, day) {
+      return this.getInquires.some(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'DECLINED' && currentDate >= startDate && currentDate <= endDate;
       });
+    },
+    isMonthInRange(item, currentMonth) {
+      // Parse the start and end dates of the inquiry to compare with the current month
+      const startDate = new Date(item.start);
+      const endDate = new Date(item.end);
 
-      // Store the icons in a map for each day
-      this.$set(this.userIcons, `${month}-${day}`, icons);
-
-      // Return true if there are reservations for the current day
-      return reservedDates.length > 0;
+      // Check if the current month is within the start and end dates of the pending inquiry
+      return currentMonth >= startDate.getMonth() && currentMonth <= endDate.getMonth();
+    },
+    isPendingForDay(item) {
+      // Add your logic to check if the item's status is "PENDING" and if the item's date matches the current day
+      return item.status_name === 'PENDING';
     },
     async getMyInqueries() {
       try {
         const response = await this.$store.dispatch('getMyInqueries');
-        console.log('TESTING : ' , response);
+        console.log(response);
       } catch (error) {
         console.error('Error fetching inqueries:', error);
       }
     },
-    async getInqueries() {
-      try {
-        const response = await this.$store.dispatch('getInqueries');
-        console.log('TESTING : ' , response);
-      } catch (error) {
-        console.error('Error fetching inqueries:', error);
+    validateSelection(){
+      this.validate=true;
+    },
+    async makeReservation() {
+      const body = {
+        type: this.selectedEventType,
+        start: this.startDate,
+        end: this.endDate
       }
-    },
-    getIconForDay(day) {
-      // Return the icon associated with the selected user
-      return this.userIcons[this.selectedUser?.id];
-    },
-    getIconClass(icon) {
-      return icon ? `mdi mdi-${icon}` : ''; // Add the mdi prefix to the icon class
-    },
-    getIconColor(icon) {
-      // Customize icon colors based on your requirements
-      if (icon === 'umbrella') return 'blue';
-      if (icon === 'car-hatchback') return 'red';
-      if (icon === 'airplane') return 'green';
-      return '';
-    },
-    updateUserIcon() {
-      // Update the user icon based on the selected user
-      // For demonstration purposes, generating a random icon here
-      const randomIcons = ['umbrella', 'car-hatchback', 'airplane'];
-      const randomIcon = randomIcons[Math.floor(Math.random() * randomIcons.length)];
 
-      this.$set(this.userIcons, this.selectedUser?.id, randomIcon);
-    },
-    generateCalendar() {
-      const totalDays = new Date(this.year, this.month + 1, 0).getDate();
-      this.daysInMonth = Array.from({ length: totalDays }, (_, i) => i + 1);
-    },
-    getDayName(day) {
-      const date = new Date(this.year, this.month, day ); // Add 1 to consider the first day of the month
-      return this.dayNames[date.getDay()];
-    },
-    prevMonth() {
-      if (this.month === 0) {
-        this.year--;
-        this.month = 11;
-      } else {
-        this.month--;
-      }
-      this.generateCalendar();
-    },
-    async listUsers() {
       try {
-        this.loading = true;
-        const response = await this.$store.dispatch('listUsers');
-        this.users = response.data;
+        // Dispatch the makeReservation action
+        await this.$store.dispatch('makeReservation', body);
+
+        // Once the reservation is made, fetch the updated data
+        await this.getMyInqueries();
+
+        // Reset your form or perform any other actions
+        this.closeDateSelectionDialog();
+        this.startDate = '';
+        this.endDate = '';
+        this.selectedEventType = '';
+
       } catch (error) {
-        console.error('Error fetching users:', error);
-      } finally {
-        this.loading = false;
+        console.error('Error making reservation:', error);
       }
     },
-    nextMonth() {
-      if (this.month === 11) {
-        this.year++;
-        this.month = 0;
-      } else {
-        this.month++;
-      }
-      this.generateCalendar();
+    scaleImage(event) {
+      event.target.style.transform = 'translateY(10px)'; // Scale up the image on hover
     },
-  },
-  computed:{
-    ...mapState({
-    getInqures : state => state.allInqueries
-    }),
-  },
-  async created() {
-    await this.listUsers();
-    await this.getMyInqueries();
-    await this.getInqueries();
-    this.generateCalendar();
-  },
-  async mounted() {
-    await this.generateCalendar();
-    await this.listUsers();
-    await this.getMyInqueries();
-    console.log('sdsads', this.getInqures);
+    resetImage(event) {
+      event.target.style.transform = 'scale(1)'; // Reset the image scale on hover out
+    },
+
+    incrementYear() {
+      this.currentYear++;
+    },
+    decrementYear() {
+      if (this.currentYear > this.MIN_YEAR) {
+        this.currentYear--;
+      }
+    },
+    openDateSelectionDialog() {
+      this.dialogVisible = true;
+    },
+    closeDateSelectionDialog() {
+      this.dialogVisible = false;
+    },
+    validateDateRange() {
+      this.valid = this.startDate <= this.endDate;
+
+    },
+    getMonthName(month) {
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+      return monthNames[month - 1];
+    },
+    getDaysInMonth(month) {
+      const daysInMonth = new Date(new Date().getFullYear(), month, 0).getDate();
+      return Array.from({ length: daysInMonth }, (_, i) => i + 1);
+    },
+    isDayReserved(month, day) {
+      const reservedDay = this.reservedDateRanges.find((range) => {
+        const start = new Date(range.startDate);
+        const end = new Date(range.endDate);
+        const current = new Date(new Date().getFullYear(), month - 1, day);
+        return current >= start && current <= end;
+      });
+
+      return reservedDay !== undefined ? reservedDay.eventType : null;
+    },
   },
 };
 </script>
 
-<style scoped>
-/* Add your custom styles here */
+<style>
+
+.arrow-button {
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+}
+
+.current-year {
+  font-size: 18px;
+  margin: 0 10px; /* Adjust spacing as needed */
+}
+
+/* Custom CSS for styling */
+.month-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.month {
+  flex: 1 0 calc(20.33% - 20px); /* Adjust the width as needed */
+  margin: 10px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  height:370px;
+  @media (max-width: 768px) {
+    /* Adjust the layout for screens with a maximum width of 768px (or any other desired breakpoint) */
+    flex-basis: calc(50% - 20px); /* Two columns on smaller screens */
+    margin: 5px;
+  }
+}
+
+.days {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day {
+  width: calc(100% / 9); /* Display 7 days per row */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: background-color 0.2s ease-in-out;
+  cursor:pointer;
+
+  @media (max-width: 768px) {
+    /* Adjust the layout for screens with a maximum width of 768px (or any other desired breakpoint) */
+    width: calc(100% / 7); /* Back to one column on smaller screens */
+    font-size: 14px; /* Adjust the font size for days on smaller screens */
+  }
+  &.reserved {
+    background-color: #ffcccc; /* Set a background color for reserved days */
+    border: 1px solid #ff5733; /* Set a border color for reserved days */
+  }
+
+}
+
+.day:hover {
+  background-color: #f0f0f0; /* Highlight on hover */
+}
+.reserved-icon {
+  font-size: 24px; /* Adjust the size as needed */
+  color: #ff5733; /* Adjust the color as needed */
+}
+
+.btn-animation:hover{
+  transform:rotate(35deg);
+  transition:0.5s;
+}
+.primary{
+  color:#19003F;
+}
+
 </style>

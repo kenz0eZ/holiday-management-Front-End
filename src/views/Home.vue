@@ -28,13 +28,13 @@
                                   class="mt-10 pt-10"
                               />
                               <v-text-field
+                                  type="password"
                                   v-model="user.password"
                                   label="Password"
                                   dense
                                   class="mt-5"
                                   color="#19003F"
                                   autocomplete="false"
-
                               />
                               <v-row>
                                 <v-col cols="12" sm="7">
