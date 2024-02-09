@@ -104,7 +104,7 @@
         <div v-for="(month, index) in monthGroup" :key="index" class="month elevation-5">
           <v-chip class="mb-5 text-center justify-center d-flex" style="color:white" color="#19003F">{{ getMonthName(month) }}</v-chip>
           <div class="days">
-            <div v-for="day in getDaysInMonth(month)" :key="day" class="day">
+            <div v-for="day in getDaysInMonth(month)" :key="day - 1" class="day">
               <!-- Check if the day is within the range of any pending inquiry -->
               <div v-if="isDayPending(month, day)">
                 <v-chip color="white"  style="color:blue; font-size:25px;">?</v-chip>
