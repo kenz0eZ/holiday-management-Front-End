@@ -1,49 +1,34 @@
 <template>
   <div>
-    <!-- Button to Open the Date Selection Dialog -->
-
-    <div style="display:flex; align-items:center; justify-content: space-around; width:90%;margin:auto; padding-top:20px;">
-<!--      Need to fix the image, take something different URL has expired when using a facebook img-->
-      <img
-          v-if="roleName === 'Manager'"
-          src="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3159137/manager-clipart-md.png"
-          style="width: 100px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
-          @mouseover="scaleImage"
-          @mouseout="resetImage"
-      />
-      <img
-          v-else
-          src="https://png.pngtree.com/png-vector/20220901/ourmid/pngtree-company-employee-avatar-icon-wearing-a-suit-png-image_6133899.png"
-          style="width: 150px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
-          @mouseover="scaleImage"
-          @mouseout="resetImage"
-      />
-      <div class=" ml-5">
-        <!--       Credentials-->
-        <v-card-text style="font-size:17px" class="custom-text">
-          <h6 style="color:#19003F; font-size:16px" class="text-uppercase"> {{userDetails.name}} {{userDetails.surname}}</h6>
-        </v-card-text>
-      </div>
-      <div class="d-flex">
-
-<!--        <v-icon @click="decrementYear" color="#19003F"  v-if="currentYear > MIN_YEAR">mdi-chevron-left</v-icon>-->
-<!--        &lt;!&ndash; Display Current Year &ndash;&gt;-->
-<!--        <h6 class="current-year custom-text"> {{ currentYear }}  {{currentYear +1  }}</h6>-->
-<!--        &lt;!&ndash; Right Arrow Button &ndash;&gt;-->
-<!--        <v-icon @click="incrementYear" color="#19003F" class="arrow-button">mdi-chevron-right</v-icon>-->
-      </div>
-
-        <v-chip v-if="roleName !== 'Manager'" color="#19003F" style="color:white; cursor: pointer;" class="mr-5">Reserved Days :{{userDetails.vacation_days}}</v-chip>
-
-      <v-tooltip bottom color="#19003F">
-        <template v-slot:activator="{on}">
-          <v-btn @click="openDateSelectionDialog" class="btn-animation" color="#19003F" style="width:30px; height:60px; font-size:40px; border-radius: 50%; color:white;" v-on="on">+</v-btn>
-        </template>
-        <div style="text-align:center;">
-          <v-icon style="color:white; margin-right:5px;">mdi-calendar</v-icon>
-          <span style="margin-top:10px;">Add Date</span>
+    <div class="d-flex align-center justify-space-between mx-16">
+      <div class="d-flex align-center">
+        <img
+            src="https://png.pngtree.com/png-vector/20220901/ourmid/pngtree-company-employee-avatar-icon-wearing-a-suit-png-image_6133899.png"
+            style="width: 150px; border-radius: 50%; transition: transform 0.3s; cursor:pointer;"
+            @mouseover="scaleImage"
+            @mouseout="resetImage"
+        />
+        <div>
+          <v-card-text style="font-size:17px" class="custom-text">
+            <h6 style="color:#19003F; font-size:16px" class="text-uppercase"> {{userDetails.name + " " + userDetails.surname}}</h6>
+          </v-card-text>
         </div>
-      </v-tooltip>
+      </div>
+
+
+<div>
+  <v-chip v-if="roleName !== 'Manager'" color="#19003F" style="color:white; cursor: pointer;" class="mr-5">Reserved Days :{{userDetails.vacation_days}}</v-chip>
+  <v-tooltip bottom color="#19003F">
+    <template v-slot:activator="{on}">
+      <v-btn @click="openDateSelectionDialog" class="btn-animation" color="#19003F" style="width:30px; height:60px; font-size:40px; border-radius: 50%; color:white;" v-on="on">+</v-btn>
+    </template>
+    <div style="text-align:center;">
+      <v-icon style="color:white; margin-right:5px;">mdi-calendar</v-icon>
+      <span style="margin-top:10px;">Add Date</span>
+    </div>
+  </v-tooltip>
+</div>
+
     </div>
 
     <v-dialog v-model="dialogVisible" max-width="400px">
@@ -114,24 +99,89 @@
           <v-chip class="mb-5 text-center justify-center d-flex" style="color:white" color="#19003F">{{ getMonthName(month) }}</v-chip>
           <div class="days">
             <div v-for="day in getDaysInMonth(month)" :key="day - 1" class="day">
-              <!-- Check if the day is within the range of any pending inquiry -->
-              <div v-if="isDayPending(month, day)">
-                <v-chip color="white"  style="color:blue; font-size:25px;">?</v-chip>
-              </div>
               <div v-if="isDayApproved(month, day)">
-                <v-icon color="orange">mdi-checkbox-marked-circle</v-icon>
+                <v-tooltip left nudge-left="20px" color="green">
+                  <template v-slot:activator="{on}">
+                    <v-icon color="green" v-on="on">mdi mdi-calendar-question</v-icon>
+                  </template>
+                  <h6 style="font-size:25px;">
+                    Day : {{day}}
+                  </h6>
+                  <div v-for="user in getApprovedInquiryForDay  (month, day)">
+                    <br>
+                    <!--                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}-->
+                    {{user.user_name}}
+                    <br>
+                    {{user.user_surname}}
+                    <br>
+                    <h6 style="font-size:15px; text-transform: uppercase">
+                      {{user.type_name}}
+                    </h6>
+                    <br>
+                  </div>
+                  <h6 style="font-size:25px; margin:0px">
+                    APPROVED
+                  </h6>
+                </v-tooltip>
+              </div>
+              <div v-if="isDayPending(month, day)">
+                <v-tooltip left nudge-left="20px" color="orange">
+                  <template v-slot:activator="{on}">
+                    <v-icon color="orange" v-on="on">mdi mdi-calendar-question</v-icon>
+                  </template>
+                  <h6 style="font-size:25px;">
+                    Day : {{day}}
+                  </h6>
+                  <div v-for="user in getPendingDay (month, day)">
+                    <br>
+                    <!--                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}-->
+                    {{user.user_name}}
+                    <br>
+                    {{user.user_surname}}
+                    <br>
+                    <h6 style="font-size:15px; text-transform: uppercase">
+                      {{user.type_name}}
+                    </h6>
+                    <br>
+                  </div>
+                  <h6 style="font-size:25px; margin:0px">
+                    PENDING
+                  </h6>
+                </v-tooltip>
               </div>
               <div v-if="isDayDeclined(month, day)">
-                <v-icon color="red">mdi-close</v-icon>
+                <v-tooltip left nudge-left="20px" color="red">
+                  <template v-slot:activator="{on}">
+                    <v-icon color="red" v-on="on">mdi-calendar-remove</v-icon>
+                  </template>
+                  <div v-for="user in getDeclinedDay(month, day)">
+                    <h6 style="font-size:25px; margin-top:5px;">
+                      Day : {{day}}
+                    </h6>
+                    <br>
+                    <!--                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}-->
+                    {{user.user_name}}
+                    <br>
+                    {{user.user_surname}}
+                    <br>
+                    <h6 style="font-size:15px; text-transform: uppercase">
+                      {{user.type_name}}
+                    </h6>
+                    <br>
+                    <h6 style="font-size:25px; margin-top:5px; margin-bottom:5px;">
+                      {{user.status_name}}
+                    </h6>
+                  </div>
+                </v-tooltip>
               </div>
-              <div v-if="!isDayPending(month,day) && !isDayApproved(month,day) && !isDayDeclined(month,day)">
-                {{day}}
+              <!-- Check if the day is within the range of any pending inquiry -->
+              <div v-if="!isDayPending(month, day) && !isDayApproved(month, day) && !isDayDeclined(month, day)">
+                {{ day }}
               </div>
-
-            </div>
-          </div>
+            </div>          </div>
         </div>
       </div>
+
     </div>
 <!--    Add a loader in the v-data-table to make a better UI -->
   </div>
@@ -215,6 +265,30 @@ export default {
     console.log('INQURES ', this.getInquires);
     },
   methods: {
+    getApprovedInquiryForDay(month, day) {
+      return this.getInquires.filter(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'APPROVED' && currentDate >= startDate && currentDate <= endDate;
+      });
+    },
+    getPendingDay(month, day) {
+      return this.getInquires.filter(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'PENDING' && currentDate >= startDate && currentDate <= endDate;
+      });
+    },
+    getDeclinedDay(month, day) {
+      return this.getInquires.filter(item => {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const currentDate = new Date(this.currentYear, month - 1, day);
+        return item.status_name === 'DECLINED' && currentDate >= startDate && currentDate <= endDate;
+      });
+    },
     isDayPending(month, day) {
       // Check if there is any pending inquiry for the current month and day
       return this.getInquires.some(item => {
@@ -260,9 +334,9 @@ export default {
         console.error('Error fetching inqueries:', error);
       }
     },
-  validateSelection(){
-    this.validate=true;
-  },
+    validateSelection(){
+      this.validate=true;
+    },
     async makeReservation() {
       const body = {
         type: this.selectedEventType,
