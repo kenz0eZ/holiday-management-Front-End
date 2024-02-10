@@ -9,21 +9,53 @@
       <v-data-table :items="inqueries" :headers="headers" class="elevation-3" height="500">
         <template v-slot:item="{ item }">
           <tr>
-            <td>{{ item.user_name }} {{ item.user_surname }}</td>
-<!--            <td>{{ item.inquire_id }}</td>-->
-<!--            <td>{{ item.user_id }}</td>-->
-            <td>{{ item.user_email }}</td>
-<!--            <td>{{ item.company_id }}</td>-->
-            <td>{{ item.company_name }}</td>
-<!--            <td>{{ item.type_id }}</td>-->
-            <td>{{ item.type_name }}</td>
-<!--            <td>{{ item.status_id }}</td>-->
-            <td>{{ item.status_name }}</td>
+            <td class="font-weight-medium">{{ item.user_name }} {{ item.user_surname }}</td>
+            <!--            <td>{{ item.inquire_id }}</td>-->
+            <!--            <td>{{ item.user_id }}</td>-->
+            <td class="font-weight-medium">{{ item.user_email }}</td>
+            <!--            <td>{{ item.company_id }}</td>-->
+            <td class="font-weight-medium">{{ item.company_name }}</td>
+            <!--            <td>{{ item.type_id }}</td>-->
+            <td class="font-weight-medium">{{ item.type_name }}</td>
+
+            <!--            <td>{{ item.status_id }}</td>-->
+            <td v-if="item.status_name ==='PENDING'">
+              <v-chip color="orange" style="color:white;">{{ item.status_name }}</v-chip>
+            </td>
+
+            <td v-if="item.status_name ==='DECLINED'">
+              <v-chip color="red" style="color:white">{{ item.status_name }}</v-chip>
+            </td>
+            <td v-if="item.status_name ==='APPROVED'">
+              <v-chip color="green" style="color:white">{{ item.status_name }}</v-chip>
+            </td>
             <td>{{ item.start }}</td>
             <td>{{ item.end }}</td>
+            <td v-if="item.status_name === 'PENDING'">
+              <v-icon @click="approveInquiry(item)" color="green">mdi-check</v-icon>
+            </td>
+            <td v-if="item.status_name === 'PENDING'">
+              <v-icon @click="declineInquiry(item)" color="red">mdi-close</v-icon>
+            </td>
+            <td v-if="item.status_name === 'APPROVED'">
+              <v-tooltip right>
+                <template v-slot:activator="{on}">
+                  <v-icon style="margin-left:70px;" color="green" v-on="on">mdi-checkbox-marked</v-icon>
+                </template>
+                <span>Approved</span>
+              </v-tooltip>
+
+            </td>
+            <td v-if="item.status_name === 'DECLINED'">
+              <v-tooltip right>
+                <template v-slot:activator="{on}">
+                  <v-icon color="red" style="margin-left:70px;" v-on="on">mdi-close-box</v-icon>
+                </template>
+                <span>Declined</span>
+              </v-tooltip>
+            </td>
           </tr>
-        </template>
-      </v-data-table>
+        </template>      </v-data-table>
     </v-card>
   </v-dialog>
 </template>
@@ -45,7 +77,8 @@ export default {
         // { text: 'Status ID', value: 'status_id' },
         { text: 'Status Name', value: 'status_name' },
         { text: 'Start', value: 'start' },
-        { text: 'End', value: 'end' },``
+        { text: 'End', value: 'end' },
+        { text: '', value:'' },
       ],
     };
   },

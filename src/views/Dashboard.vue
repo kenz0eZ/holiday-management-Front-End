@@ -72,10 +72,10 @@
                   <template v-slot:activator="{on}">
                     <v-icon color="red" v-on="on">mdi-calendar-remove</v-icon>
                   </template>
+                  <h6 style="font-size:25px; margin-top:5px;">
+                    Day : {{day}}
+                  </h6>
                   <div v-for="user in getDeclinedDay(month, day)">
-                    <h6 style="font-size:25px; margin-top:5px;">
-                      Day : {{day}}
-                    </h6>
                     <br>
 <!--                    {{user.user_name  + ' ' + user.user_surname + ' ' +  user.type_name + ' ' + user.status_name }}-->
                     {{user.user_name}}
@@ -86,10 +86,10 @@
                       {{user.type_name}}
                     </h6>
                     <br>
-                    <h6 style="font-size:25px; margin-top:5px; margin-bottom:5px;">
-                      {{user.status_name}}
-                    </h6>
                   </div>
+                  <h6 style="font-size:25px; margin:0px">
+                    DECLINED
+                  </h6>
                 </v-tooltip>
               </div>
               <!-- Check if the day is within the range of any pending inquiry -->
