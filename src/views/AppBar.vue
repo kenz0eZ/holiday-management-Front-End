@@ -33,10 +33,6 @@
           </v-tooltip>
         </div>
 
-
-        <!--
-              </div>
-                  My inquiries -->
         <div v-if="this.testRole==='Employee'">
           <v-tooltip bottom  color="#19003F">
             <template v-slot:activator="{on}">

@@ -2,7 +2,8 @@
   <v-dialog v-model="dialog" max-width="1500">
     <v-card height="620 ">
       <!-- Displaying the notifications here. -->
-        <v-card-title style="background-color: #19003F; color: white; border-radius: 0px !important; display:flex; align-items: center; justify-content:space-between; position:sticky; top:0; z-index:1000;">Notifications Table
+        <v-card-title style="background-color: #19003F; color: white; border-radius: 0px !important; display:flex; align-items: center; justify-content:space-between; position:sticky; top:0; z-index:1000;">
+          Listing Inquires
           <v-icon @click="closeDialog" style="cursor:pointer; color:white;">mdi mdi-close</v-icon>
         </v-card-title>
 
@@ -17,22 +18,10 @@
             <td class="font-weight-medium">{{ item.company_name }}</td>
 <!--            <td>{{ item.type_id }}</td>-->
             <td class="font-weight-medium">{{ item.type_name }}</td>
-            <td v-if="item.type_name==='Vacation'">
-              <v-icon color="primary">mdi mdi-airplane</v-icon>
-            </td>
-            <td v-if="item.type_name==='Day Off'">
-              <v-icon color="orange">mdi mdi-car</v-icon>
-            </td>
-            <td v-if="item.type_name==='Remote'">
-              <v-icon color="red">mdi mdi-home</v-icon>
-            </td>
-            <td v-if="item.type_name==='Unpaid'">
-              <v-icon color="green">mdi mdi-emoticon-sad</v-icon>
-            </td>
 
 <!--            <td>{{ item.status_id }}</td>-->
               <td v-if="item.status_name ==='PENDING'">
-                <v-chip color="primary">{{ item.status_name }}</v-chip>
+                <v-chip color="orange" style="color:white;">{{ item.status_name }}</v-chip>
               </td>
 
             <td v-if="item.status_name ==='DECLINED'">
@@ -94,7 +83,6 @@ export default {
         { text: 'Company Name', value: 'company_name' },
         // { text: 'Type ID', value: 'type_id' },
         { text: 'Type Name', value: 'type_name' },
-        { text: 'Icon', value: 'icon' },
         // { text: 'Status ID', value: 'status_id' },
         { text: 'Status Name', value: 'status_name' },
         { text: 'Start', value: 'start' },

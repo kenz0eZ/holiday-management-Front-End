@@ -120,7 +120,6 @@
                   ></v-text-field>
             </v-col>
             <v-col cols="6" style="margin-top:-65px;">
-
               <v-text-field
                   label="Department"
                   outlined
@@ -128,17 +127,7 @@
                   dense
                   class="custom-text"
               ></v-text-field>
-              <div style="margin-top:35px; font-size:16px; font-weight:bold;">
-                <a href="/mycalendar" class="text-decoration-none">
-                  <v-icon left color="primary" style="font-size:20px;">
-                    mdi-calendar <!-- Calendar icon -->
-                  </v-icon>
-                  View Calendar
-                </a>
-              </div>
-
             </v-col>
-
           </v-row>
         </v-row>
         <v-row v-if="activeTab==='details'">
