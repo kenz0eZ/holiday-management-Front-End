@@ -20,7 +20,7 @@
               <div v-if="isDayApproved(month, day)">
                 <v-tooltip left nudge-left="20px" color="green">
                   <template v-slot:activator="{on}">
-                    <v-icon color="green" v-on="on">mdi mdi-calendar-question</v-icon>
+                    <v-icon color="green" v-on="on">mdi mdi-calendar-check</v-icon>
                   </template>
                   <h6 style="font-size:25px;">
                     Day : {{day}}
@@ -171,12 +171,9 @@ export default {
       return groups;
     },
   },
-  watch:{
-    currentYear:'updateCalendar',
-  },
   async mounted () {
     this.$store.dispatch('vacationTypes');
-    console.log('INQURES ', this.getInquires);
+    //console.log('INQURES ', this.getInquires);
   },
   methods: {
     getApprovedInquiryForDay(month, day) {
@@ -243,9 +240,9 @@ export default {
     async getMyInqueries() {
       try {
         const response = await this.$store.dispatch('getMyInqueries');
-        console.log(response);
+       // console.log(response);
       } catch (error) {
-        console.error('Error fetching inqueries:', error);
+       // console.error('Error fetching inqueries:', error);
       }
     },
     validateSelection(){
@@ -272,7 +269,7 @@ export default {
         this.selectedEventType = '';
 
       } catch (error) {
-        console.error('Error making reservation:', error);
+      //  console.error('Error making reservation:', error);
       }
     },
     scaleImage(event) {

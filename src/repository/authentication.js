@@ -202,7 +202,7 @@ export default {
             return response;
         }
         catch(error){
-            console.log(error);
+         //   console.log(error);
             throw error;
         }
     },

@@ -115,7 +115,7 @@ export default {
   },
   mounted() {
     this.testRole=localStorage.getItem('role');
-    console.log(this.testRole);
+   // console.log(this.testRole);
     },
   data() {
     return {
@@ -140,7 +140,7 @@ export default {
         const response = await this.$store.dispatch('getMyInqueries');
         this.inqueries = response; // Assuming your response is an array of inqueries
       } catch (error) {
-        console.error('Error fetching inqueries:', error);
+     //   console.error('Error fetching inqueries:', error);
       }
     },
     async notificationDialog() {

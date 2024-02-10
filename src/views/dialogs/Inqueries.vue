@@ -154,12 +154,12 @@ export default {
 
       this.$store.dispatch('updateInquire', { inquireId: item.inquire_id, statusId })
           .then(updatedData => {
-            console.log('Update successful:', updatedData);
+            //console.log('Update successful:', updatedData);
             // Handle the response or perform additional actions
             this.getInqueries();
           })
           .catch(error => {
-            console.error('Failed to update inquiry status:', error);
+            //console.error('Failed to update inquiry status:', error);
             // Handle the error appropriately
             this.getInqueries();
           });
@@ -169,12 +169,12 @@ export default {
 
       this.$store.dispatch('updateInquire', { inquireId: item.inquire_id, statusId })
           .then(updatedData => {
-            console.log('Update successful:', updatedData);
+            //console.log('Update successful:', updatedData);
             this.getInqueries();
             // Handle the response or perform additional actions
           })
           .catch(error => {
-            console.error('Failed to update inquiry status:', error);
+            //console.error('Failed to update inquiry status:', error);
             this.getInqueries();
             // Handle the error appropriately
           });
@@ -194,7 +194,7 @@ export default {
         this.inqueries = response; // Assuming your response is an array of inqueries
         this.id = response.user_id;
       } catch (error) {
-        console.error('Error fetching inqueries:', error);
+       // console.error('Error fetching inqueries:', error);
       }
     },
   },

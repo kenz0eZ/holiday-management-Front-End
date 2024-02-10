@@ -261,8 +261,6 @@ export default {
   async mounted () {
     this.$store.dispatch('vacationTypes');
     await this.getMyInqueries();
-    console.log('Inquires : ' , this.inqueries);
-    console.log('INQURES ', this.getInquires);
     },
   methods: {
     getApprovedInquiryForDay(month, day) {
@@ -329,9 +327,9 @@ export default {
     async getMyInqueries() {
       try {
         const response = await this.$store.dispatch('getMyInqueries');
-        console.log(response);
+       // console.log(response);
       } catch (error) {
-        console.error('Error fetching inqueries:', error);
+     //   console.error('Error fetching inqueries:', error);
       }
     },
     validateSelection(){
@@ -358,7 +356,7 @@ export default {
         this.selectedEventType = '';
 
       } catch (error) {
-        console.error('Error making reservation:', error);
+       // console.error('Error making reservation:', error);
       }
     },
     scaleImage(event) {

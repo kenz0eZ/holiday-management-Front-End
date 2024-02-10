@@ -123,8 +123,6 @@
 
               <v-text-field
                   label="Department"
-                  :readonly="role ==='Employee'"
-                  v-model="userDetails.company[0].name"
                   outlined
                   hide-details
                   dense
@@ -224,7 +222,6 @@ export default {
       getUserId : localStorage.getItem('id'),
       user: {
         profilePhotoUrl: 'URL_OF_PROFILE_PHOTO',
-        role:null,
         name: this.userDetails,
         department: 'HR',
         firstName: '',
@@ -257,8 +254,6 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch('getUser',this.getUserId);
-    this.role = localStorage.getItem('role');
-
   },
   methods: {
     closeDialog() {
