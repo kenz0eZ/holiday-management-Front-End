@@ -3,8 +3,8 @@
     <v-card height="620">
       <!-- Displaying the notifications here. -->
       <v-card-title style="display: flex; justify-content: space-between; background-color: #19003F; color: white; border-radius: 0px !important;">
-        <span>Notifications Table</span>
-        <v-btn @click="closeDialog()">X</v-btn>
+        <span>My Inquires</span>
+      <v-icon style="color:white;" @click="closeDialog">mdi-close</v-icon>
       </v-card-title>
       <v-data-table :items="inqueries" :headers="headers" class="elevation-3" height="500">
         <template v-slot:item="{ item }">
