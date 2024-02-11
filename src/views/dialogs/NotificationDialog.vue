@@ -31,12 +31,6 @@
             </td>
             <td>{{ item.start }}</td>
             <td>{{ item.end }}</td>
-            <td v-if="item.status_name === 'PENDING'">
-              <v-icon @click="approveInquiry(item)" color="green">mdi-check</v-icon>
-            </td>
-            <td v-if="item.status_name === 'PENDING'">
-              <v-icon @click="declineInquiry(item)" color="red">mdi-close</v-icon>
-            </td>
             <td v-if="item.status_name === 'APPROVED'">
               <v-tooltip right>
                 <template v-slot:activator="{on}">
