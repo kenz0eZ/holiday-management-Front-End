@@ -69,10 +69,10 @@
             <v-select
                 v-model="selectedEventType"
                 :items="vacationType"
-                item-text="name"
+                item-text="friendly_name"
                 @input="validateSelection"
                 item-value="id"
-                label="test"
+                label="Type"
                 dense
                 color="#19003F"
                 class="mt-2"
